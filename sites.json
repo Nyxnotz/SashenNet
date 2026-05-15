@@ -6,7 +6,12 @@
   }
   "news.sashen": {
     "name": "Новости",
-    "description": "Новости SashenNet'а."
+    "description": "Новости SashenNet'а.",
     "tags": ["news"]
   }
+{
+  "sites.sashen": {
+    "name": "Сайты",
+    "description": "Все сайты SashenNet'а.",
+    "tags": ["sites"]
 }
