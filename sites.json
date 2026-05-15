@@ -1,5 +1,5 @@
 {
-  "ruslikdx.sashen": {
+  "test.sashen": {
     "name": "Тестовый сайт",
     "description": "Первый сайт в сети SashenNet.",
     "tags": ["test", "dev"]
