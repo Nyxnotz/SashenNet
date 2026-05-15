@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>SashenNet</title>
+  <style>
+    body { background: #c0c0c0; font-family: Arial, sans-serif; margin: 20px; }
+    h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .subtitle { color: #444; font-size: 0.85rem; margin-bottom: 16px; }
+    input { width: 300px; padding: 4px; font-size: 1rem; border: 2px inset #888; }
+    button { padding: 4px 12px; font-size: 1rem; margin-left: 4px; cursor: pointer; }
+    hr { border: 1px solid #888; margin: 16px 0; }
+    .result { margin-bottom: 12px; }
+    .result a { font-size: 1.1rem; color: #00008b; }
+    .result .domain { font-size: 0.75rem; color: #006400; }
+    .result .desc { font-size: 0.85rem; color: #222; }
+    .not-found { color: #800000; }
+
+    /* Viewer */
+    #viewer { display: none; }
+    #viewer-bar { background: #808080; padding: 6px 10px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #444; }
+    #viewer-bar a { color: white; font-size: 0.85rem; text-decoration: none; }
+    #viewer-bar span { color: white; font-size: 0.85rem; }
+    #viewer iframe { width: 100%; height: calc(100vh - 80px); border: none; display: block; }
+  </style>
+</head>
+<body>
+
+<div id="search-page">
+  <h1>🔎 SashenNet</h1>
+  <div class="subtitle">Search .sashen sites</div>
+  <input id="q" type="text" placeholder="Search..." onkeydown="if(event.key==='Enter')search()">
+  <button onclick="search()">Search</button>
+  <hr>
+  <div id="results"></div>
+</div>
+
+<div id="viewer">
+  <div id="viewer-bar">
+    <a href="#" onclick="goHome()">← SashenNet</a>
+    <span>|</span>
+    <span id="viewer-domain"></span>
+  </div>
+  <iframe id="viewer-frame"></iframe>
+</div>
+
+<script>
+  const BASE = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+
+  async function getSites() {
+    const res = await fetch('sites.json');
+    return res.json();
+  }
+
+  async function search() {
+    const q = document.getElementById('q').value.toLowerCase().trim();
+    const container = document.getElementById('results');
+    if (!q) { container.innerHTML = ''; return; }
+
+    const sites = await getSites();
+    const results = Object.entries(sites).filter(([domain, val]) =>
+      domain.includes(q) ||
+      val.name.toLowerCase().includes(q) ||
+      val.description.toLowerCase().includes(q)
+    );
+
+    if (!results.length) {
+      container.innerHTML = '<div class="not-found">No sites found.</div>';
+      return;
+    }
+
+    container.innerHTML = results.map(([domain, val]) => `
+      <div class="result">
+        <a href="#" onclick="openSite('${domain}'); return false;">${val.name}</a><br>
+        <span class="domain">${domain}</span><br>
+        <span class="desc">${val.description}</span>
+      </div>
+    `).join('<hr>');
+  }
+
+  function openSite(domain) {
+    history.pushState({}, '', '?site=' + domain);
+    showSite(domain);
+  }
+
+  function showSite(domain) {
+    document.getElementById('search-page').style.display = 'none';
+    document.getElementById('viewer').style.display = 'block';
+    document.getElementById('viewer-domain').textContent = domain;
+    document.getElementById('viewer-frame').src = 'sites/' + domain + '/index.html';
+  }
+
+  function goHome() {
+    history.pushState({}, '', window.location.pathname);
+    document.getElementById('search-page').style.display = 'block';
+    document.getElementById('viewer').style.display = 'none';
+    document.getElementById('viewer-frame').src = '';
+  }
+
+  // Открыть сайт если в URL есть ?site=
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('site')) showSite(params.get('site'));
+</script>
+</body>
+</html>
