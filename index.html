@@ -162,7 +162,7 @@
 
 <script>
   async function getSites() {
-    const res = await fetch('sites.json');
+    const res = await fetch('sites.json?v=' + Date.now());
     return res.json();
   }
 
