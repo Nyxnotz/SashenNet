@@ -4,49 +4,163 @@
   <meta charset="UTF-8">
   <title>SashenNet</title>
   <style>
-    body { background: #c0c0c0; font-family: Arial, sans-serif; margin: 20px; }
-    h1 { font-size: 1.5rem; margin-bottom: 4px; }
-    .subtitle { color: #444; font-size: 0.85rem; margin-bottom: 16px; }
-    input { width: 300px; padding: 4px; font-size: 1rem; border: 2px inset #888; }
-    button { padding: 4px 12px; font-size: 1rem; margin-left: 4px; cursor: pointer; }
-    hr { border: 1px solid #888; margin: 16px 0; }
-    .result { margin-bottom: 12px; }
-    .result a { font-size: 1.1rem; color: #00008b; }
-    .result .domain { font-size: 0.75rem; color: #006400; }
-    .result .desc { font-size: 0.85rem; color: #222; }
-    .not-found { color: #800000; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Viewer */
-    #viewer { display: none; }
-    #viewer-bar { background: #808080; padding: 6px 10px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #444; }
-    #viewer-bar a { color: white; font-size: 0.85rem; text-decoration: none; }
-    #viewer-bar span { color: white; font-size: 0.85rem; }
-    #viewer iframe { width: 100%; height: calc(100vh - 80px); border: none; display: block; }
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #0a0a0a;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,40,0,0.15) 2px, rgba(0,40,0,0.15) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,60,0,0.07) 40px, rgba(0,60,0,0.07) 41px),
+        radial-gradient(ellipse at 20% 50%, rgba(0,60,20,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(0,40,10,0.25) 0%, transparent 60%);
+      color: #ccc;
+    }
+
+    /* SEARCH PAGE */
+    #search-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .logo {
+      font-size: 5rem;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+    .logo span:nth-child(1)  { color: #a78bfa; }
+    .logo span:nth-child(2)  { color: #60a5fa; }
+    .logo span:nth-child(3)  { color: #34d399; }
+    .logo span:nth-child(4)  { color: #fbbf24; }
+    .logo span:nth-child(5)  { color: #f87171; }
+    .logo span:nth-child(6)  { color: #a78bfa; }
+    .logo span:nth-child(7)  { color: #60a5fa; }
+    .logo span:nth-child(8)  { color: #34d399; }
+    .logo span:nth-child(9)  { color: #fbbf24; }
+
+    .nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 14px;
+      font-size: 0.85rem;
+    }
+    .nav a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    .nav a:hover { text-decoration: underline; color: #fff; }
+    .nav .active { color: #fff; font-weight: bold; border-bottom: 1px solid #fff; }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    #q {
+      width: 380px;
+      max-width: 90vw;
+      padding: 4px 6px;
+      font-size: 1rem;
+      border: 1px solid #555;
+      background: #1a1a1a;
+      color: #eee;
+      outline: none;
+    }
+    #q:focus { border-color: #888; }
+
+    .search-row button {
+      padding: 4px 14px;
+      font-size: 0.85rem;
+      background: #2a2a2a;
+      color: #ccc;
+      border: 1px solid #555;
+      cursor: pointer;
+    }
+    .search-row button:hover { background: #3a3a3a; color: #fff; }
+
+    .tagline {
+      font-size: 0.72rem;
+      color: #555;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #222;
+      width: 420px;
+      max-width: 90vw;
+      margin: 20px 0;
+    }
+
+    #results { width: 420px; max-width: 90vw; }
+
+    .result { margin-bottom: 18px; }
+    .result-domain { font-size: 0.78rem; color: #5a9a5a; margin-bottom: 2px; }
+    .result-name a { color: #8ab4f8; text-decoration: none; font-size: 1rem; }
+    .result-name a:hover { text-decoration: underline; }
+    .result-desc { font-size: 0.82rem; color: #888; margin-top: 2px; }
+    .no-results { color: #666; font-size: 0.85rem; }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #444;
+    }
+    .footer a { color: #555; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* VIEWER */
+    #viewer { display: none; width: 100%; height: 100vh; }
+    #viewer iframe { width: 100%; height: 100%; border: none; display: block; }
   </style>
 </head>
 <body>
 
 <div id="search-page">
-  <h1>🔎 SashenNet</h1>
-  <div class="subtitle">Search .sashen sites</div>
-  <input id="q" type="text" placeholder="Search..." onkeydown="if(event.key==='Enter')search()">
-  <button onclick="search()">Search</button>
-  <hr>
+  <div class="logo">
+    <span>S</span><span>a</span><span>s</span><span>h</span><span>e</span><span>n</span><span>N</span><span>e</span><span>t</span>
+  </div>
+
+  <div class="nav">
+    <a href="#" class="active">Web</a>
+    <a href="#">News</a>
+    <a href="#">Sites</a>
+    <a href="#">About</a>
+  </div>
+
+  <div class="search-row">
+    <input id="q" type="text" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')search()">
+    <button onclick="search()">Search</button>
+    <button onclick="lucky()">I'm Feeling Lucky</button>
+  </div>
+  <div class="tagline">Search SashenNet...</div>
+
+  <hr class="divider">
   <div id="results"></div>
+
+  <div class="footer">
+    <a href="#">Advertising Programs</a> · <a href="#">About SashenNet</a><br><br>
+    &copy;2025 SashenNet · Searching .sashen web pages
+  </div>
 </div>
 
 <div id="viewer">
-  <div id="viewer-bar">
-    <a href="#" onclick="goHome()">← SashenNet</a>
-    <span>|</span>
-    <span id="viewer-domain"></span>
-  </div>
   <iframe id="viewer-frame"></iframe>
 </div>
 
 <script>
-  const BASE = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
-
   async function getSites() {
     const res = await fetch('sites.json');
     return res.json();
@@ -61,45 +175,50 @@
     const results = Object.entries(sites).filter(([domain, val]) =>
       domain.includes(q) ||
       val.name.toLowerCase().includes(q) ||
-      val.description.toLowerCase().includes(q)
+      val.description.toLowerCase().includes(q) ||
+      (val.tags || []).some(t => t.toLowerCase().includes(q))
     );
 
     if (!results.length) {
-      container.innerHTML = '<div class="not-found">No sites found.</div>';
+      container.innerHTML = '<div class="no-results">No sites found for "<b>' + q + '</b>".</div>';
       return;
     }
 
     container.innerHTML = results.map(([domain, val]) => `
       <div class="result">
-        <a href="#" onclick="openSite('${domain}'); return false;">${val.name}</a><br>
-        <span class="domain">${domain}</span><br>
-        <span class="desc">${val.description}</span>
+        <div class="result-domain">${domain}</div>
+        <div class="result-name"><a href="#" onclick="openSite('${domain}'); return false;">${val.name}</a></div>
+        <div class="result-desc">${val.description}</div>
       </div>
-    `).join('<hr>');
+    `).join('');
+  }
+
+  async function lucky() {
+    const sites = await getSites();
+    const keys = Object.keys(sites);
+    if (keys.length) openSite(keys[Math.floor(Math.random() * keys.length)]);
   }
 
   function openSite(domain) {
     history.pushState({}, '', '?site=' + domain);
-    showSite(domain);
-  }
-
-  function showSite(domain) {
     document.getElementById('search-page').style.display = 'none';
     document.getElementById('viewer').style.display = 'block';
-    document.getElementById('viewer-domain').textContent = domain;
     document.getElementById('viewer-frame').src = 'sites/' + domain + '/index.html';
   }
 
-  function goHome() {
-    history.pushState({}, '', window.location.pathname);
-    document.getElementById('search-page').style.display = 'block';
-    document.getElementById('viewer').style.display = 'none';
-    document.getElementById('viewer-frame').src = '';
-  }
+  window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('site')) {
+      openSite(params.get('site'));
+    } else {
+      document.getElementById('search-page').style.display = 'flex';
+      document.getElementById('viewer').style.display = 'none';
+      document.getElementById('viewer-frame').src = '';
+    }
+  });
 
-  // Открыть сайт если в URL есть ?site=
   const params = new URLSearchParams(window.location.search);
-  if (params.get('site')) showSite(params.get('site'));
+  if (params.get('site')) openSite(params.get('site'));
 </script>
 </body>
 </html>
