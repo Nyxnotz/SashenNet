@@ -1,7 +1,12 @@
 {
   "test.sashen": {
     "name": "Тестовый сайт",
-    "description": "Первый сайт в сети SashenNet.",
+    "description": "Первый сайт в SashenNet.",
     "tags": ["test", "dev"]
+  }
+  "news.sashen": {
+    "name": "Новости",
+    "description": "Новости SashenNet'а."
+    "tags": ["news"]
   }
 }
