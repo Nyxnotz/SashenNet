@@ -3,77 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PopovChan</title>
+    <title>..PopovChan..</title>
     <style>
-        /* Цветовые схемы */
-        :root { 
-            --bg: #eef2ff; --text: #111; --post: #d6daf0; --border: #b7c5d9; --accent: #af0a0f; 
-        }
-        body.dark { 
-            --bg: #1a1a1a; --text: #ddd; --post: #2d2d2d; --border: #444; --accent: #ff4d4d; 
-        }
-
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; transition: 0.3s; padding: 20px; margin: 0; }
+        :root { --bg: #eef2ff; --text: #111; --post: #d6daf0; --border: #b7c5d9; --accent: #af0a0f; }
+        body.dark { --bg: #1a1a1a; --text: #ddd; --post: #2d2d2d; --border: #444; --accent: #ff4d4d; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; transition: 0.3s; margin: 0; }
         .container { max-width: 800px; margin: 0 auto; }
-        
         .header { background: var(--post); padding: 15px; border: 1px solid var(--border); text-align: center; position: relative; margin-bottom: 20px; }
-        .settings-btn { position: absolute; right: 10px; top: 10px; cursor: pointer; font-size: 20px; }
-
         .panel { background: var(--post); padding: 15px; border: 1px solid var(--border); margin-bottom: 20px; border-radius: 4px; }
         .hidden { display: none; }
-
         input, textarea { width: calc(100% - 22px); margin-bottom: 10px; padding: 10px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; }
-        button { background: var(--accent); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 4px; }
-        button:disabled { background: #666; cursor: not-allowed; }
-
-        /* Стили постов */
+        button { background: var(--accent); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
         .post { background: var(--post); border: 1px solid var(--border); padding: 15px; margin-bottom: 10px; position: relative; border-radius: 0 8px 8px 0; }
-        .post-info { font-size: 0.85em; color: #117743; margin-bottom: 8px; }
-        body.dark .post-info { color: #8bc34a; }
         .nick { font-weight: bold; color: var(--accent); }
-        .admin-badge { background: #000; color: gold; padding: 2px 6px; font-size: 0.75em; border-radius: 3px; margin-right: 5px; border: 1px solid gold; }
-        
-        /* Компактные медиа (твоя просьба) */
-        .post-media { 
-            max-width: 400px; 
-            max-height: 300px; 
-            display: block; 
-            margin-top: 10px; 
-            border-radius: 4px; 
-            background: #000;
-            object-fit: contain; 
-        }
-
-        .del-btn { position: absolute; right: 10px; top: 10px; color: var(--accent); cursor: pointer; font-size: 18px; }
-
-        @media (max-width: 500px) {
-            .post-media { max-width: 100%; max-height: 250px; }
-        }
+        .admin-badge { background: #000; color: gold; padding: 2px 6px; font-size: 0.75em; border-radius: 3px; border: 1px solid gold; margin-right: 5px; }
+        .post-media { max-width: 400px; max-height: 300px; display: block; margin-top: 10px; border-radius: 4px; background: #000; object-fit: contain; }
+        .del-btn { position: absolute; right: 10px; top: 10px; cursor: pointer; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1 style="margin:0;">PopovChan</h1>
-        <div class="settings-btn" onclick="toggleSettings()">⚙️</div>
+        <h1>PopovChan</h1>
+        <div style="position:absolute; right:10px; top:10px; cursor:pointer;" onclick="toggleSettings()">⚙️</div>
     </div>
 
     <div id="settings" class="panel hidden">
-        <button onclick="toggleTheme()">Сменить тему (День/Ночь)</button>
+        <button onclick="toggleTheme()">Темы (черная/белая)</button>
         <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
         <div id="loginForm">
-            <input type="email" id="admEmail" placeholder="Email админа">
+            <input type="email" id="admEmail" placeholder="Email">
             <input type="password" id="admPass" placeholder="Пароль">
-            <button id="loginBtn">Войти как админ</button>
+            <button id="loginBtn">Войти</button>
         </div>
-        <button id="logoutBtn" class="hidden">Выйти из админки</button>
+        <button id="logoutBtn" class="hidden">Выйти</button>
     </div>
 
     <div class="panel">
-        <input type="text" id="userNick" placeholder="Твой ник" maxlength="20">
-        <textarea id="userMsg" placeholder="Текст сообщения..." rows="3"></textarea>
-        <p style="font-size:0.8em; margin:0 0 5px 0;">Фото/Видео (строго до 1МБ):</p>
+        <input type="text" id="userNick" placeholder="Ник" maxlength="20">
+        <textarea id="userMsg" placeholder="Текст..." rows="3"></textarea>
         <input type="file" id="userFile" accept="image/*,video/*">
         <button id="submitBtn">Запостить</button>
     </div>
@@ -86,10 +55,10 @@
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // --- ВСТАВЬ СВОИ ДАННЫЕ НИЖЕ ---
     const firebaseConfig = {
-apiKey: "AIzaSyDfEf4TFLYQ7dCJh6tSVVT9ocRqyDiu724",
+  apiKey: "AIzaSyDfEf4TFLYQ7dCJh6tSVVT9ocRqyDiu724",
   authDomain: "rusla-44501.firebaseapp.com",
+  databaseURL: "https://rusla-44501-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "rusla-44501",
   storageBucket: "rusla-44501.firebasestorage.app",
   messagingSenderId: "1008733514150",
@@ -102,17 +71,22 @@ apiKey: "AIzaSyDfEf4TFLYQ7dCJh6tSVVT9ocRqyDiu724",
 
     let isAdmin = false;
 
-    // Интерфейс и темы
+    // --- ФУНКЦИЯ ОЧИСТКИ (ЗАЩИТА) ---
+    const clean = (str) => {
+        const div = document.createElement('div');
+        div.textContent = str; // Превращаем код в текст
+        return div.innerHTML;  // Возвращаем безопасную строку
+    };
+
     window.toggleTheme = () => {
         const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('popovTheme', isDark ? 'dark' : 'light');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     };
-    if(localStorage.getItem('popovTheme') === 'dark') document.body.classList.add('dark');
+    if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
     window.toggleSettings = () => document.getElementById('settings').classList.toggle('hidden');
 
-    // Админка
     document.getElementById('loginBtn').onclick = () => {
-        signInWithEmailAndPassword(auth, document.getElementById('admEmail').value, document.getElementById('admPass').value).catch(() => alert("Ошибка входа!"));
+        signInWithEmailAndPassword(auth, document.getElementById('admEmail').value, document.getElementById('admPass').value).catch(() => alert("Ошибка!"));
     };
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
     onAuthStateChanged(auth, user => {
@@ -121,71 +95,59 @@ apiKey: "AIzaSyDfEf4TFLYQ7dCJh6tSVVT9ocRqyDiu724",
         document.getElementById('logoutBtn').classList.toggle('hidden', !isAdmin);
     });
 
-    // Удаление
     window.removePost = async (id) => {
-        if(confirm("Удалить это сообщение?")) await deleteDoc(doc(db, "posts", id));
+        if(confirm("Удалить?")) await deleteDoc(doc(db, "posts", id));
     };
 
-    // Отправка
     document.getElementById('submitBtn').onclick = async () => {
         const file = document.getElementById('userFile').files[0];
         const text = document.getElementById('userMsg').value;
         const btn = document.getElementById('submitBtn');
-
         if(!text && !file) return;
 
         btn.disabled = true;
-        btn.innerText = "Загрузка...";
+        btn.innerText = "...";
 
         let dataUrl = "";
         try {
             if(file) {
-                // Если файл > 1МБ, Firestore выдаст ошибку, но мы пытаемся
                 dataUrl = await new Promise((res, rej) => {
                     const r = new FileReader();
                     r.onload = () => res(r.result);
-                    r.onerror = rej;
                     r.readAsDataURL(file);
                 });
             }
-
             await addDoc(collection(db, "posts"), {
                 nick: document.getElementById('userNick').value || "Аноним",
-                text,
-                url: dataUrl,
-                isAdminPost: isAdmin,
-                time: serverTimestamp()
+                text, url: dataUrl, isAdminPost: isAdmin, time: serverTimestamp()
             });
-
             document.getElementById('userMsg').value = "";
             document.getElementById('userFile').value = "";
-        } catch (e) {
-            console.error(e);
-            alert("Ошибка! Файл слишком большой (больше 1 МБ) или нет связи.");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "Запостить";
-        }
+        } catch (e) { alert("Файл слишком большой!"); }
+        finally { btn.disabled = false; btn.innerText = "Запостить"; }
     };
 
-    // Отображение ленты
     onSnapshot(query(collection(db, "posts"), orderBy("time", "desc")), snap => {
         const feed = document.getElementById('feed');
-        feed.innerHTML = "";
+        let html = "";
+        
         snap.forEach(d => {
             const p = d.data();
             const isVid = p.url && p.url.includes('video');
-            feed.innerHTML += `
+            
+            // Здесь мы используем HTML-шаблон, но фильтруем данные!
+            html += `
                 <div class="post">
                     ${isAdmin ? `<span class="del-btn" onclick="removePost('${d.id}')">✖</span>` : ""}
                     <div class="post-info">
                         ${p.isAdminPost ? '<span class="admin-badge">ADMIN</span>' : ''}
-                        <span class="nick">${p.nick}</span>
+                        <span class="nick">${clean(p.nick)}</span>
                     </div>
-                    <div style="white-space:pre-wrap;">${p.text}</div>
+                    <div style="white-space:pre-wrap;">${clean(p.text)}</div>
                     ${p.url ? (isVid ? `<video src="${p.url}" controls class="post-media"></video>` : `<img src="${p.url}" class="post-media">`) : ""}
                 </div>`;
         });
+        feed.innerHTML = html;
     });
 </script>
 </body>
