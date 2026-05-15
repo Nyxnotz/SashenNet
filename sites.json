@@ -13,5 +13,10 @@
     "name": "Сайты",
     "description": "Все сайты SashenNet'а.",
     "tags": ["sites"]
+  },
+  "about.sashen": {
+  "name": "О SashenNet",
+  "description": "Что такое SashenNet и как он устроен.",
+  "tags": ["about"]
   }
 }
