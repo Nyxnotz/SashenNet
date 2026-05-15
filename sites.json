@@ -21,12 +21,12 @@
   },
   "popovchan.sashen": {
     "name": "ПоповЧан",
-    "description": "Анонимный имиджборд, автор сайта: SOrT",
+    "description": "Анонимный имиджборд, автор сайта: SOrT.",
     "tags": ["forum", "imageboard", "chat"]
   },
   "rusltube.sashen": {
     "name": "РуслТуб",
-    "description": "РуслТуб, автор сайта: SOrT",
+    "description": "Платформа где можно выкладывать свои видео, автор сайта: SOrT.",
     "tags": ["video"]
   }
 }
