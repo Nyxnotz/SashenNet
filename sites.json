@@ -15,12 +15,13 @@
     "tags": ["sites"]
   },
   "about.sashen": {
-  "name": "О SashenNet",
-  "description": "Что такое SashenNet и как он устроен.",
-  "tags": ["about"]
+    "name": "О SashenNet",
+    "description": "Что такое SashenNet и как он устроен.",
+    "tags": ["about"]
   },
   "popovchan.sashen": {
     "name": "ПоповЧан",
     "description": "Анонимный имиджборд, автор сайта: SOrT",
     "tags": ["forum", "imageboard", "chat"]
+  }
 }
