@@ -3,15 +3,15 @@
     "name": "Тестовый сайт",
     "description": "Первый сайт в SashenNet.",
     "tags": ["test", "dev"]
-  }
+  },
   "news.sashen": {
     "name": "Новости",
     "description": "Новости SashenNet'а.",
     "tags": ["news"]
-  }
-{
+  },
   "sites.sashen": {
     "name": "Сайты",
     "description": "Все сайты SashenNet'а.",
     "tags": ["sites"]
+  }
 }
