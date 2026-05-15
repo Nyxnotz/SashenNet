@@ -23,5 +23,9 @@
     "name": "ПоповЧан",
     "description": "Анонимный имиджборд, автор сайта: SOrT",
     "tags": ["forum", "imageboard", "chat"]
-  }
+  },
+  "rusltube.sashen": {
+    "name": "РуслТуб",
+    "description": "РуслТуб, автор сайта: SOrT",
+    "tags": ["video"]
 }
