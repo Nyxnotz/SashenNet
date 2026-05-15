@@ -5,54 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RuslTube</title>
     <style>
-        :root { --bg: #0f0f0f; --surf: #1f1f1f; --text: #fff; --red: #ff0000; --blue: #3ea6ff; }
-        body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        :root { --bg: #0f0f0f; --surf: #1f1f1f; --text: #fff; --red: #ff0000; --blue: #3ea6ff; --border: #333; --card-bg: #000; }
+        body.light { --bg: #f9f9f9; --surf: #fff; --text: #0f0f0f; --border: #ddd; --card-bg: #eee; }
         
-        header { display: flex; justify-content: space-between; padding: 10px 20px; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid #222; }
+        body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        header { display: flex; justify-content: space-between; padding: 10px 20px; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); }
         .logo { font-size: 22px; font-weight: bold; cursor: pointer; }
-        .logo span { background: var(--red); padding: 2px 6px; border-radius: 4px; }
+        .logo span { background: var(--red); padding: 2px 6px; border-radius: 4px; color: #fff; }
         
         .search-bar { display: flex; flex: 0 1 500px; }
-        .search-bar input { width: 100%; padding: 10px 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 20px 0 0 20px; outline: none; }
-        .search-bar button { padding: 0 15px; background: #222; border: 1px solid #333; border-radius: 0 20px 20px 0; color: #fff; cursor: pointer; }
+        .search-bar input { width: 100%; padding: 10px 15px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text); border-radius: 20px 0 0 20px; outline: none; }
+        .search-bar button { padding: 0 15px; background: var(--surf); border: 1px solid var(--border); border-radius: 0 20px 20px 0; color: var(--text); cursor: pointer; }
 
         .page { padding: 20px; display: none; }
         #homePage { display: block; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         
-        #searchChannels { display: flex; gap: 20px; overflow-x: auto; padding: 10px 5px 20px; margin-bottom: 20px; border-bottom: 1px solid #333; display: none; }
-        .ch-card { display: flex; flex-direction: column; align-items: center; min-width: 100px; cursor: pointer; text-align: center; }
-        .ch-card .avatar { width: 70px; height: 70px; font-size: 24px; margin-bottom: 8px; border: 2px solid var(--blue); }
-
-        .card { cursor: pointer; transition: 0.2s; }
+        .card { cursor: pointer; }
         .card video { width: 100%; aspect-ratio: 16/9; border-radius: 12px; background: #000; object-fit: cover; }
-        .card-info { display: flex; gap: 12px; margin-top: 8px; align-items: flex-start; }
+        .card-info { display: flex; gap: 12px; margin-top: 8px; }
         .card-info h4 { margin: 0; font-size: 15px; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .card-info p { margin: 1px 0 0 0; font-size: 13px; color: #aaa; }
+        .card-info p { margin: 3px 0 0 0; font-size: 13px; color: #888; }
         
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden; object-fit: cover; flex-shrink: 0; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         #videoPage { grid-template-columns: minmax(0, 1fr) 350px; gap: 30px; max-width: 1400px; margin: 0 auto; }
-        .player-side video { width: 100%; border-radius: 12px; background: #000; max-height: 75vh; }
+        .player-side video { width: 100%; border-radius: 12px; background: #000; max-height: 70vh; }
         
-        .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .btn-group { display: flex; align-items: center; gap: 12px; }
+        .v-desc { background: var(--surf); padding: 12px; border-radius: 12px; margin: 15px 0; font-size: 14px; line-height: 1.4; border: 1px solid var(--border); white-space: pre-wrap; }
+        .actions { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
 
-        .like-box { display: flex; align-items: center; background: #222; padding: 0 15px; border-radius: 20px; height: 36px; cursor: pointer; gap: 8px; border: 1px solid #444; font-size: 14px; }
-        .like-box.active { color: var(--blue); border-color: var(--blue); }
+        .sub-btn { background: var(--text); color: var(--bg); padding: 0 18px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; height: 36px; }
+        .sub-btn.active { background: var(--surf); color: var(--text); border: 1px solid var(--border); }
 
-        .comm-box { margin-top: 25px; }
-        .comm-add { display: flex; gap: 10px; margin-bottom: 20px; }
-        .comm-add input { flex: 1; background: none; border: none; border-bottom: 1px solid #333; color: #fff; outline: none; padding: 5px 0; }
-
-        .sub-btn { background: #fff; color: #000; padding: 0 18px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; height: 36px; }
-        .sub-btn.active { background: #222; color: #fff; border: 1px solid #444; }
-
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surf); padding: 30px; border-radius: 15px; z-index: 1001; width: 320px; box-shadow: 0 0 30px #000; }
-        .modal input { width: 93%; padding: 10px; margin-bottom: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; }
-        .btn-main { background: var(--red); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surf); padding: 25px; border-radius: 15px; z-index: 1001; width: 320px; box-shadow: 0 0 40px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .modal input, .modal textarea { width: 93%; padding: 10px; margin-bottom: 12px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+        .btn-main { background: var(--red); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .ch-card { display: flex; flex-direction: column; align-items: center; min-width: 100px; cursor: pointer; text-align: center; }
+        .theme-toggle { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -64,253 +57,249 @@
             <button onclick="search()">🔍</button>
         </div>
         <div id="authBox">
-            <button onclick="openM('loginM')" id="loginBtnUI" style="background:var(--blue); border:none; color:white; padding:8px 15px; border-radius:5px; cursor:pointer;">Войти</button>
+            <button onclick="openM('loginM')" id="loginBtnUI" class="sub-btn" style="background:var(--blue); color:white;">Войти</button>
             <div id="userUI" style="display:none; gap:15px; align-items:center;">
-                <button onclick="openM('upM')" style="background:#222; color:white; border-radius:20px; padding:6px 15px; cursor:pointer; border:1px solid #444;">+ Создать</button>
-                <div class="avatar" id="myHeadAv" onclick="openM('profileM')" style="cursor:pointer; width:34px; height:34px; border:1px solid var(--blue);"></div>
+                <button onclick="openM('upM')" style="background:var(--surf); color:var(--text); border-radius:20px; padding:6px 15px; cursor:pointer; border:1px solid var(--border);">+ Видео</button>
+                <div class="avatar" id="myHeadAv" onclick="openM('settingsM')" style="cursor:pointer; width:34px; height:34px; border:1px solid var(--blue);"></div>
             </div>
         </div>
     </header>
 
     <div id="homePage" class="page">
-        <div id="searchChannels"></div>
+        <div id="searchChannels" style="display:none; gap:20px; overflow-x:auto; padding-bottom:15px; margin-bottom:20px; border-bottom:1px solid var(--border);"></div>
         <div class="grid" id="mainFeed"></div>
+        <center><button id="loadMoreBtn" onclick="renderMore()" class="sub-btn" style="margin-top:30px; display:none; background:var(--surf); color:var(--text); border:1px solid var(--border);">Показать еще</button></center>
     </div>
 
     <div id="videoPage" class="page">
         <div class="player-side">
             <video id="vPl" controls autoplay></video>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-                <h2 id="vT" style="margin:0;"></h2>
-                <div id="vDelPlace"></div>
-            </div>
+            <h2 id="vT" style="margin:15px 0 5px 0;"></h2>
+            <div id="vViewsText" style="color:#888; font-size:13px; margin-bottom:15px;"></div>
+            <div class="v-desc" id="vDescText"></div>
             <div class="actions">
-                <div class="btn-group">
-                    <div class="avatar" id="authorAv" style="cursor:pointer; width:40px; height:40px;"></div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="avatar" id="authorAv" style="cursor:pointer;"></div>
                     <div>
-                        <b id="vA" style="cursor:pointer; font-size:15px;"></b>
-                        <div id="vSubCount" style="font-size:12px; color:#aaa;">0 Подписчиков</div>
+                        <b id="vA" style="cursor:pointer;"></b>
+                        <div id="vSubCount" style="font-size:12px; color:#888;"></div>
                     </div>
                     <button id="subBtn" class="sub-btn">Подписаться</button>
                 </div>
-                <div class="like-box" id="likeBtn" onclick="toggleLike()">
-                    <span id="likeIcon">🤍</span> <span id="likeCount">0</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="sub-btn active" id="likeBtn" onclick="toggleLike()" style="display:flex; align-items:center; gap:8px;">
+                        <span id="likeIcon">🤍</span> <span id="likeCount">0</span>
+                    </div>
+                    <div id="vDelPlace"></div>
                 </div>
             </div>
             <div class="comm-box">
-                <h4 id="cCount" style="margin-bottom:15px;">Комментарии</h4>
+                <h4 id="cCount">0 Комментариев</h4>
                 <div class="comm-add">
-                    <input type="text" id="cInp" placeholder="Добавьте комментарий...">
-                    <button onclick="addComm()" style="background:var(--blue); border:none; padding:5px 15px; border-radius:5px; color:white; cursor:pointer;">ОК</button>
+                    <input type="text" id="cInp" placeholder="Оставьте комментарий...">
+                    <button onclick="addComm()" class="sub-btn" style="background:var(--blue); color:#fff;">ОК</button>
                 </div>
                 <div id="cList"></div>
             </div>
         </div>
-        <div class="rec-side" id="recList" style="padding-left:10px;"></div>
+        <div id="recList" class="rec-side"></div>
     </div>
 
     <div id="channelPage" class="page">
-        <div style="display:flex; align-items:center; gap:25px; padding:20px; background:#1a1a1a; border-radius:15px; margin-bottom:30px;">
-            <div class="avatar" id="chAv" style="width:100px; height:100px; font-size:40px;"></div>
+        <div style="display:flex; align-items:center; gap:20px; padding:30px; background:var(--surf); border-radius:15px; margin-bottom:20px; border:1px solid var(--border);">
+            <div class="avatar" id="chAv" style="width:80px; height:80px; font-size:30px;"></div>
             <div>
-                <h1 id="chName" style="margin:0;"></h1>
-                <p id="chSubs" style="color:#aaa; margin:5px 0 15px 0;">0 Подписчиков</p>
+                <h2 id="chName" style="margin:0;"></h2>
+                <p id="chSubs" style="color:#888; margin:5px 0 10px 0;"></p>
                 <button id="chSubBtn" class="sub-btn">Подписаться</button>
-                <button onclick="logout()" style="background:none; border:1px solid #444; color:#ff4444; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px; font-size:11px;">ВЫЙТИ</button>
             </div>
         </div>
         <div class="grid" id="chFeed"></div>
     </div>
 
     <div class="overlay" id="ovl" onclick="closeM()"></div>
-    <div id="profileM" class="modal">
-        <h3>Профиль</h3>
-        <input type="file" id="avF" accept="image/*">
-        <button class="btn-main" onclick="updateAvatar()">Сменить фото</button>
-        <button class="btn-main" onclick="openChannel(user)" style="background:#333;">Мой канал</button>
+    
+    <div id="settingsM" class="modal">
+        <h3>Настройки</h3>
+        <input type="file" id="avF" accept="image/*" style="font-size:10px;">
+        <button class="btn-main" onclick="updateAvatar()" style="margin-bottom:10px;">Сменить фото</button>
+        <button class="btn-main" onclick="openChannel(user)" style="background:var(--surf); color:var(--text); border:1px solid var(--border); margin-bottom:10px;">Мой канал</button>
+        <div class="theme-toggle">
+            <span>Светлая тема</span>
+            <input type="checkbox" id="themeCheck" onchange="toggleTheme()">
+        </div>
+        <button class="btn-main" onclick="logout()" style="background:#311; color:#f66; margin-top:20px;">Выйти</button>
     </div>
+
+    <div id="upM" class="modal">
+        <h3>Загрузка видео</h3>
+        <input type="text" id="upT" placeholder="Название (макс 50)" maxlength="50">
+        <textarea id="upD" placeholder="Описание (макс 50)" maxlength="50" rows="3"></textarea>
+        <input type="file" id="upF" accept="video/*">
+        <div id="upS" style="font-size:12px; color:var(--blue);"></div>
+        <button class="btn-main" onclick="upload()">Опубликовать</button>
+    </div>
+
     <div id="loginM" class="modal">
         <h3>Вход</h3>
-        <input type="text" id="liU" placeholder="Логин"><input type="password" id="liP" placeholder="Пароль">
+        <input type="text" id="liU" placeholder="Логин (макс 10)" maxlength="10">
+        <input type="password" id="liP" placeholder="Пароль">
         <button class="btn-main" onclick="auth('login')">Войти</button>
-        <p onclick="openM('regM')" style="text-align:center; cursor:pointer; color:var(--blue); font-size:12px; margin-top:15px;">Регистрация</p>
+        <p onclick="openM('regM')" style="cursor:pointer; color:var(--blue); font-size:12px; text-align:center; margin-top:10px;">Нет аккаунта? Регистрация</p>
     </div>
+
     <div id="regM" class="modal">
         <h3>Регистрация</h3>
-        <input type="text" id="rgU" placeholder="Логин"><input type="password" id="rgP" placeholder="Пароль">
-        <button class="btn-main" onclick="auth('reg')">Создать аккаунт</button>
-    </div>
-    <div id="upM" class="modal">
-        <h3>Загрузка</h3>
-        <input type="text" id="upT" placeholder="Название"><input type="file" id="upF" accept="video/*">
-        <div id="upS" style="font-size:12px; color:var(--blue); margin-bottom:10px;"></div>
-        <button class="btn-main" onclick="upload()">Опубликовать</button>
+        <input type="text" id="rgU" placeholder="Логин (макс 10)" maxlength="10">
+        <input type="password" id="rgP" placeholder="Пароль">
+        <button class="btn-main" onclick="auth('reg')">Создать</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, serverTimestamp, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, serverTimestamp, getDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBw5b72gU3RIBn3NUqwnJz4a7QAf-ox-hg",
-            authDomain: "rusltube-ff487.firebaseapp.com",
-            projectId: "rusltube-ff487",
-            storageBucket: "rusltube-ff487.firebasestorage.app",
-            messagingSenderId: "144869005114",
-            appId: "1:144869005114:web:764ec36730b6c8c7012203"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const firebaseConfig = { apiKey: "AIzaSyBw5b72gU3RIBn3NUqwnJz4a7QAf-ox-hg", authDomain: "rusltube-ff487.firebaseapp.com", projectId: "rusltube-ff487", storageBucket: "rusltube-ff487.firebasestorage.app", messagingSenderId: "144869005114", appId: "1:144869005114:web:764ec36730b6c8c7012203" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
         const CLOUD = "dujfw1ch1"; const PRESET = "RuslTube";
+        
         window.user = localStorage.getItem("rUser");
-        let curVid = null; let avCache = {};
+        let curVid = null; let homeVids = []; let homeStart = 0; let avCache = {};
 
-        function esc(str) { return str ? str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
-        async function getAv(name) {
-            if (avCache[name]) return avCache[name];
-            const q = query(collection(db, "users"), where("u", "==", name));
-            const snap = await getDocs(q);
-            let url = ""; snap.forEach(d => url = d.data().av || "");
-            avCache[name] = url; return url;
+        if(localStorage.getItem('lightMode') === 'true') { document.body.classList.add('light'); document.getElementById('themeCheck').checked = true; }
+        window.toggleTheme = () => { const isL = document.body.classList.toggle('light'); localStorage.setItem('lightMode', isL); };
+
+        function esc(s) { return s ? s.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
+        async function getAv(n) {
+            if(avCache[n]) return avCache[n];
+            const q = query(collection(db, "users"), where("u", "==", n));
+            const s = await getDocs(q); let url = ""; s.forEach(d => url = d.data().av || "");
+            avCache[n] = url; return url;
         }
-        function drawAv(url, name) { return url ? `<img src="${url}">` : (name ? name[0].toUpperCase() : "?"); }
+        function drawAv(u, n) { return u ? `<img src="${u}">` : (n ? n[0].toUpperCase() : "?"); }
 
         window.switchPage = (id) => {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById(id).style.display = (id === 'videoPage') ? 'grid' : 'block';
             if(id !== 'videoPage') document.getElementById('vPl').pause();
         };
-        window.goHome = () => { switchPage('homePage'); document.getElementById('searchChannels').style.display='none'; loadFeed(); };
+
+        window.goHome = () => { 
+            document.getElementById('sInp').value = "";
+            document.getElementById('searchChannels').style.display = 'none';
+            switchPage('homePage'); loadFeed(); 
+        };
         window.openM = (id) => { closeM(); document.getElementById(id).style.display='block'; document.getElementById('ovl').style.display='block'; };
         window.closeM = () => { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); document.getElementById('ovl').style.display='none'; };
 
         window.search = async () => {
-            const val = document.getElementById('sInp').value.trim().toLowerCase();
-            if (!val) return goHome();
+            const v = document.getElementById('sInp').value.trim().toLowerCase();
+            if(!v) return goHome();
             switchPage('homePage');
             const feed = document.getElementById('mainFeed'); const chBox = document.getElementById('searchChannels');
-            feed.innerHTML = "Поиск..."; chBox.innerHTML = ""; chBox.style.display = "none";
-            try {
-                const uSnap = await getDocs(collection(db, "users"));
-                let chFound = false;
-                uSnap.forEach(d => {
-                    const u = d.data();
-                    if (u.u && u.u.toLowerCase().includes(val)) {
-                        chFound = true;
-                        chBox.innerHTML += `<div class="ch-card" onclick="openChannel('${u.u}')"><div class="avatar">${drawAv(u.av, u.u)}</div><div style="font-weight:bold; font-size:12px;">@${esc(u.u)}</div></div>`;
-                    }
-                });
-                if(chFound) chBox.style.display = "flex";
-                const vSnap = await getDocs(collection(db, "videos"));
-                feed.innerHTML = ""; let vidFound = false;
-                for (const d of vSnap.docs) {
-                    const v = d.data();
-                    if (v.title && (v.title.toLowerCase().includes(val) || v.author.toLowerCase().includes(val))) {
-                        vidFound = true; const av = await getAv(v.author);
-                        feed.innerHTML += `<div class="card" onclick="openV('${d.id}')"><video src="${v.url}#t=1"></video><div class="card-info"><div class="avatar" onclick="event.stopPropagation(); openChannel('${v.author}')">${drawAv(av, v.author)}</div><div><h4>${esc(v.title)}</h4><p onclick="event.stopPropagation(); openChannel('${v.author}')">@${esc(v.author)}</p></div></div></div>`;
-                    }
+            feed.innerHTML = "Поиск..."; chBox.innerHTML = ""; chBox.style.display = 'none';
+            
+            const uS = await getDocs(collection(db, "users"));
+            let cf = false;
+            uS.forEach(d => {
+                const u = d.data().u;
+                if(u && u.toLowerCase().includes(v)) {
+                    cf = true;
+                    chBox.innerHTML += `<div class="ch-card" onclick="openChannel('${u}')"><div class="avatar">${drawAv(d.data().av, u)}</div><b style="font-size:12px; margin-top:5px;">@${esc(u)}</b></div>`;
                 }
-                if(!vidFound && !chFound) feed.innerHTML = "Ничего не найдено";
-            } catch (e) { feed.innerHTML = "Ошибка базы."; }
-        };
-
-        window.openChannel = async (name) => {
-            closeM(); switchPage('channelPage');
-            document.getElementById('chName').innerText = "@" + name;
-            const av = await getAv(name); document.getElementById('chAv').innerHTML = drawAv(av, name);
-            updateSubUI(name, 'chSubBtn', 'chSubs');
-            const q = query(collection(db, "videos"), where("author", "==", name));
-            const snap = await getDocs(q);
-            const feed = document.getElementById('chFeed'); feed.innerHTML = "";
-            snap.forEach(d => {
-                const v = d.data();
-                feed.innerHTML += `<div class="card" onclick="openV('${d.id}')"><video src="${v.url}#t=1"></video><div class="card-info" style="justify-content:space-between; width:100%;"><div><h4>${esc(v.title)}</h4></div>${v.author === user ? `<button style="background:#311; color:#f66; border:1px solid #622; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="event.stopPropagation(); deleteVid('${d.id}')">Удалить</button>` : ""}</div></div>`;
             });
-        };
+            if(cf) chBox.style.display = 'flex';
 
-        window.deleteVid = async (id) => { if(confirm("Удалить?")) { await deleteDoc(doc(db, "videos", id)); goHome(); } };
-
-        window.toggleLike = async () => {
-            if(!user) return openM('loginM');
-            const q = query(collection(db, "likes"), where("vId", "==", curVid), where("u", "==", user));
-            const snap = await getDocs(q);
-            if(snap.empty) await addDoc(collection(db, "likes"), {vId: curVid, u: user});
-            else await deleteDoc(doc(db, "likes", snap.docs[0].id));
-            updateLikeUI();
-        };
-
-        async function updateLikeUI() {
-            const q = query(collection(db, "likes"), where("vId", "==", curVid));
-            const snap = await getDocs(q);
-            document.getElementById('likeCount').innerText = snap.size;
-            let myLike = false; snap.forEach(d => { if(d.data().u === user) myLike = true; });
-            document.getElementById('likeIcon').innerText = myLike ? "❤️" : "🤍";
-            document.getElementById('likeBtn').className = myLike ? "like-box active" : "like-box";
-        }
-
-        window.addComm = async () => {
-            const t = document.getElementById('cInp').value.trim();
-            if(!user || !t) return !user ? openM('loginM') : null;
-            await addDoc(collection(db, "comments"), { vId: curVid, u: user, t, createdAt: serverTimestamp() });
-            document.getElementById('cInp').value = ""; loadComms(curVid);
-        };
-
-        async function loadComms(vId) {
-            const q = query(collection(db, "comments"), where("vId", "==", vId));
-            const snap = await getDocs(q);
-            const l = document.getElementById('cList'); l.innerHTML = "";
-            document.getElementById('cCount').innerText = `${snap.size} Комментариев`;
-            const docs = snap.docs.sort((a,b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0));
-            for (const d of docs) {
-                const c = d.data(); const av = await getAv(c.u);
-                l.innerHTML += `<div style="display:flex; gap:12px; margin-bottom:12px;"><div class="avatar" style="width:32px; height:32px;">${drawAv(av, c.u)}</div><div><b style="font-size:13px;">@${esc(c.u)}</b><p style="margin:2px 0 0; font-size:14px;">${esc(c.t)}</p></div></div>`;
+            const vS = await getDocs(collection(db, "videos"));
+            feed.innerHTML = "";
+            for(const d of vS.docs) {
+                const vi = d.data();
+                if(vi.title.toLowerCase().includes(v) || vi.author.toLowerCase().includes(v)) {
+                    const av = await getAv(vi.author);
+                    feed.innerHTML += `<div class="card" onclick="openV('${d.id}')"><video src="${vi.url}#t=1"></video><div class="card-info"><div class="avatar" onclick="event.stopPropagation(); openChannel('${vi.author}')">${drawAv(av, vi.author)}</div><div><h4>${esc(vi.title)}</h4><p onclick="event.stopPropagation(); openChannel('${vi.author}')">@${esc(vi.author)} • ${vi.views||0} просмотров</p></div></div></div>`;
+                }
             }
-        }
+        };
 
         window.openV = async (id) => {
             curVid = id; window.scrollTo(0,0);
+            await updateDoc(doc(db, "videos", id), { views: increment(1) }).catch(()=>{});
             const d = (await getDoc(doc(db, "videos", id))).data();
             switchPage('videoPage');
             document.getElementById('vPl').src = d.url;
             document.getElementById('vT').innerText = d.title;
+            document.getElementById('vDescText').innerText = d.desc || "Нет описания";
+            document.getElementById('vViewsText').innerText = `${d.views || 1} просмотров`;
             document.getElementById('vA').innerText = "@" + d.author;
+            document.getElementById('vA').onclick = () => openChannel(d.author);
             const av = await getAv(d.author);
             document.getElementById('authorAv').innerHTML = drawAv(av, d.author);
             document.getElementById('authorAv').onclick = () => openChannel(d.author);
-            document.getElementById('vA').onclick = () => openChannel(d.author);
-            document.getElementById('vDelPlace').innerHTML = (d.author === user) ? `<button style="background:#311; color:#f66; border:1px solid #622; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:12px;" onclick="deleteVid('${id}')">Удалить моё видео</button>` : "";
+            document.getElementById('vDelPlace').innerHTML = (d.author === user) ? `<button onclick="deleteVid('${id}')" style="background:none; border:none; color:red; cursor:pointer; font-size:12px;">Удалить</button>` : "";
             updateSubUI(d.author, 'subBtn', 'vSubCount'); updateLikeUI(); loadComms(id); loadRecs(id);
         };
 
-        async function loadRecs(id) {
-            const snap = await getDocs(collection(db, "videos"));
-            const r = document.getElementById('recList'); r.innerHTML = "";
-            snap.forEach(d => {
-                if(d.id === id) return;
+        window.openChannel = async (n) => {
+            closeM(); switchPage('channelPage');
+            document.getElementById('chName').innerText = "@" + n;
+            const av = await getAv(n); document.getElementById('chAv').innerHTML = drawAv(av, n);
+            updateSubUI(n, 'chSubBtn', 'chSubs');
+            const q = query(collection(db, "videos"), where("author", "==", n));
+            const s = await getDocs(q); const f = document.getElementById('chFeed'); f.innerHTML = "";
+            s.forEach(d => {
                 const v = d.data();
-                r.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:12px; cursor:pointer;" onclick="openV('${d.id}')"><video src="${v.url}#t=1" style="width:140px; aspect-ratio:16/9; border-radius:8px; object-fit:cover;"></video><div><h5 style="margin:0; font-size:13px;">${esc(v.title)}</h5><p style="font-size:11px; color:#aaa; margin:2px 0 0;">@${esc(v.author)}</p></div></div>`;
+                f.innerHTML += `<div class="card" onclick="openV('${d.id}')"><video src="${v.url}#t=1"></video><div class="card-info"><div><h4>${esc(v.title)}</h4><p>${v.views||0} просмотров</p></div></div></div>`;
             });
-        }
+        };
 
         window.loadFeed = async () => {
-            const snap = await getDocs(collection(db, "videos"));
-            const f = document.getElementById('mainFeed'); f.innerHTML = "";
-            const docs = snap.docs.sort((a,b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0));
-            for (const d of docs) {
-                const v = d.data(); const av = await getAv(v.author);
-                f.innerHTML += `<div class="card" onclick="openV('${d.id}')"><video src="${v.url}#t=1"></video><div class="card-info"><div class="avatar" onclick="event.stopPropagation(); openChannel('${v.author}')">${drawAv(av, v.author)}</div><div><h4>${esc(v.title)}</h4><p onclick="event.stopPropagation(); openChannel('${v.author}')">@${esc(v.author)}</p></div></div></div>`;
+            const s = await getDocs(collection(db, "videos"));
+            homeVids = s.docs.map(d => ({id: d.id, ...d.data()})).sort(() => Math.random() - 0.5);
+            document.getElementById('mainFeed').innerHTML = ""; homeStart = 0; renderMore();
+        };
+
+        window.renderMore = async () => {
+            const end = Math.min(homeStart + 24, homeVids.length);
+            const f = document.getElementById('mainFeed');
+            for (let i = homeStart; i < end; i++) {
+                const v = homeVids[i]; const av = await getAv(v.author);
+                f.innerHTML += `<div class="card" onclick="openV('${v.id}')"><video src="${v.url}#t=1"></video><div class="card-info"><div class="avatar" onclick="event.stopPropagation(); openChannel('${v.author}')">${drawAv(av, v.author)}</div><div><h4>${esc(v.title)}</h4><p onclick="event.stopPropagation(); openChannel('${v.author}')">@${esc(v.author)} • ${v.views || 0} просмотров</p></div></div></div>`;
             }
+            homeStart = end; document.getElementById('loadMoreBtn').style.display = (homeStart < homeVids.length) ? 'block' : 'none';
+        };
+
+        window.loadRecs = async (id) => {
+            const s = await getDocs(collection(db, "videos"));
+            let r = s.docs.filter(d => d.id !== id).map(d => ({id: d.id, ...d.data()})).sort(() => Math.random() - 0.5).slice(0, 7);
+            const l = document.getElementById('recList'); l.innerHTML = "";
+            r.forEach(v => {
+                l.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:12px; cursor:pointer;" onclick="openV('${v.id}')"><video src="${v.url}#t=1" style="width:140px; aspect-ratio:16/9; border-radius:8px; object-fit:cover;"></video><div><h5 style="margin:0; font-size:13px; line-height:1.2;">${esc(v.title)}</h5><p style="font-size:11px; color:#888; margin-top:4px;">@${esc(v.author)}</p></div></div>`;
+            });
         };
 
         window.upload = async () => {
-            const f = document.getElementById('upF').files[0]; const t = document.getElementById('upT').value.trim();
-            if(!f || !t) return alert("Заполни всё!");
+            const f = document.getElementById('upF').files[0]; const t = document.getElementById('upT').value.trim(); const d = document.getElementById('upD').value.trim();
+            if(!f || !t) return alert("Файл и название!");
             document.getElementById('upS').innerText = "Загрузка...";
             const fd = new FormData(); fd.append('file', f); fd.append('upload_preset', PRESET);
             const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/video/upload`, {method:'POST', body:fd});
             const data = await res.json();
-            await addDoc(collection(db, "videos"), { title: t, url: data.secure_url, author: user, createdAt: serverTimestamp() }); location.reload();
+            await addDoc(collection(db, "videos"), { title: t, desc: d, url: data.secure_url, author: user, views: 0, createdAt: serverTimestamp() }); location.reload();
+        };
+
+        window.auth = async (m) => {
+            const u = document.getElementById(m=='reg'?'rgU':'liU').value.trim();
+            const p = document.getElementById(m=='reg'?'rgP':'liP').value.trim();
+            if(!u || !p) return;
+            if(m=='reg') {
+                const q = query(collection(db, "users"), where("u","==",u));
+                if(!(await getDocs(q)).empty) return alert("Занят!");
+                await addDoc(collection(db, "users"), {u, p, av: ""});
+            } else {
+                const q = query(collection(db, "users"), where("u","==",u), where("p","==",p));
+                const s = await getDocs(q); if(s.empty) return alert("Ошибка!");
+            }
+            localStorage.setItem("rUser", u); location.reload();
         };
 
         window.updateAvatar = async () => {
@@ -319,24 +308,43 @@
             const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {method:'POST', body:fd});
             const data = await res.json();
             const q = query(collection(db, "users"), where("u", "==", user));
-            const snap = await getDocs(q); await updateDoc(doc(db, "users", snap.docs[0].id), { av: data.secure_url }); location.reload();
-        };
-
-        window.auth = async (m) => {
-            const u = document.getElementById(m=='reg'?'rgU':'liU').value.trim();
-            const p = document.getElementById(m=='reg'?'rgP':'liP').value.trim();
-            if(m=='reg') {
-                const q = query(collection(db, "users"), where("u","==",u));
-                if(!(await getDocs(q)).empty) return alert("Занято!");
-                await addDoc(collection(db, "users"), {u, p, av: ""});
-            } else {
-                const q = query(collection(db, "users"), where("u","==",u), where("p","==",p));
-                if((await getDocs(q)).empty) return alert("Ошибка!");
-            }
-            localStorage.setItem("rUser", u); location.reload();
+            const s = await getDocs(q); await updateDoc(doc(db, "users", s.docs[0].id), { av: data.secure_url }); location.reload();
         };
 
         window.logout = () => { localStorage.removeItem("rUser"); location.reload(); };
+
+        window.toggleLike = async () => {
+            if(!user) return openM('loginM');
+            const q = query(collection(db, "likes"), where("vId", "==", curVid), where("u", "==", user));
+            const s = await getDocs(q);
+            if(s.empty) await addDoc(collection(db, "likes"), {vId: curVid, u: user});
+            else await deleteDoc(doc(db, "likes", s.docs[0].id));
+            updateLikeUI();
+        };
+
+        async function updateLikeUI() {
+            const q = query(collection(db, "likes"), where("vId", "==", curVid));
+            const s = await getDocs(q); document.getElementById('likeCount').innerText = s.size;
+            let m = false; s.forEach(d => { if(d.data().u === user) m = true; });
+            document.getElementById('likeIcon').innerText = m ? "❤️" : "🤍";
+        }
+
+        window.addComm = async () => {
+            const t = document.getElementById('cInp').value.trim(); if(!user || !t) return !user ? openM('loginM') : null;
+            await addDoc(collection(db, "comments"), { vId: curVid, u: user, t, createdAt: serverTimestamp() });
+            document.getElementById('cInp').value = ""; loadComms(curVid);
+        };
+
+        async function loadComms(vId) {
+            const q = query(collection(db, "comments"), where("vId", "==", vId));
+            const s = await getDocs(q); const l = document.getElementById('cList'); l.innerHTML = "";
+            document.getElementById('cCount').innerText = `${s.size} Комментариев`;
+            const ds = s.docs.sort((a,b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0));
+            for (const d of ds) {
+                const c = d.data(); const av = await getAv(c.u);
+                l.innerHTML += `<div style="display:flex; gap:12px; margin-bottom:12px;"><div class="avatar" style="width:32px; height:32px; cursor:pointer;" onclick="openChannel('${c.u}')">${drawAv(av, c.u)}</div><div><b style="font-size:13px; cursor:pointer;" onclick="openChannel('${c.u}')">@${esc(c.u)}</b><p style="margin:2px 0 0; font-size:14px;">${esc(c.t)}</p></div></div>`;
+            }
+        }
 
         window.updateSubUI = async (a, bId, cId) => {
             const qS = query(collection(db, "subs"), where("to", "==", a));
@@ -358,6 +366,8 @@
             else await deleteDoc(doc(db, "subs", snap.docs[0].id));
             updateSubUI(a, bId, cId);
         };
+
+        window.deleteVid = async (id) => { if(confirm("Удалить?")) { await deleteDoc(doc(db, "videos", id)); goHome(); } };
 
         if(user) { 
             document.getElementById('loginBtnUI').style.display='none'; document.getElementById('userUI').style.display='flex';
