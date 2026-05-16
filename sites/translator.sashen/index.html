@@ -256,7 +256,7 @@
       <textarea id="input" placeholder="Введи текст..." maxlength="500" oninput="updateCount()"></textarea>
       <div class="box-footer">
         <span class="char-count"><span id="charCount">0</span> / 500</span>
-        <button class="translate-btn" onclick="translate()">Перевести</button>
+        <button class="translate-btn" onclick="doTranslate()">Перевести</button>
       </div>
     </div>
     <div class="box">
@@ -370,7 +370,7 @@ function wrongTranslate(text) {
   return out.join(' ');
 }
 
-function translate() {
+function doTranslate() {
   const input = document.getElementById('input').value.trim();
   if (!input) return;
   const out = document.getElementById('output');
@@ -404,7 +404,7 @@ function copyResult() {
 }
 
 document.getElementById('input').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); translate(); }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doTranslate(); }
 });
 </script>
 </body>
