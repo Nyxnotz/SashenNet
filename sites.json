@@ -1,57 +1,62 @@
 {
   "test.sashen": {
     "name": "Тестовый сайт",
-    "description": "Первый сайт в SashenNet.",
+    "description": "Первый сайт в SashenNet",
     "tags": ["test", "dev"]
   },
   "news.sashen": {
     "name": "Новости",
-    "description": "Новости SashenNet'а.",
+    "description": "Новости SashenNet'а",
     "tags": ["news"]
   },
   "sites.sashen": {
     "name": "Сайты",
-    "description": "Все сайты SashenNet'а.",
+    "description": "Все сайты SashenNet'а",
     "tags": ["sites"]
   },
   "about.sashen": {
     "name": "О SashenNet",
-    "description": "Что такое SashenNet и как он устроен.",
+    "description": "Что такое SashenNet и как он устроен",
     "tags": ["about"]
   },
   "popovchan.sashen": {
     "name": "ПоповЧан",
-    "description": "Анонимный имиджборд, автор сайта: SOrT.",
+    "description": "Анонимный имиджборд, автор сайта: SOrT",
     "tags": ["forum", "imageboard", "chat"]
   },
   "rusltube.sashen": {
     "name": "РуслТуб",
-    "description": "Платформа где можно выкладывать свои видео, автор сайта: SOrT.",
+    "description": "Платформа где можно выкладывать свои видео, автор сайта: SOrT",
     "tags": ["video"]
   },
   "apple.sashen": {
   "name": "Apple — iPhone 1488",
-  "description": "Официальный сайт iPhone 1488. От $1488.",
+  "description": "Официальный сайт iPhone 1488. От $1488",
   "tags": ["apple"]
   },
   "kak_posrat_chtobi_ne_bulknulo.sashen": {
   "name": "Как посрать чтобы не булькнуло",
-  "description": "Полное руководство. 4 метода. Проверено на практике.",
+  "description": "Полное руководство",
   "tags": ["guide", "tutorial"]
   },
   "geodash.sashen": {
   "name": "Geometry Dash",
-  "description": "Free geometry dash.",
+  "description": "Free geometry dash",
   "tags": ["game"]
   },
   "sashenmaps.sashen": {
   "name": "SashenMaps",
-  "description": "Карта мира.",
+  "description": "Карта мира",
   "tags": ["map", "geo"]
   },
   "wall.sashen": {
   "name": "Стена",
-  "description": "Рисовалка.",
+  "description": "Рисовалка",
   "tags": ["art", "draw"]
+  },
+  "translator.sashen": {
+  "name": "SashenTranslator",
+  "description": "Переводчик",
+  "tags": ["translator", "tools"]
   }
 }
