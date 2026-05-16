@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>SashenTranslator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1a73e8;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: #ea4335; }
+
+    .header-nav {
+      display: flex;
+      gap: 4px;
+      margin-left: 24px;
+    }
+    .header-nav a {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      color: #444;
+      text-decoration: none;
+      border-radius: 20px;
+    }
+    .header-nav a:hover { background: #f0f0f0; }
+    .header-nav a.active { color: #1a73e8; background: #e8f0fe; }
+
+    .header-right {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    /* LANG BAR */
+    .lang-bar {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      border-bottom: none;
+      overflow: hidden;
+    }
+
+    .lang-tab {
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      color: #444;
+      cursor: pointer;
+      border-right: 1px solid #e0e0e0;
+      white-space: nowrap;
+    }
+    .lang-tab:hover { background: #f5f5f5; }
+    .lang-tab.active { color: #1a73e8; border-bottom: 2px solid #1a73e8; background: #fff; font-weight: 600; }
+
+    .swap-btn {
+      margin: 0 8px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid #e0e0e0;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #1a73e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .swap-btn:hover { background: #e8f0fe; }
+
+    .lang-tabs-right {
+      display: flex;
+      flex: 1;
+    }
+
+    /* BOXES */
+    .translate-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid #e0e0e0;
+      border-radius: 0 0 8px 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .box {
+      position: relative;
+      padding: 16px;
+      border-right: 1px solid #e0e0e0;
+    }
+    .box:last-child { border-right: none; }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      border: none;
+      outline: none;
+      font-size: 1.1rem;
+      font-family: inherit;
+      resize: none;
+      color: #222;
+      line-height: 1.5;
+      background: transparent;
+    }
+
+    .output-text {
+      height: 180px;
+      font-size: 1.1rem;
+      color: #1a73e8;
+      line-height: 1.5;
+      overflow-y: auto;
+    }
+
+    .box-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .char-count { font-size: 0.72rem; color: #bbb; }
+
+    .translate-btn {
+      padding: 8px 24px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .translate-btn:hover { background: #1557b0; }
+
+    .copy-btn {
+      padding: 6px 14px;
+      background: none;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: #666;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: #f5f5f5; }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      color: #bbb;
+      text-align: center;
+    }
+
+    /* HISTORY */
+    .history {
+      margin-top: 32px;
+    }
+    .history-title {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .history-item {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .history-item:hover { border-color: #bbb; }
+    .history-langs { font-size: 0.68rem; color: #aaa; margin-bottom: 4px; }
+    .history-orig { font-size: 0.85rem; color: #444; margin-bottom: 2px; }
+    .history-trans { font-size: 0.85rem; color: #1a73e8; }
+
+    /* FOOTER */
+    footer {
+      margin-top: 48px;
+      padding: 24px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #aaa;
+    }
+    footer a { color: #aaa; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
+
+    .loading { color: #aaa; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Sashen<span>Translate</span></div>
+  <nav class="header-nav">
+    <a href="#" class="active">Текст</a>
+    <a href="#" onclick="alert('Скоро™')">Документы</a>
+    <a href="#" onclick="alert('Скоро™')">Веб-сайты</a>
+  </nav>
+</header>
+
+<main>
+  <div class="lang-bar">
+    <div class="lang-tab active" id="from-ru" onclick="setFrom('ru', this)">Русский</div>
+    <div class="lang-tab" id="from-en" onclick="setFrom('en', this)">English</div>
+    <div class="lang-tab" id="from-de" onclick="setFrom('de', this)">Deutsch</div>
+    <div class="lang-tab" id="from-fr" onclick="setFrom('fr', this)">Français</div>
+    <div class="lang-tab" id="from-es" onclick="setFrom('es', this)">Español</div>
+
+    <button class="swap-btn" onclick="swapLangs()">⇄</button>
+
+    <div class="lang-tabs-right">
+      <div class="lang-tab active" id="to-en" onclick="setTo('en', this)">English</div>
+      <div class="lang-tab" id="to-ru" onclick="setTo('ru', this)">Русский</div>
+      <div class="lang-tab" id="to-de" onclick="setTo('de', this)">Deutsch</div>
+      <div class="lang-tab" id="to-fr" onclick="setTo('fr', this)">Français</div>
+      <div class="lang-tab" id="to-es" onclick="setTo('es', this)">Español</div>
+    </div>
+  </div>
+
+  <div class="translate-area">
+    <div class="box">
+      <textarea id="input" placeholder="Введи текст..." maxlength="500" oninput="updateCount()"></textarea>
+      <div class="box-footer">
+        <span class="char-count"><span id="charCount">0</span> / 500</span>
+        <button class="translate-btn" onclick="translate()">Перевести</button>
+      </div>
+    </div>
+    <div class="box">
+      <div class="output-text" id="output">Перевод появится здесь</div>
+      <div class="box-footer">
+        <span></span>
+        <button class="copy-btn" onclick="copyResult()">Копировать</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="history">
+    <div class="history-title">Недавние переводы</div>
+    <div id="history"></div>
+  </div>
+</main>
+
+<footer>
+  <a href="#">О сервисе</a>
+  <a href="#">Конфиденциальность</a>
+  <a href="#">Условия</a>
+  <a href="#">Помощь</a>
+  <br><br>
+  &copy; 2025 SashenTranslate
+</footer>
+
+<script>
+let fromLang = 'ru';
+let toLang = 'en';
+
+const langNames = { ru:'Русский', en:'English', de:'Deutsch', fr:'Français', es:'Español' };
+
+function setFrom(lang, el) {
+  fromLang = lang;
+  document.querySelectorAll('.lang-bar .lang-tab').forEach((t,i) => { if(i<5) t.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+function setTo(lang, el) {
+  toLang = lang;
+  const tabs = document.querySelectorAll('.lang-tabs-right .lang-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function swapLangs() {
+  const inp = document.getElementById('input').value;
+  const out = document.getElementById('output').textContent;
+  document.getElementById('input').value = out === 'Перевод появится здесь' ? '' : out;
+  document.getElementById('output').textContent = inp || 'Перевод появится здесь';
+  const tmp = fromLang; fromLang = toLang; toLang = tmp;
+  updateCount();
+}
+
+function updateCount() {
+  document.getElementById('charCount').textContent = document.getElementById('input').value.length;
+}
+
+const wrongWords = {
+  'привет': ['картошка','холодильник','облако','носок','пингвин'],
+  'пока': ['бутерброд','форточка','гараж','диван'],
+  'да': ['может быть','нет','спросите у кота','в пятницу'],
+  'нет': ['да','возможно','сегодня нет','в принципе да'],
+  'спасибо': ['суп','трамвай','кефир','антенна'],
+  'как дела': ['крокодил','чайник сломался','не ваше дело','норм'],
+  'я тебя люблю': ['у меня кончился хлеб','поезд опоздал','купи молоко'],
+  'помогите': ['всё хорошо','спасибо не надо','это нормально'],
+  'хорошо': ['ужасно','терпимо','бывало и хуже'],
+  'hello': ['potato','refrigerator','sock','penguin'],
+  'hi': ['cabbage','window','garage'],
+  'yes': ['maybe','no','ask the cat'],
+  'no': ['yes','possibly','depends'],
+  'thanks': ['soup','tram','antenna'],
+  'how are you': ['crocodile','the kettle broke','none of your business'],
+  'i love you': ['i ran out of bread','buy milk','the train was late'],
+  'help': ['everything is fine','no thanks'],
+  'good': ['terrible','bearable','could be worse'],
+  'ok': ['not ok','we\'ll see','no'],
+  'bye': ['sandwich','window','garage'],
+};
+
+const transforms = {
+  en: w => { const m={'а':'a','б':'b','в':'v','г':'g','д':'d','е':'ye','ж':'zh','з':'z','и':'i','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','ы':'y','э':'e','ю':'yu','я':'ya'}; return w.split('').map(c=>m[c.toLowerCase()]||c).join('')+(Math.random()>.5?'ovsky':'ski'); },
+  de: w => w+(Math.random()>.5?'ung':'heit'),
+  fr: w => 'le '+w+(Math.random()>.5?'eur':'age'),
+  es: w => w+(Math.random()>.5?'ción':'ado'),
+  ru: w => { const e=['ость','ание','щина','ство']; return w+e[Math.floor(Math.random()*e.length)]; }
+};
+
+function wrongTranslate(text) {
+  const lower = text.toLowerCase().trim();
+  for (const [key, vals] of Object.entries(wrongWords)) {
+    if (lower.includes(key)) {
+      const r = vals[Math.floor(Math.random()*vals.length)];
+      const suffixes = ['','.',' (точно)',' (наверное)',' 🤔','!'];
+      return r.charAt(0).toUpperCase()+r.slice(1)+suffixes[Math.floor(Math.random()*suffixes.length)];
+    }
+  }
+  const words = text.trim().split(/\s+/);
+  const t = transforms[toLang] || transforms.en;
+  const foods = ['суп','хлеб','молоко','картошка','bread','soup','milk','potato','cheese'];
+  const out = words.map(w => {
+    const r = Math.random();
+    if (r<.12) return '???';
+    if (r<.22) return '[ERROR]';
+    if (r<.32) return w;
+    if (r<.45) return foods[Math.floor(Math.random()*foods.length)];
+    return t(w.replace(/[^а-яёa-z]/gi,'').toLowerCase()||w);
+  });
+  if (Math.random()>.65) out.reverse();
+  return out.join(' ');
+}
+
+function translate() {
+  const input = document.getElementById('input').value.trim();
+  if (!input) return;
+  const out = document.getElementById('output');
+  out.innerHTML = '<span class="loading">Переводим...</span>';
+  setTimeout(() => {
+    const result = wrongTranslate(input);
+    out.textContent = result;
+    addHistory(input, result);
+  }, 300 + Math.random()*700);
+}
+
+function addHistory(orig, trans) {
+  const container = document.getElementById('history');
+  const item = document.createElement('div');
+  item.className = 'history-item';
+  item.innerHTML = `<div class="history-langs">${langNames[fromLang]} → ${langNames[toLang]}</div><div class="history-orig">${orig}</div><div class="history-trans">${trans}</div>`;
+  item.onclick = () => { document.getElementById('input').value = orig; document.getElementById('output').textContent = trans; };
+  container.insertBefore(item, container.firstChild);
+  while (container.children.length > 5) container.removeChild(container.lastChild);
+}
+
+function copyResult() {
+  const text = document.getElementById('output').textContent;
+  if (text && text !== 'Перевод появится здесь') {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Скопировано!';
+      setTimeout(() => btn.textContent = 'Копировать', 1500);
+    });
+  }
+}
+
+document.getElementById('input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); translate(); }
+});
+</script>
+</body>
+</html>
