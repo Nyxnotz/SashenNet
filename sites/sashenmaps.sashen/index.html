@@ -216,11 +216,11 @@
 <!-- SEARCH POPUP -->
 <div class="search-popup" id="searchPopup">
   <div class="search-item" onclick="focusPlace(0)"><span class="search-icon">🏛️</span><div><div>Сашенбург</div><div class="search-item-sub">Столица · Главный город</div></div></div>
-  <div class="search-item" onclick="focusPlace(1)"><span class="search-icon">🏖️</span><div><div>Пляж Нулевой Ошибки</div><div class="search-item-sub">Курорт · Популярное место</div></div></div>
-  <div class="search-item" onclick="focusPlace(2)"><span class="search-icon">🏔️</span><div><div>Гора Не Существует</div><div class="search-item-sub">Природа · Высота 9999м</div></div></div>
-  <div class="search-item" onclick="focusPlace(3)"><span class="search-icon">🏪</span><div><div>Магазин Пустышка</div><div class="search-item-sub">Магазин · Закрыт навсегда</div></div></div>
-  <div class="search-item" onclick="focusPlace(4)"><span class="search-icon">🌊</span><div><div>Озеро Баг</div><div class="search-item-sub">Водоём · Существует только в чётные дни</div></div></div>
-  <div class="search-item" onclick="focusPlace(5)"><span class="search-icon">🏠</span><div><div>Район 404</div><div class="search-item-sub">Жилой район · Не найден</div></div></div>
+  <div class="search-item" onclick="focusPlace(1)"><span class="search-icon">🏖️</span><div><div>Пляж Дерьма/div><div class="search-item-sub">Курорт · Популярное место</div></div></div>
+  <div class="search-item" onclick="focusPlace(2)"><span class="search-icon">🏔️</span><div><div>Гора С Мочой</div><div class="search-item-sub">Природа · Высота 8м</div></div></div>
+  <div class="search-item" onclick="focusPlace(3)"><span class="search-icon">🏪</span><div><div>Магазин</div><div class="search-item-sub">Магазин · Скидка 20% на покупку дерьма</div></div></div>
+  <div class="search-item" onclick="focusPlace(4)"><span class="search-icon">🌊</span><div><div>Озеро Моча</div><div class="search-item-sub">Водоём · С мочой вместо воды</div></div></div>
+  <div class="search-item" onclick="focusPlace(5)"><span class="search-icon">🏠</span><div><div>Район</div><div class="search-item-sub">Жилой район</div></div></div>
 </div>
 
 <!-- CONTROLS -->
@@ -244,9 +244,9 @@
   <div class="place-stars" id="panelStars"></div>
   <div class="place-desc" id="panelDesc"></div>
   <div class="place-actions">
-    <button class="place-action" onclick="alert('Маршрут проложен. Прибытие через 847 лет.')">🗺 Маршрут</button>
-    <button class="place-action" onclick="alert('Сохранено! (нет)')">🔖 Сохранить</button>
-    <button class="place-action" onclick="alert('Отзыв принят. Спасибо ни за что.')">⭐ Отзыв</button>
+    <button class="place-action">🗺 Маршрут</button>
+    <button class="place-action">🔖 Сохранить</button>
+    <button class="place-action">⭐ Отзыв</button>
   </div>
 </div>
 
@@ -270,12 +270,12 @@ let lastMouse = { x: 0, y: 0 };
 
 // PLACES
 const places = [
-  { id: 0, x: 500, y: 300, icon: '🏛️', name: 'Сашенбург', type: 'Столица SashenNet', stars: '★★★★★', desc: 'Главный и единственный настоящий город. Население: 1 человек (разработчик). Достопримечательности: сервер, ещё один сервер.', color: '#d32f2f' },
-  { id: 1, x: 750, y: 480, icon: '🏖️', name: 'Пляж Нулевой Ошибки', type: 'Курортная зона', stars: '★★★★☆', desc: 'Место где никогда не бывает багов. Вода тёплая, Wi-Fi отличный, баги запрещены законом.', color: '#0288d1' },
-  { id: 2, x: 300, y: 150, icon: '🏔️', name: 'Гора Не Существует', type: 'Природный объект', stars: '★★★☆☆', desc: 'Высота 9999 метров. Учёные спорят о её существовании. Туристы возвращаются с пустыми фотоаппаратами.', color: '#5d4037' },
-  { id: 3, x: 620, y: 200, icon: '🏪', name: 'Магазин Пустышка', type: 'Торговля · Закрыт', stars: '★☆☆☆☆', desc: 'Работает с 00:00 до 00:01. Продаёт исключительно воздух и разочарование. Рейтинг 1 звезда — заслуженно.', color: '#f57f17' },
-  { id: 4, x: 200, y: 400, icon: '🌊', name: 'Озеро Баг', type: 'Водоём', stars: '★★★★☆', desc: 'Существует только по чётным числам. В нечётные дни на его месте — парковка. Вода пахнет консольными ошибками.', color: '#0097a7' },
-  { id: 5, x: 850, y: 300, icon: '🏠', name: 'Район 404', type: 'Жилой район', stars: '★★☆☆☆', desc: 'Официально не найден. Жители утверждают что живут здесь, но адрес не существует в базах данных.', color: '#616161' },
+  { id: 0, x: 500, y: 300, icon: '🏛️', name: 'Сашенбург', type: 'Столица', stars: '★★★★★', desc: 'Город', color: '#d32f2f' },
+  { id: 1, x: 750, y: 480, icon: '🏖️', name: 'Пляж Дерьма', type: 'Курортная зона', stars: '★★★★☆', desc: 'Все на пляже срали и зарывали свое говно в песок, оттуда и пошло такое название', color: '#0288d1' },
+  { id: 2, x: 300, y: 150, icon: '🏔️', name: 'Гора С Мочой', type: 'Природный объект', stars: '★★★☆☆', desc: 'Высота 8м, вместо снега моча', color: '#5d4037' },
+  { id: 3, x: 620, y: 200, icon: '🏪', name: 'Магазин', type: 'Торговля', stars: '★☆☆☆☆', desc: 'Магазин где есть все но скидка 20% только на дерьмо, успей купить!', color: '#f57f17' },
+  { id: 4, x: 200, y: 400, icon: '🌊', name: 'Озеро Моча', type: 'Водоём', stars: '★★★★☆', desc: 'Все ссали в озеро поэтому такое название, купаться не рекомендуется', color: '#0097a7' },
+  { id: 5, x: 850, y: 300, icon: '🏠', name: 'Район', type: 'Жилой район', stars: '★★☆☆☆', desc: 'Район', color: '#616161' },
 ];
 
 // MAP TILES (procedural fake map)
@@ -403,13 +403,13 @@ function drawMap() {
   // Area labels
   const labels = [
     {x:480, y:290, text:'Сашенбург', size:13, bold:true},
-    {x:720, y:460, text:'Пляж Нулевой Ошибки', size:10, bold:false},
-    {x:250, y:140, text:'Гора Не Существует', size:9, bold:false},
-    {x:800, y:250, text:'Район 404', size:10, bold:false},
-    {x:150, y:430, text:'Озеро Баг', size:9, bold:false, color:'#5b8fa8'},
-    {x:-100, y:310, text:'Море 500 Ошибок', size:11, bold:false, color:'#5b8fa8'},
-    {x:950, y:220, text:'Поле Undefined', size:9, bold:false},
-    {x:400, y:120, text:'Шоссе А-404', size:8, bold:false, color:'#888', italic:true},
+    {x:720, y:460, text:'Пляж Дерьма', size:10, bold:false},
+    {x:250, y:140, text:'Гора С Мочой', size:9, bold:false},
+    {x:800, y:250, text:'Район', size:10, bold:false},
+    {x:150, y:430, text:'Озеро Моча', size:9, bold:false, color:'#5b8fa8'},
+    {x:-100, y:310, text:'Море 500 Какашек', size:11, bold:false, color:'#5b8fa8'},
+    {x:950, y:220, text:'Поле', size:9, bold:false},
+    {x:400, y:120, text:'Шоссе Где Мамаша Зарабатывает', size:8, bold:false, color:'#888', italic:true},
   ];
 
   for (const l of labels) {
