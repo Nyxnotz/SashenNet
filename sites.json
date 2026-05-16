@@ -29,4 +29,9 @@
     "description": "Платформа где можно выкладывать свои видео, автор сайта: SOrT.",
     "tags": ["video"]
   }
+  "apple.sashen": {
+  "name": "Apple — iPhone 1488",
+  "description": "Официальный сайт iPhone 1488. От $1488.",
+  "tags": ["apple"]
+  }
 }
