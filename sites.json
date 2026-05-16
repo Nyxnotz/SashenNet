@@ -38,5 +38,10 @@
   "name": "Как посрать чтобы не булькнуло",
   "description": "Полное руководство. 4 метода. Проверено на практике.",
   "tags": ["guide", "tutorial"]
+  },
+  "geodash.sashen": {
+  "name": "GEOMETRY SMASH",
+  "description": "Free geometry dash",
+  "tags": ["game"]
   }
 }
