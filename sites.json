@@ -48,5 +48,10 @@
   "name": "SashenMaps",
   "description": "Карта мира.",
   "tags": ["map", "geo"]
+  },
+  "wall.sashen": {
+  "name": "Стена",
+  "description": "Рисовалка.",
+  "tags": ["art", "draw"]
   }
 }
