@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple — iPhone 1488</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    /* NAV */
+    nav {
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 0 24px;
+      height: 44px;
+      font-size: 0.75rem;
+      color: #aaa;
+      border-bottom: 1px solid #222;
+    }
+    nav a { color: #aaa; text-decoration: none; }
+    nav a:hover { color: #fff; }
+    .nav-logo { font-size: 1.1rem; color: #fff; }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: linear-gradient(180deg, #000 0%, #0a0a1a 50%, #000 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,80,255,0.15) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: #888;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    .hero-price {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 24px;
+    }
+    .hero-price span { color: #f56300; font-weight: bold; }
+
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+
+    .btn-primary {
+      background: #0071e3;
+      color: #fff;
+      border: none;
+      border-radius: 980px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: #0077ed; }
+
+    .btn-secondary {
+      background: transparent;
+      color: #0071e3;
+      border: none;
+      border-radius: 980px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-secondary:hover { text-decoration: underline; }
+
+    /* PHONE SVG */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .phone {
+      width: 160px;
+      position: relative;
+    }
+
+    /* SPECS STRIP */
+    .specs-strip {
+      background: #111;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+    }
+
+    .spec {
+      padding: 40px 48px;
+      text-align: center;
+      border-right: 1px solid #222;
+    }
+    .spec:last-child { border-right: none; }
+
+    .spec-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff, #888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .spec-label {
+      font-size: 0.78rem;
+      color: #555;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2px;
+      background: #222;
+      margin: 2px 0;
+    }
+
+    .feature {
+      background: #111;
+      padding: 56px 48px;
+    }
+
+    .feature-icon { font-size: 2rem; margin-bottom: 16px; }
+    .feature-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .feature-desc { font-size: 0.88rem; color: #888; line-height: 1.6; }
+    .feature-highlight { color: #0071e3; }
+
+    /* COLORS */
+    .colors-section {
+      text-align: center;
+      padding: 80px 20px;
+      background: #000;
+    }
+
+    .colors-title { font-size: 2rem; font-weight: 600; margin-bottom: 8px; }
+    .colors-sub { color: #888; font-size: 0.9rem; margin-bottom: 32px; }
+
+    .color-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .dot:hover { border-color: #fff; }
+
+    /* BUY */
+    .buy-section {
+      background: #111;
+      text-align: center;
+      padding: 80px 20px;
+      border-top: 1px solid #222;
+    }
+
+    .buy-title { font-size: 2rem; font-weight: 600; margin-bottom: 8px; }
+    .buy-sub { color: #888; font-size: 0.9rem; margin-bottom: 8px; }
+    .buy-price { font-size: 1.1rem; color: #f56300; font-weight: bold; margin-bottom: 24px; }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      background: #000;
+      border-top: 1px solid #222;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .disclaimer a { color: #555; text-decoration: none; }
+
+    /* FOOTER */
+    footer {
+      background: #111;
+      border-top: 1px solid #222;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #555;
+    }
+    footer a { color: #555; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">&#63743;</span>
+  <a href="?site=apple.sashen">Store</a>
+  <a href="?site=apple.sashen">Mac</a>
+  <a href="?site=apple.sashen">iPad</a>
+  <a href="?site=apple.sashen" style="color:#fff">iPhone</a>
+  <a href="?site=apple.sashen">Watch</a>
+  <a href="?site=apple.sashen">Support</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Только что вышел</div>
+  <div class="hero-title">iPhone 1488</div>
+  <div class="hero-sub">Величайший iPhone в истории вселенной. И соседней.</div>
+  <div class="hero-price">От <span>$1 488</span> или $416/мес. в течение 12 лет.</div>
+  <div class="hero-btns">
+    <a href="#buy" class="btn-primary">Купить</a>
+    <a href="#specs" class="btn-secondary">Подробнее ↓</a>
+  </div>
+
+  <div class="phone-wrap">
+    <svg class="phone" viewBox="0 0 160 320" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="5" width="150" height="310" rx="28" ry="28" fill="#1a1a1a" stroke="#444" stroke-width="1.5"/>
+      <rect x="12" y="12" width="136" height="296" rx="22" ry="22" fill="#000"/>
+      <!-- screen -->
+      <rect x="14" y="14" width="132" height="292" rx="20" ry="20" fill="#0a0a2a"/>
+      <!-- dynamic island -->
+      <rect x="52" y="22" width="56" height="16" rx="8" fill="#000"/>
+      <!-- screen content -->
+      <text x="80" y="100" text-anchor="middle" fill="#fff" font-size="9" font-family="Arial">iOS 300 отсоси у тракториста</text>
+      <text x="80" y="118" text-anchor="middle" fill="#888" font-size="7" font-family="Arial">Суббота, 0 мая</text>
+      <text x="80" y="148" text-anchor="middle" fill="#fff" font-size="28" font-family="Arial" font-weight="bold">25:87</text>
+      <!-- battery indicator -->
+      <rect x="30" y="170" width="100" height="8" rx="4" fill="#222"/>
+      <rect x="30" y="170" width="97" height="8" rx="4" fill="#34d399"/>
+      <text x="80" y="188" text-anchor="middle" fill="#34d399" font-size="6" font-family="Arial">97% — заряжался 3 года</text>
+      <!-- app icons -->
+      <rect x="28" y="200" width="22" height="22" rx="5" fill="#0071e3"/>
+      <rect x="56" y="200" width="22" height="22" rx="5" fill="#f56300"/>
+      <rect x="84" y="200" width="22" height="22" rx="5" fill="#34d399"/>
+      <rect x="112" y="200" width="22" height="22" rx="5" fill="#a78bfa"/>
+      <rect x="28" y="228" width="22" height="22" rx="5" fill="#f87171"/>
+      <rect x="56" y="228" width="22" height="22" rx="5" fill="#fbbf24"/>
+      <rect x="84" y="228" width="22" height="22" rx="5" fill="#60a5fa"/>
+      <rect x="112" y="228" width="22" height="22" rx="5" fill="#f56300"/>
+      <!-- home bar -->
+      <rect x="55" y="290" width="50" height="4" rx="2" fill="#444"/>
+      <!-- side buttons -->
+      <rect x="0" y="90" width="4" height="30" rx="2" fill="#333"/>
+      <rect x="0" y="130" width="4" height="50" rx="2" fill="#333"/>
+      <rect x="156" y="110" width="4" height="60" rx="2" fill="#333"/>
+    </svg>
+  </div>
+</div>
+
+<!-- SPECS -->
+<div class="specs-strip" id="specs">
+  <div class="spec">
+    <div class="spec-value">1488</div>
+    <div class="spec-label">Поколение iPhone</div>
+  </div>
+  <div class="spec">
+    <div class="spec-value">A500</div>
+    <div class="spec-label">Чип "Омега Pro Max Ultra"</div>
+  </div>
+  <div class="spec">
+    <div class="spec-value">999MP</div>
+    <div class="spec-label">Камера (на каждой стороне)</div>
+  </div>
+  <div class="spec">
+    <div class="spec-value">∞</div>
+    <div class="spec-label">Батарея (часов)</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature">
+    <div class="feature-icon">📷</div>
+    <div class="feature-title">999 МП. 47 камер.</div>
+    <div class="feature-desc">На этот раз мы добавили камеру на каждую поверхность телефона. Включая экран. И вашу ладонь каким-то образом тоже. <span class="feature-highlight">ProRAW, ProRes, ProЧтоУгодно.</span></div>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">⚡</div>
+    <div class="feature-title">Чип A1488 Omega.</div>
+    <div class="feature-desc">В 1488 раз быстрее чем iPhone 1. В 3 раза быстрее здравого смысла. Даунский движок обрабатывает <span class="feature-highlight">1488 триллионов операций</span> в секунду — большинство из них бесполезны.</div>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">🔋</div>
+    <div class="feature-title">Батарея на всю жизнь.</div>
+    <div class="feature-desc">Новая батарея Infinite Cell™ работает <span class="feature-highlight">до 847 часов</span> при активном использовании. При выключенном экране — вечно. Заряжается за 0.3 секунды.</div>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">🌡️</div>
+    <div class="feature-title">iOS 300 отсоси у тракториста.</div>
+    <div class="feature-desc">Умнее вас. Самостоятельно заказывает еду, платит налоги и пишет сообщения маме. <span class="feature-highlight">Apple Intelligence Ultra Pro</span> знает что вы хотите ещё до того как вы это подумали.</div>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">💎</div>
+    <div class="feature-title">Титан. Платина. Адамантий.</div>
+    <div class="feature-desc">Корпус из нового материала <span class="feature-highlight">AppleSteel™</span> — прочнее алмаза, легче воздуха. Дисплей Super Retina XDR Pro Max Infinity — 120 000 нит яркости. Виден из космоса.</div>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">📡</div>
+    <div class="feature-title">12G. И немного 13G.</div>
+    <div class="feature-desc">Поддержка 12G позволяет скачать весь интернет за <span class="feature-highlight">4 секунды</span>. Зачем — неизвестно, но это впечатляет на презентации.</div>
+  </div>
+</div>
+
+<!-- COLORS -->
+<div class="colors-section">
+  <div class="colors-title">Шесть новых цветов.</div>
+  <div class="colors-sub">Включая "Невидимый Белый" и "Слишком Чёрный".</div>
+  <div class="color-dots">
+    <div class="dot" style="background:#e8e0d5" title="Звёздный свет"></div>
+    <div class="dot" style="background:#1a1a1a" title="Слишком Чёрный"></div>
+    <div class="dot" style="background:#6b8fae" title="Синий Депрессия"></div>
+    <div class="dot" style="background:#c06b4a" title="Оранжевый Долг"></div>
+    <div class="dot" style="background:#7a9e7e" title="Зелёный Ипотека"></div>
+    <div class="dot" style="background:linear-gradient(135deg,#fff,#fff)" title="Невидимый Белый" style="border:1px solid #333"></div>
+  </div>
+</div>
+
+<!-- BUY -->
+<div class="buy-section" id="buy">
+  <div class="buy-title">iPhone 1488</div>
+  <div class="buy-sub">128 ПБ хранилища · iOS 300 · 47 камер</div>
+  <div class="buy-price">От $1 488</div>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="btn-primary" onclick="alert('Поздравляем! Вы потратили воображаемые $4999. iPhone 500 прибудет через 47 лет.'); return false;">Купить</a>
+    <a href="#" class="btn-secondary" onclick="alert('Рассрочка: $416/мес × 144 месяца = $59 904. Выгодно!'); return false;">Рассрочка</a>
+  </div>
+</div>
+
+<footer>
+  Copyright &copy; 2275 Apple Inc. Все права защищены на 280 лет вперёд. |
+  <a href="?site=apple.sashen">Конфиденциальность</a> |
+  <a href="?site=apple.sashen">Условия использования</a> |
+  <a href="?site=apple.sashen">Карта сайта</a>
+</footer>
+
+</body>
+</html>
