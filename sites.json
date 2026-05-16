@@ -43,5 +43,10 @@
   "name": "Geometry Dash",
   "description": "Free geometry dash",
   "tags": ["game"]
+  },
+  "sashenmaps.sashen": {
+  "name": "SashenMaps",
+  "description": "Карта мира.",
+  "tags": ["map", "geo"]
   }
 }
