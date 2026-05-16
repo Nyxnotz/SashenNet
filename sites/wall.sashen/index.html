@@ -2,428 +2,86 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Стена</title>
+  <title>404 — SashenNet</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #111;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      height: 100vh;
-      overflow: hidden;
+      background-color: #0a0a0a;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,40,0,0.15) 2px, rgba(0,40,0,0.15) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,60,0,0.07) 40px, rgba(0,60,0,0.07) 41px),
+        radial-gradient(ellipse at 20% 50%, rgba(0,60,20,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(0,40,10,0.25) 0%, transparent 60%);
+      color: #ccc;
       display: flex;
       flex-direction: column;
-    }
-
-    /* TOOLBAR */
-    .toolbar {
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-      flex-wrap: wrap;
-    }
-
-    .toolbar-title {
-      font-size: 0.85rem;
-      color: #666;
-      margin-right: 8px;
-      white-space: nowrap;
-    }
-
-    .colors {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-
-    .color-swatch {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: border-color 0.15s, transform 0.1s;
-      flex-shrink: 0;
-    }
-    .color-swatch:hover { transform: scale(1.2); }
-    .color-swatch.active { border-color: #fff; }
-
-    .color-custom {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid #444;
-      cursor: pointer;
-      background: linear-gradient(135deg, #f00, #0f0, #00f);
-      flex-shrink: 0;
-    }
-
-    .sep { width: 1px; height: 24px; background: #2a2a2a; flex-shrink: 0; }
-
-    .sizes {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .size-btn {
-      background: none;
-      border: 2px solid #333;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      transition: border-color 0.15s;
-    }
-    .size-btn:hover { border-color: #888; }
-    .size-btn.active { border-color: #fff; }
-    .size-dot { background: #fff; border-radius: 50%; }
-
-    .tool-btn {
-      padding: 4px 12px;
-      background: #2a2a2a;
-      border: 1px solid #333;
-      color: #aaa;
-      font-size: 0.8rem;
-      cursor: pointer;
-      border-radius: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .tool-btn:hover { background: #333; color: #fff; }
-    .tool-btn.active { background: #444; color: #fff; border-color: #666; }
-
-    .visitors {
-      margin-left: auto;
-      font-size: 0.72rem;
-      color: #444;
-      white-space: nowrap;
+      text-align: center;
     }
 
-    /* CANVAS AREA */
-    .canvas-wrap {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      cursor: crosshair;
+    a.logo {
+      font-size: 3rem;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .logo span:nth-child(1)  { color: #a78bfa; }
+    .logo span:nth-child(2)  { color: #60a5fa; }
+    .logo span:nth-child(3)  { color: #34d399; }
+    .logo span:nth-child(4)  { color: #fbbf24; }
+    .logo span:nth-child(5)  { color: #f87171; }
+    .logo span:nth-child(6)  { color: #a78bfa; }
+    .logo span:nth-child(7)  { color: #60a5fa; }
+    .logo span:nth-child(8)  { color: #34d399; }
+    .logo span:nth-child(9)  { color: #fbbf24; }
+
+    .code {
+      font-size: 6rem;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      color: #222;
+      line-height: 1;
+      margin-bottom: 12px;
+      letter-spacing: -4px;
     }
 
-    #wall {
-      position: absolute;
-      top: 0; left: 0;
-      touch-action: none;
-    }
-
-    /* HINT */
-    .hint {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
+    .title {
+      font-size: 1.1rem;
       color: #555;
-      font-size: 0.68rem;
-      padding: 5px 14px;
-      border-radius: 20px;
-      pointer-events: none;
-      white-space: nowrap;
+      margin-bottom: 8px;
     }
 
-    /* COLOR PICKER POPUP */
-    #colorPicker {
-      position: absolute;
-      top: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 12px;
-      z-index: 200;
-      display: none;
+    .desc {
+      font-size: 0.8rem;
+      color: #333;
+      margin-bottom: 32px;
     }
-    #colorPicker.show { display: block; }
-    #colorPicker input[type=color] {
-      width: 120px;
-      height: 40px;
-      border: none;
-      cursor: pointer;
-      background: none;
+
+    a.back {
+      font-size: 0.85rem;
+      color: #8ab4f8;
+      text-decoration: none;
     }
-    #colorPicker label { font-size: 0.75rem; color: #888; display: block; margin-bottom: 6px; }
+    a.back:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-<div class="toolbar">
-  <span class="toolbar-title">🎨 Wall.sashen</span>
+  <a class="logo" href="../../index.html">
+    <span>S</span><span>a</span><span>s</span><span>h</span><span>e</span><span>n</span><span>N</span><span>e</span><span>t</span>
+  </a>
 
-  <div class="colors" id="colorPalette"></div>
+  <div class="code">404</div>
+  <div class="title">Ничего не найдено</div>
+  <div class="desc">Этот сайт не существует в сети SashenNet.</div>
+  <a class="back" href="../../index.html">← Вернуться на главную</a>
 
-  <div class="color-custom" title="Свой цвет" onclick="toggleColorPicker()"></div>
-
-  <div class="sep"></div>
-
-  <div class="sizes">
-    <button class="size-btn active" onclick="setSize(3, this)" style="width:20px;height:20px"><div class="size-dot" style="width:4px;height:4px"></div></button>
-    <button class="size-btn" onclick="setSize(8, this)" style="width:24px;height:24px"><div class="size-dot" style="width:9px;height:9px"></div></button>
-    <button class="size-btn" onclick="setSize(18, this)" style="width:30px;height:30px"><div class="size-dot" style="width:18px;height:18px"></div></button>
-    <button class="size-btn" onclick="setSize(36, this)" style="width:36px;height:36px"><div class="size-dot" style="width:30px;height:30px"></div></button>
-  </div>
-
-  <div class="sep"></div>
-
-  <button class="tool-btn active" id="btnDraw" onclick="setTool('draw')">✏️ Рисовать</button>
-  <button class="tool-btn" id="btnErase" onclick="setTool('erase')">⬜ Ластик</button>
-  <button class="tool-btn" onclick="clearMyStrokes()">🗑 Очистить моё</button>
-  <button class="tool-btn" onclick="saveImage()">💾 Скачать</button>
-
-  <span class="visitors" id="visitCount"></span>
-</div>
-
-<div class="canvas-wrap" id="canvasWrap">
-  <canvas id="wall"></canvas>
-</div>
-
-<div id="colorPicker">
-  <label>Выбери цвет</label>
-  <input type="color" id="customColor" value="#ff00ff" oninput="setCustomColor(this.value)">
-</div>
-
-<script>
-const canvas = document.getElementById('wall');
-const ctx = canvas.getContext('2d');
-const wrap = document.getElementById('canvasWrap');
-
-let brushColor = '#ff4444';
-let brushSize = 3;
-let tool = 'draw';
-let drawing = false;
-let lastX = 0, lastY = 0;
-
-// Resize canvas
-function resize() {
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  canvas.width = wrap.clientWidth;
-  canvas.height = wrap.clientHeight;
-  drawBackground();
-  ctx.putImageData(imageData, 0, 0);
-  loadStrokes();
-}
-
-function drawBackground() {
-  // Concrete wall texture
-  ctx.fillStyle = '#1c1c1c';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Brick pattern
-  const bw = 60, bh = 24;
-  for (let row = 0; row * bh < canvas.height + bh; row++) {
-    const offset = (row % 2) * (bw / 2);
-    for (let col = -1; col * bw < canvas.width + bw; col++) {
-      const x = col * bw + offset;
-      const y = row * bh;
-      ctx.fillStyle = row % 3 === 0 ? '#1e1e1e' : (row % 3 === 1 ? '#1a1a1a' : '#1d1d1d');
-      ctx.fillRect(x + 1, y + 1, bw - 2, bh - 2);
-      ctx.strokeStyle = '#151515';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, y, bw, bh);
-    }
-  }
-}
-
-// STROKES stored in sessionStorage (shared look via localStorage with timestamp)
-const STORAGE_KEY = 'wall_sashen_strokes';
-
-function saveStroke(stroke) {
-  try {
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    // Keep last 500 strokes
-    existing.push(stroke);
-    if (existing.length > 500) existing.splice(0, existing.length - 500);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-  } catch(e) {}
-}
-
-function loadStrokes() {
-  try {
-    const strokes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    for (const s of strokes) drawStroke(s);
-  } catch(e) {}
-}
-
-function drawStroke(s) {
-  ctx.save();
-  ctx.globalCompositeOperation = s.erase ? 'destination-out' : 'source-over';
-  ctx.strokeStyle = s.color;
-  ctx.lineWidth = s.size;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.beginPath();
-  if (s.points.length === 1) {
-    ctx.arc(s.points[0].x, s.points[0].y, s.size/2, 0, Math.PI*2);
-    ctx.fillStyle = s.color;
-    ctx.fill();
-  } else {
-    ctx.moveTo(s.points[0].x, s.points[0].y);
-    for (let i = 1; i < s.points.length; i++) {
-      ctx.lineTo(s.points[i].x, s.points[i].y);
-    }
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-// Current stroke buffer
-let currentStroke = null;
-
-function getPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  if (e.touches) {
-    return {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top
-    };
-  }
-  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-}
-
-function startDraw(e) {
-  drawing = true;
-  const pos = getPos(e);
-  currentStroke = {
-    color: tool === 'erase' ? '#000' : brushColor,
-    size: tool === 'erase' ? brushSize * 4 : brushSize,
-    erase: tool === 'erase',
-    points: [pos]
-  };
-  drawStroke(currentStroke);
-}
-
-function doDraw(e) {
-  if (!drawing) return;
-  e.preventDefault();
-  const pos = getPos(e);
-  currentStroke.points.push(pos);
-
-  // Draw only the new segment
-  ctx.save();
-  ctx.globalCompositeOperation = currentStroke.erase ? 'destination-out' : 'source-over';
-  ctx.strokeStyle = currentStroke.color;
-  ctx.lineWidth = currentStroke.size;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  const pts = currentStroke.points;
-  ctx.beginPath();
-  ctx.moveTo(pts[pts.length-2].x, pts[pts.length-2].y);
-  ctx.lineTo(pos.x, pos.y);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function endDraw() {
-  if (!drawing) return;
-  drawing = false;
-  if (currentStroke && currentStroke.points.length > 0) {
-    saveStroke(currentStroke);
-  }
-  currentStroke = null;
-}
-
-canvas.addEventListener('mousedown', startDraw);
-canvas.addEventListener('mousemove', doDraw);
-canvas.addEventListener('mouseup', endDraw);
-canvas.addEventListener('mouseleave', endDraw);
-canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(e); }, {passive:false});
-canvas.addEventListener('touchmove', e => { e.preventDefault(); doDraw(e); }, {passive:false});
-canvas.addEventListener('touchend', endDraw);
-
-// COLORS
-const palette = [
-  '#ff4444', '#ff8800', '#ffdd00', '#44dd44',
-  '#44aaff', '#aa44ff', '#ff44aa', '#ffffff',
-  '#aaaaaa', '#555555', '#000000', '#00ffcc',
-];
-
-function buildPalette() {
-  const el = document.getElementById('colorPalette');
-  for (const c of palette) {
-    const div = document.createElement('div');
-    div.className = 'color-swatch' + (c === brushColor ? ' active' : '');
-    div.style.background = c;
-    div.title = c;
-    div.onclick = () => {
-      brushColor = c;
-      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-      div.classList.add('active');
-      setTool('draw');
-    };
-    el.appendChild(div);
-  }
-}
-
-function setSize(s, btn) {
-  brushSize = s;
-  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function setTool(t) {
-  tool = t;
-  document.getElementById('btnDraw').classList.toggle('active', t === 'draw');
-  document.getElementById('btnErase').classList.toggle('active', t === 'erase');
-  canvas.style.cursor = t === 'erase' ? 'cell' : 'crosshair';
-}
-
-function toggleColorPicker() {
-  document.getElementById('colorPicker').classList.toggle('show');
-}
-
-function setCustomColor(c) {
-  brushColor = c;
-  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-  setTool('draw');
-}
-
-function clearMyStrokes() {
-  if (!confirm('Очистить всю стену?')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  drawBackground();
-}
-
-function saveImage() {
-  const link = document.createElement('a');
-  link.download = 'wall_sashen.png';
-  link.href = canvas.toDataURL();
-  link.click();
-}
-
-// Visit counter (fake but fun)
-function updateVisitors() {
-  const base = parseInt(localStorage.getItem('wall_visits') || '41');
-  const count = base + Math.floor(Math.random() * 3);
-  localStorage.setItem('wall_visits', count);
-  document.getElementById('visitCount').textContent = count + ' человек рисовали здесь';
-}
-
-// Init
-window.addEventListener('resize', resize);
-buildPalette();
-resize();
-updateVisitors();
-
-// Close color picker on outside click
-document.addEventListener('click', e => {
-  if (!e.target.closest('#colorPicker') && !e.target.closest('.color-custom')) {
-    document.getElementById('colorPicker').classList.remove('show');
-  }
-});
-</script>
 </body>
 </html>
