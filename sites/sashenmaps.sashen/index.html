@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>SashenMaps</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Google Sans', Arial, sans-serif;
+      background: #e8e0d8;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo {
+      background: #fff;
+      border-radius: 24px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo span:nth-child(1) { color: #4285f4; }
+    .logo span:nth-child(2) { color: #ea4335; }
+    .logo span:nth-child(3) { color: #fbbc05; }
+    .logo span:nth-child(4) { color: #4285f4; }
+    .logo span:nth-child(5) { color: #34a853; }
+    .logo span:nth-child(6) { color: #ea4335; }
+    .logo span:nth-child(7) { color: #333; }
+    .logo span:nth-child(8) { color: #4285f4; }
+    .logo span:nth-child(9) { color: #ea4335; }
+    .logo span:nth-child(10) { color: #fbbc05; }
+    .logo span:nth-child(11) { color: #34a853; }
+
+    .search-bar {
+      background: #fff;
+      border-radius: 24px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      width: 300px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* CONTROLS */
+    .controls {
+      position: absolute;
+      bottom: 120px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ctrl-btn {
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      border: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+    }
+    .ctrl-btn:hover { background: #f5f5f5; }
+    .ctrl-sep { height: 1px; background: #eee; }
+
+    /* BOTTOM INFO */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      background: rgba(255,255,255,0.92);
+      padding: 6px 12px;
+      font-size: 0.65rem;
+      color: #777;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* PLACE PANEL */
+    .place-panel {
+      position: absolute;
+      bottom: 30px;
+      left: 10px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      width: 300px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      z-index: 100;
+      display: none;
+    }
+    .place-panel.show { display: block; }
+    .place-name { font-size: 1.1rem; font-weight: 700; color: #222; margin-bottom: 2px; }
+    .place-type { font-size: 0.78rem; color: #777; margin-bottom: 8px; }
+    .place-stars { color: #fbbc05; font-size: 0.85rem; margin-bottom: 8px; }
+    .place-desc { font-size: 0.82rem; color: #555; line-height: 1.5; margin-bottom: 10px; }
+    .place-close {
+      position: absolute;
+      top: 10px; right: 12px;
+      background: none; border: none;
+      font-size: 1rem; color: #aaa; cursor: pointer;
+    }
+    .place-actions { display: flex; gap: 8px; }
+    .place-action {
+      flex: 1;
+      padding: 7px;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      background: none;
+      font-size: 0.75rem;
+      color: #1a73e8;
+      cursor: pointer;
+      text-align: center;
+    }
+    .place-action:hover { background: #f0f6ff; }
+
+    /* MAP CANVAS */
+    #map {
+      width: 100vw;
+      height: 100vh;
+      cursor: grab;
+      display: block;
+    }
+    #map:active { cursor: grabbing; }
+
+    /* SCALE */
+    .scale-bar {
+      position: absolute;
+      bottom: 38px;
+      right: 60px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .scale-line {
+      width: 80px;
+      height: 4px;
+      border: 2px solid #555;
+      border-top: none;
+      background: transparent;
+    }
+    .scale-text { font-size: 0.65rem; color: #555; }
+
+    /* SEARCH POPUP */
+    .search-popup {
+      display: none;
+      position: absolute;
+      top: 58px;
+      left: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      width: 340px;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .search-popup.show { display: block; }
+    .search-item {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .search-item:hover { background: #f5f5f5; }
+    .search-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .search-item-sub { font-size: 0.72rem; color: #888; }
+  </style>
+</head>
+<body>
+
+<canvas id="map"></canvas>
+
+<!-- TOP -->
+<div class="topbar">
+  <div class="logo">
+    <span>S</span><span>a</span><span>s</span><span>h</span><span>e</span><span>n</span><span>M</span><span>a</span><span>p</span><span>s</span>
+  </div>
+  <input class="search-bar" id="searchInput" placeholder="🔍 Search SashenMaps..." readonly onclick="toggleSearch()">
+</div>
+
+<!-- SEARCH POPUP -->
+<div class="search-popup" id="searchPopup">
+  <div class="search-item" onclick="focusPlace(0)"><span class="search-icon">🏛️</span><div><div>Сашенбург</div><div class="search-item-sub">Столица · Главный город</div></div></div>
+  <div class="search-item" onclick="focusPlace(1)"><span class="search-icon">🏖️</span><div><div>Пляж Нулевой Ошибки</div><div class="search-item-sub">Курорт · Популярное место</div></div></div>
+  <div class="search-item" onclick="focusPlace(2)"><span class="search-icon">🏔️</span><div><div>Гора Не Существует</div><div class="search-item-sub">Природа · Высота 9999м</div></div></div>
+  <div class="search-item" onclick="focusPlace(3)"><span class="search-icon">🏪</span><div><div>Магазин Пустышка</div><div class="search-item-sub">Магазин · Закрыт навсегда</div></div></div>
+  <div class="search-item" onclick="focusPlace(4)"><span class="search-icon">🌊</span><div><div>Озеро Баг</div><div class="search-item-sub">Водоём · Существует только в чётные дни</div></div></div>
+  <div class="search-item" onclick="focusPlace(5)"><span class="search-icon">🏠</span><div><div>Район 404</div><div class="search-item-sub">Жилой район · Не найден</div></div></div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="ctrl-btn" onclick="zoom(1.3)">+</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn" onclick="zoom(0.77)">−</button>
+</div>
+
+<!-- SCALE -->
+<div class="scale-bar">
+  <div class="scale-line"></div>
+  <div class="scale-text" id="scaleText">500 км</div>
+</div>
+
+<!-- PLACE PANEL -->
+<div class="place-panel" id="placePanel">
+  <button class="place-close" onclick="closePanel()">✕</button>
+  <div class="place-name" id="panelName"></div>
+  <div class="place-type" id="panelType"></div>
+  <div class="place-stars" id="panelStars"></div>
+  <div class="place-desc" id="panelDesc"></div>
+  <div class="place-actions">
+    <button class="place-action" onclick="alert('Маршрут проложен. Прибытие через 847 лет.')">🗺 Маршрут</button>
+    <button class="place-action" onclick="alert('Сохранено! (нет)')">🔖 Сохранить</button>
+    <button class="place-action" onclick="alert('Отзыв принят. Спасибо ни за что.')">⭐ Отзыв</button>
+  </div>
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom-bar">
+  <span>© 2025 SashenMaps · Данные могут быть выдуманы</span>
+  <span id="coords">55.7558° N, 37.6173° E</span>
+</div>
+
+<script>
+const canvas = document.getElementById('map');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Camera
+let cam = { x: 0, y: 0, zoom: 1 };
+let dragging = false;
+let lastMouse = { x: 0, y: 0 };
+
+// PLACES
+const places = [
+  { id: 0, x: 500, y: 300, icon: '🏛️', name: 'Сашенбург', type: 'Столица SashenNet', stars: '★★★★★', desc: 'Главный и единственный настоящий город. Население: 1 человек (разработчик). Достопримечательности: сервер, ещё один сервер.', color: '#d32f2f' },
+  { id: 1, x: 750, y: 480, icon: '🏖️', name: 'Пляж Нулевой Ошибки', type: 'Курортная зона', stars: '★★★★☆', desc: 'Место где никогда не бывает багов. Вода тёплая, Wi-Fi отличный, баги запрещены законом.', color: '#0288d1' },
+  { id: 2, x: 300, y: 150, icon: '🏔️', name: 'Гора Не Существует', type: 'Природный объект', stars: '★★★☆☆', desc: 'Высота 9999 метров. Учёные спорят о её существовании. Туристы возвращаются с пустыми фотоаппаратами.', color: '#5d4037' },
+  { id: 3, x: 620, y: 200, icon: '🏪', name: 'Магазин Пустышка', type: 'Торговля · Закрыт', stars: '★☆☆☆☆', desc: 'Работает с 00:00 до 00:01. Продаёт исключительно воздух и разочарование. Рейтинг 1 звезда — заслуженно.', color: '#f57f17' },
+  { id: 4, x: 200, y: 400, icon: '🌊', name: 'Озеро Баг', type: 'Водоём', stars: '★★★★☆', desc: 'Существует только по чётным числам. В нечётные дни на его месте — парковка. Вода пахнет консольными ошибками.', color: '#0097a7' },
+  { id: 5, x: 850, y: 300, icon: '🏠', name: 'Район 404', type: 'Жилой район', stars: '★★☆☆☆', desc: 'Официально не найден. Жители утверждают что живут здесь, но адрес не существует в базах данных.', color: '#616161' },
+];
+
+// MAP TILES (procedural fake map)
+function drawMap() {
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.save();
+  ctx.translate(W/2, H/2);
+  ctx.scale(cam.zoom, cam.zoom);
+  ctx.translate(-W/2 + cam.x, -H/2 + cam.y);
+
+  // Base land
+  ctx.fillStyle = '#e8e0d0';
+  ctx.fillRect(-2000, -2000, 5000, 5000);
+
+  // Water bodies
+  const waters = [
+    {x:-400, y:200, w:500, h:300},
+    {x:900, y:100, w:400, h:500},
+    {x:100, y:600, w:600, h:200},
+    {x:-100, y:-300, w:300, h:400},
+  ];
+  ctx.fillStyle = '#aad3df';
+  for (const w of waters) {
+    ctx.beginPath();
+    ctx.ellipse(w.x + w.w/2, w.y + w.h/2, w.w/2, w.h/2, 0, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // Parks / green areas
+  const parks = [
+    {x:350, y:220, w:120, h:80},
+    {x:600, y:350, w:100, h:60},
+    {x:180, y:180, w:80, h:100},
+    {x:700, y:150, w:60, h:60},
+    {x:450, y:430, w:150, h:70},
+    {x:800, y:400, w:90, h:90},
+  ];
+  ctx.fillStyle = '#c8e6c9';
+  for (const p of parks) {
+    ctx.fillRect(p.x, p.y, p.w, p.h);
+  }
+  // darker park detail
+  ctx.fillStyle = '#a5d6a7';
+  for (const p of parks) {
+    ctx.fillRect(p.x+10, p.y+10, p.w-20, p.h-20);
+  }
+
+  // Roads — main
+  const roads = [
+    // horizontal
+    {x1:-500, y1:300, x2:1200, y2:300, w:8},
+    {x1:-500, y1:450, x2:1200, y2:450, w:5},
+    {x1:-500, y1:180, x2:1200, y2:180, w:5},
+    // vertical
+    {x1:500, y1:-500, x2:500, y2:800, w:8},
+    {x1:300, y1:-500, x2:300, y2:800, w:5},
+    {x1:700, y1:-500, x2:700, y2:800, w:5},
+    // diagonal
+    {x1:100, y1:100, x2:600, y2:500, w:4},
+    {x1:600, y1:100, x2:900, y2:450, w:4},
+  ];
+
+  // Road shadow
+  ctx.strokeStyle = '#bbb';
+  for (const r of roads) {
+    ctx.beginPath();
+    ctx.lineWidth = r.w + 3;
+    ctx.moveTo(r.x1, r.y1);
+    ctx.lineTo(r.x2, r.y2);
+    ctx.stroke();
+  }
+  // Road fill
+  ctx.strokeStyle = '#fff';
+  for (const r of roads) {
+    ctx.beginPath();
+    ctx.lineWidth = r.w;
+    ctx.moveTo(r.x1, r.y1);
+    ctx.lineTo(r.x2, r.y2);
+    ctx.stroke();
+  }
+
+  // Road center dashes
+  ctx.strokeStyle = '#ffcc00';
+  ctx.setLineDash([10, 12]);
+  for (const r of roads.filter(r => r.w >= 8)) {
+    ctx.beginPath();
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(r.x1, r.y1);
+    ctx.lineTo(r.x2, r.y2);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Buildings (city blocks)
+  const buildingAreas = [
+    {bx:380, by:230, cols:4, rows:3, bs:18, gap:6, color:'#d7ccc8'},
+    {bx:510, by:310, cols:3, rows:4, bs:20, gap:5, color:'#cfd8dc'},
+    {bx:620, by:210, cols:3, rows:2, bs:22, gap:7, color:'#d7ccc8'},
+    {bx:310, by:200, cols:2, rows:3, bs:16, gap:5, color:'#e0e0e0'},
+    {bx:720, by:310, cols:4, rows:3, bs:18, gap:6, color:'#d7ccc8'},
+  ];
+
+  for (const area of buildingAreas) {
+    for (let c = 0; c < area.cols; c++) {
+      for (let r = 0; r < area.rows; r++) {
+        ctx.fillStyle = area.color;
+        ctx.fillRect(
+          area.bx + c * (area.bs + area.gap),
+          area.by + r * (area.bs + area.gap),
+          area.bs, area.bs
+        );
+        ctx.strokeStyle = '#bbb';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(
+          area.bx + c * (area.bs + area.gap),
+          area.by + r * (area.bs + area.gap),
+          area.bs, area.bs
+        );
+      }
+    }
+  }
+
+  // Area labels
+  const labels = [
+    {x:480, y:290, text:'Сашенбург', size:13, bold:true},
+    {x:720, y:460, text:'Пляж Нулевой Ошибки', size:10, bold:false},
+    {x:250, y:140, text:'Гора Не Существует', size:9, bold:false},
+    {x:800, y:250, text:'Район 404', size:10, bold:false},
+    {x:150, y:430, text:'Озеро Баг', size:9, bold:false, color:'#5b8fa8'},
+    {x:-100, y:310, text:'Море 500 Ошибок', size:11, bold:false, color:'#5b8fa8'},
+    {x:950, y:220, text:'Поле Undefined', size:9, bold:false},
+    {x:400, y:120, text:'Шоссе А-404', size:8, bold:false, color:'#888', italic:true},
+  ];
+
+  for (const l of labels) {
+    ctx.font = `${l.italic?'italic ':''} ${l.bold?'bold ':''} ${l.size}px Arial`;
+    ctx.fillStyle = l.color || '#555';
+    ctx.textAlign = 'center';
+    ctx.fillText(l.text, l.x, l.y);
+  }
+
+  // Place markers
+  for (const p of places) {
+    const mx = p.x;
+    const my = p.y;
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.beginPath();
+    ctx.ellipse(mx, my + 28, 10, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pin
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(mx, my, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.beginPath();
+    ctx.arc(mx, my, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(mx, my, 13, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Point
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.moveTo(mx - 8, my + 10);
+    ctx.lineTo(mx + 8, my + 10);
+    ctx.lineTo(mx, my + 24);
+    ctx.closePath();
+    ctx.fill();
+
+    // Icon
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.icon, mx, my + 5);
+  }
+
+  ctx.restore();
+}
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawMap();
+  updateScale();
+}
+
+function updateScale() {
+  const km = Math.round(500 / cam.zoom);
+  document.getElementById('scaleText').textContent = km + ' км';
+}
+
+function zoom(factor) {
+  cam.zoom = Math.min(4, Math.max(0.3, cam.zoom * factor));
+  render();
+}
+
+// Drag
+canvas.addEventListener('mousedown', e => {
+  dragging = true;
+  lastMouse = { x: e.clientX, y: e.clientY };
+});
+canvas.addEventListener('mousemove', e => {
+  // Update coords display
+  const wx = (e.clientX - canvas.width/2) / cam.zoom - cam.x;
+  const wy = (e.clientY - canvas.height/2) / cam.zoom - cam.y;
+  const lat = (55.7558 - wy * 0.001).toFixed(4);
+  const lng = (37.6173 + wx * 0.001).toFixed(4);
+  document.getElementById('coords').textContent = `${lat}° N, ${lng}° E`;
+
+  if (!dragging) return;
+  const dx = e.clientX - lastMouse.x;
+  const dy = e.clientY - lastMouse.y;
+  cam.x += dx / cam.zoom;
+  cam.y += dy / cam.zoom;
+  lastMouse = { x: e.clientX, y: e.clientY };
+  render();
+});
+canvas.addEventListener('mouseup', e => {
+  if (!dragging) return;
+  const moved = Math.abs(e.clientX - lastMouse.x) + Math.abs(e.clientY - lastMouse.y);
+  dragging = false;
+  if (moved < 5) checkClick(e.clientX, e.clientY);
+});
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoom(e.deltaY < 0 ? 1.15 : 0.87);
+}, { passive: false });
+
+// Touch
+let lastTouch = null;
+canvas.addEventListener('touchstart', e => {
+  lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const dx = e.touches[0].clientX - lastTouch.x;
+  const dy = e.touches[0].clientY - lastTouch.y;
+  cam.x += dx / cam.zoom;
+  cam.y += dy / cam.zoom;
+  lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  render();
+}, { passive: false });
+
+function checkClick(cx, cy) {
+  for (const p of places) {
+    const sx = (p.x + cam.x) * cam.zoom + canvas.width/2 - cam.x * cam.zoom;
+    const sy = (p.y + cam.y) * cam.zoom + canvas.height/2 - cam.y * cam.zoom;
+    // transform to screen
+    const screenX = (p.x + cam.x - canvas.width/2 * (1/cam.zoom - 1)) * cam.zoom;
+    // simpler: just calc screen pos
+    const px = (p.x + cam.x) * cam.zoom + canvas.width/2*(1 - cam.zoom);
+    const py = (p.y + cam.y) * cam.zoom + canvas.height/2*(1 - cam.zoom);
+    if (Math.hypot(cx - px, cy - py) < 20 * cam.zoom) {
+      showPlace(p);
+      return;
+    }
+  }
+  closePanel();
+}
+
+function showPlace(p) {
+  document.getElementById('panelName').textContent = p.icon + ' ' + p.name;
+  document.getElementById('panelType').textContent = p.type;
+  document.getElementById('panelStars').textContent = p.stars + ' · SashenMaps';
+  document.getElementById('panelDesc').textContent = p.desc;
+  document.getElementById('placePanel').classList.add('show');
+}
+
+function closePanel() {
+  document.getElementById('placePanel').classList.remove('show');
+}
+
+function focusPlace(idx) {
+  const p = places[idx];
+  cam.x = canvas.width/2 - p.x;
+  cam.y = canvas.height/2 - p.y;
+  cam.zoom = 1.5;
+  render();
+  showPlace(p);
+  toggleSearch();
+}
+
+function toggleSearch() {
+  const popup = document.getElementById('searchPopup');
+  popup.classList.toggle('show');
+}
+
+document.addEventListener('click', e => {
+  const popup = document.getElementById('searchPopup');
+  if (!e.target.closest('#searchPopup') && !e.target.closest('#searchInput')) {
+    popup.classList.remove('show');
+  }
+});
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
