@@ -33,5 +33,10 @@
   "name": "Apple — iPhone 1488",
   "description": "Официальный сайт iPhone 1488. От $1488.",
   "tags": ["apple"]
+  },
+  "toilet.sashen": {
+  "name": "Как посрать чтобы не булькнуло",
+  "description": "Полное руководство. 4 метода. Проверено на практике.",
+  "tags": ["guide", "tutorial"]
   }
 }
