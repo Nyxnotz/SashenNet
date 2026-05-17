@@ -60,7 +60,7 @@
   "tags": ["translator", "tools"]
   },
   "draw.sashen": {
-  "name": "Draw.sashen",
+  "name": "Draw",
   "description": "Рисовалка со слоями",
   "tags": ["draw", "tools", "art"]
   }
