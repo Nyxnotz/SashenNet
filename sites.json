@@ -61,7 +61,7 @@
   },
   "draw.sashen": {
   "name": "Draw",
-  "description": "Рисовалка со слоями",
+  "description": "Рисовалка",
   "tags": ["draw", "tools", "art"]
   }
 }
