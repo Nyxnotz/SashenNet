@@ -58,5 +58,10 @@
   "name": "SashenTranslator",
   "description": "Переводчик",
   "tags": ["translator", "tools"]
+  },
+  "draw.sashen": {
+  "name": "Draw.sashen",
+  "description": "Рисовалка со слоями",
+  "tags": ["draw", "tools", "art"]
   }
 }
