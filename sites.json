@@ -55,7 +55,7 @@
   "tags": ["art", "draw"]
   },
   "translator.sashen": {
-  "name": "SashenTranslator",
+  "name": "Translator",
   "description": "Переводчик",
   "tags": ["translator", "tools"]
   },
