@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Casino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #c9a84c;
+      --accent2: #f0d080;
+      --bg1: #1a0a05;
+      --bg2: #0a0503;
+      --machine-top: #3a2a18;
+      --machine-mid: #1e1408;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(ellipse at center, var(--bg1) 0%, var(--bg2) 100%);
+      min-height: 100vh;
+      font-family: 'Oswald', sans-serif;
+      color: #eee;
+      transition: background 0.8s, --accent 0.8s;
+    }
+
+    /* THEMES */
+    body.theme-blue {
+      --accent: #4ab8f0;
+      --accent2: #80d0ff;
+      --bg1: #020d1a;
+      --bg2: #010508;
+      --machine-top: #0a1e30;
+      --machine-mid: #050e18;
+    }
+    body.theme-green {
+      --accent: #4acf70;
+      --accent2: #80ff9a;
+      --bg1: #021a06;
+      --bg2: #010801;
+      --machine-top: #0a2a10;
+      --machine-mid: #051408;
+    }
+    body.theme-purple {
+      --accent: #b060f0;
+      --accent2: #d090ff;
+      --bg1: #0d0218;
+      --bg2: #050108;
+      --machine-top: #1a0a28;
+      --machine-mid: #0d0514;
+    }
+
+    .page { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+    header { text-align: center; padding: 20px 0 12px; border-bottom: 1px solid rgba(201,168,76,0.2); margin-bottom: 20px; }
+    body.theme-blue header { border-color: rgba(74,184,240,0.2); }
+    body.theme-green header { border-color: rgba(74,207,112,0.2); }
+    body.theme-purple header { border-color: rgba(176,96,240,0.2); }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem,5vw,3rem);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 60%, #000), var(--accent2), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.08em;
+    }
+    .sub { font-size: 0.7rem; color: rgba(201,168,76,0.4); letter-spacing: 0.3em; margin-top: 4px; }
+
+    /* HUD */
+    .hud { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+    .hud-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px; padding: 8px 18px; text-align: center; min-width: 90px;
+    }
+    .hud-label { font-size: 0.6rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; }
+    .hud-val { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent2); }
+
+    /* BET */
+    .bet-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; justify-content: center; }
+    .bet-btn { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4); color: var(--accent); width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; border-radius: 4px; }
+    .bet-btn:hover { background: rgba(201,168,76,0.3); }
+    .bet-val { font-size: 1rem; color: var(--accent2); min-width: 80px; text-align: center; }
+    .bet-hint { font-size: 0.65rem; color: #555; }
+
+    /* LAYOUT */
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+    @media(max-width:700px){ .layout { grid-template-columns: 1fr; } }
+
+    /* MACHINE */
+    .machine-area { display: flex; flex-direction: column; align-items: center; }
+    canvas#mc { display: block; cursor: default; max-width: 100%; }
+    .result-msg { height: 30px; text-align: center; font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--accent2); letter-spacing: 0.1em; margin-top: 8px; }
+
+    /* SHOP */
+    .shop { background: rgba(0,0,0,0.4); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; overflow: hidden; }
+    .shop-hdr { background: rgba(201,168,76,0.1); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 12px 16px; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--accent); }
+    .shop-list { padding: 10px; display: flex; flex-direction: column; gap: 6px; max-height: 70vh; overflow-y: auto; }
+
+    .si {
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 6px; padding: 10px 12px; transition: border-color 0.2s;
+    }
+    .si:hover { border-color: rgba(201,168,76,0.3); }
+    .si.owned { border-color: rgba(0,200,80,0.3); background: rgba(0,40,15,0.3); }
+    .si.poor { opacity: 0.4; pointer-events: none; }
+
+    .si-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+    .si-name { font-size: 0.85rem; color: #eee; font-weight: 600; }
+    .si-price { font-size: 0.78rem; color: var(--accent); white-space: nowrap; flex-shrink: 0; }
+    .si-desc { font-size: 0.7rem; color: #666; margin-bottom: 8px; line-height: 1.4; }
+    .si-preview { width: 100%; height: 36px; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; letter-spacing: 0.1em; }
+
+    .buy-btn { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4); color: var(--accent); font-family: 'Oswald', sans-serif; font-size: 0.7rem; padding: 5px 14px; cursor: pointer; border-radius: 3px; letter-spacing: 0.1em; transition: background 0.15s; }
+    .buy-btn:hover { background: rgba(201,168,76,0.3); }
+    .buy-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .owned-badge { font-size: 0.7rem; color: #4caf50; }
+
+    /* JACKPOT */
+    .jp-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+    .jp-overlay.show { display: flex; }
+    .jp-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem,8vw,5rem); color: var(--accent2); text-shadow: 0 0 60px var(--accent); animation: jpp .4s ease infinite alternate; margin-bottom: 12px; }
+    @keyframes jpp { from{transform:scale(1)}to{transform:scale(1.06)} }
+    .jp-sub { font-size: 1.2rem; color: #eee; margin-bottom: 24px; }
+    .jp-btn { background: var(--accent); color: #000; border: none; font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700; padding: 12px 40px; cursor: pointer; border-radius: 4px; letter-spacing: 0.2em; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Casino</h1>
+  </header>
+
+  <div class="hud">
+    <div class="hud-box"><div class="hud-label">Монеты</div><div class="hud-val" id="hC">100</div></div>
+    <div class="hud-box"><div class="hud-label">Выиграно</div><div class="hud-val" id="hW">0</div></div>
+    <div class="hud-box"><div class="hud-label">Спинов</div><div class="hud-val" id="hS">0</div></div>
+    <div class="hud-box"><div class="hud-label">Победы</div><div class="hud-val" id="hWins">0</div></div>
+    <div class="hud-box"><div class="hud-label">Джекпоты</div><div class="hud-val" id="hJ">0</div></div>
+  </div>
+
+  <div class="bet-row">
+    <span style="font-size:0.75rem;color:var(--accent);letter-spacing:0.1em">СТАВКА:</span>
+    <button class="bet-btn" onclick="chBet(-10)">-</button>
+    <div class="bet-val" id="bVal">10</div>
+    <button class="bet-btn" onclick="chBet(10)">+</button>
+    <span class="bet-hint" id="bHint"></span>
+  </div>
+
+  <div class="layout">
+    <div class="machine-area">
+      <canvas id="mc"></canvas>
+      <div class="result-msg" id="rMsg"></div>
+    </div>
+    <div class="shop">
+      <div class="shop-hdr">Магазин улучшений</div>
+      <div class="shop-list" id="shopList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="jp-overlay" id="jpO">
+  <div class="jp-title">ДЖЕКПОТ!</div>
+  <div class="jp-sub" id="jpA"></div>
+  <button class="jp-btn" onclick="document.getElementById('jpO').classList.remove('show')">ЗАБРАТЬ</button>
+</div>
+
+<script>
+// ========== CANVAS ==========
+const canvas = document.getElementById('mc');
+const ctx = canvas.getContext('2d');
+
+function setCanvasSize() {
+  const maxW = Math.min(480, window.innerWidth - 40);
+  canvas.width = maxW;
+  canvas.height = Math.round(maxW * 0.9);
+}
+setCanvasSize();
+window.addEventListener('resize', () => { setCanvasSize(); });
+
+// ========== SYMBOLS ==========
+// Drawn as SVG-like shapes — no text, no emoji
+const SYMS = [
+  { id:'seven',  payout:50,  weight:2,  draw: drawSeven  },
+  { id:'bar',    payout:30,  weight:3,  draw: drawBar    },
+  { id:'bell',   payout:15,  weight:8,  draw: drawBell   },
+  { id:'cherry', payout:10,  weight:14, draw: drawCherry },
+  { id:'star',   payout:12,  weight:10, draw: drawStar   },
+  { id:'lemon',  payout:8,   weight:14, draw: drawLemon  },
+  { id:'grape',  payout:9,   weight:12, draw: drawGrape  },
+  { id:'diamond',payout:20,  weight:5,  draw: drawDiamond},
+];
+
+function drawSeven(ctx, cx, cy, sz) {
+  ctx.fillStyle = '#ff2200';
+  ctx.font = `bold ${sz*0.7}px Playfair Display, serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ff2200';
+  ctx.shadowColor = '#ff4400'; ctx.shadowBlur = 8;
+  ctx.fillText('7', cx, cy);
+  ctx.shadowBlur = 0;
+}
+function drawBar(ctx, cx, cy, sz) {
+  const w = sz*0.7, h = sz*0.28;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(cx-w/2, cy-h/2, w, h);
+  ctx.fillStyle = '#222';
+  ctx.font = `bold ${sz*0.22}px Oswald, sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('BAR', cx, cy);
+}
+function drawBell(ctx, cx, cy, sz) {
+  const s = sz*0.38;
+  // bell body
+  ctx.fillStyle = '#ffcc00';
+  ctx.shadowColor = '#ffaa00'; ctx.shadowBlur = 6;
+  ctx.beginPath();
+  ctx.arc(cx, cy-s*0.1, s*0.8, Math.PI, 0);
+  ctx.lineTo(cx+s*0.8, cy+s*0.4);
+  ctx.arc(cx, cy+s*0.4, s*0.8, 0, Math.PI);
+  ctx.closePath(); ctx.fill();
+  // clapper
+  ctx.fillStyle = '#cc8800';
+  ctx.beginPath(); ctx.arc(cx, cy+s*0.5, s*0.18, 0, Math.PI*2); ctx.fill();
+  // top
+  ctx.fillStyle = '#ffcc00';
+  ctx.fillRect(cx-s*0.12, cy-s*0.9, s*0.24, s*0.4);
+  ctx.shadowBlur = 0;
+}
+function drawCherry(ctx, cx, cy, sz) {
+  const s = sz*0.3;
+  // stem
+  ctx.strokeStyle = '#44aa22'; ctx.lineWidth = sz*0.04;
+  ctx.beginPath(); ctx.moveTo(cx, cy+s*0.2); ctx.quadraticCurveTo(cx+s*0.8, cy-s*1.1, cx+s*0.5, cy-s*1.4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy+s*0.2); ctx.quadraticCurveTo(cx-s*0.8, cy-s*1.1, cx-s*0.5, cy-s*1.4); ctx.stroke();
+  // cherries
+  ctx.fillStyle = '#cc0022'; ctx.shadowColor='#ff0044'; ctx.shadowBlur=6;
+  ctx.beginPath(); ctx.arc(cx+s*0.5, cy, s*0.55, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-s*0.5, cy, s*0.55, 0, Math.PI*2); ctx.fill();
+  // shine
+  ctx.fillStyle='rgba(255,200,200,0.4)';
+  ctx.beginPath(); ctx.arc(cx+s*0.3, cy-s*0.2, s*0.18, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx-s*0.7, cy-s*0.2, s*0.18, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+}
+function drawStar(ctx, cx, cy, sz) {
+  const s = sz*0.38; const pts = 5;
+  ctx.fillStyle='#ffdd00'; ctx.shadowColor='#ffaa00'; ctx.shadowBlur=8;
+  ctx.beginPath();
+  for(let i=0;i<pts*2;i++){
+    const r = i%2===0 ? s : s*0.42;
+    const a = (i*Math.PI/pts) - Math.PI/2;
+    i===0 ? ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)) : ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  }
+  ctx.closePath(); ctx.fill();
+  ctx.shadowBlur=0;
+}
+function drawLemon(ctx, cx, cy, sz) {
+  const s = sz*0.36;
+  ctx.fillStyle='#eeee00'; ctx.shadowColor='#cccc00'; ctx.shadowBlur=4;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, s*0.7, s, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(255,255,200,0.3)';
+  ctx.beginPath(); ctx.ellipse(cx-s*0.2, cy-s*0.2, s*0.3, s*0.5, -0.4, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+}
+function drawGrape(ctx, cx, cy, sz) {
+  const s = sz*0.15;
+  ctx.fillStyle='#8822cc'; ctx.shadowColor='#aa44ff'; ctx.shadowBlur=4;
+  const pos=[[0,-0.7],[-.4,-0.35],[.4,-0.35],[-.7,0],[0,0],[.7,0],[-.35,.35],[.35,.35],[0,.7]];
+  for(const [dx,dy] of pos){
+    ctx.beginPath(); ctx.arc(cx+dx*sz*0.22, cy+dy*sz*0.22, s, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.strokeStyle='#44aa22'; ctx.lineWidth=sz*0.035;
+  ctx.beginPath(); ctx.moveTo(cx,cy-sz*0.38); ctx.lineTo(cx,cy-sz*0.52); ctx.stroke();
+  ctx.shadowBlur=0;
+}
+function drawDiamond(ctx, cx, cy, sz) {
+  const s=sz*0.4;
+  ctx.fillStyle='#44ccff'; ctx.shadowColor='#00aaff'; ctx.shadowBlur=10;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-s); ctx.lineTo(cx+s*0.65, cy-s*0.1);
+  ctx.lineTo(cx, cy+s); ctx.lineTo(cx-s*0.65, cy-s*0.1);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.beginPath(); ctx.moveTo(cx,cy-s); ctx.lineTo(cx+s*0.65,cy-s*0.1); ctx.lineTo(cx,cy-s*0.05); ctx.closePath(); ctx.fill();
+  ctx.shadowBlur=0;
+}
+
+function pickSym(lucky=false) {
+  let pool = [...SYMS];
+  if(lucky) pool = pool.map(s=>({...s, weight: s.id==='seven'||s.id==='diamond'||s.id==='bar' ? s.weight*1.5 : s.weight}));
+  const total=pool.reduce((a,s)=>a+s.weight,0);
+  let r=Math.random()*total;
+  for(const s of pool){ r-=s.weight; if(r<=0)return s; }
+  return pool[pool.length-1];
+}
+
+// ========== STATE ==========
+const DEF = { coins:100, bet:10, totalWon:0, spins:0, wins:0, losses:0, jackpots:0, upg:{}, theme:'default' };
+let G = (() => { try{ const s=JSON.parse(localStorage.getItem('cs3')); return s?{...DEF,...s}:DEF; }catch{return{...DEF};} })();
+let freeSpins = 0;
+function save(){ localStorage.setItem('cs3', JSON.stringify(G)); }
+
+// ========== REELS ==========
+const REEL_COUNT = 3;
+const SYM_H = 80;
+const VISIBLE = 3;
+const STRIP_LEN = 30;
+
+let reels = Array.from({length:REEL_COUNT},()=>({
+  strip: Array.from({length:STRIP_LEN},()=>pickSym()),
+  offset: 0,
+  spinning: false,
+  done: false,
+}));
+
+// ========== GEOMETRY (dynamic) ==========
+function geo() {
+  const W=canvas.width, H=canvas.height;
+  const MX=W*0.06, MY=H*0.04;
+  const MW=W*0.82, MH=H*0.9;
+  const RAX=MX+MW*0.1, RAY=MY+MH*0.22;
+  const RAW=MW*0.8;
+  const RW=(RAW - 8*(REEL_COUNT-1))/REEL_COUNT;
+  const RAH=SYM_H*VISIBLE;
+  return {W,H,MX,MY,MW,MH,RAX,RAY,RAW,RW,RAH};
+}
+
+// ========== LEVER ==========
+let leverAngle = -25; // -25=up, +25=down
+let leverV = 0;
+let leverTarget = -25;
+
+function animLever() {
+  const diff = leverTarget - leverAngle;
+  leverV = leverV * 0.7 + diff * 0.18;
+  leverAngle += leverV;
+  if(Math.abs(leverAngle-leverTarget)<0.3 && Math.abs(leverV)<0.1){
+    leverAngle=leverTarget; leverV=0;
+  }
+}
+
+function triggerLever() {
+  leverTarget = 28;
+  setTimeout(()=>{ leverTarget=-25; }, 350);
+}
+
+// ========== THEME COLORS ==========
+function themeCol() {
+  const t = G.theme;
+  if(t==='blue')   return {a:'#4ab8f0',a2:'#80d0ff',body1:'#020d1a',body2:'#010508',mt:'#0a1e30',mm:'#050e18'};
+  if(t==='green')  return {a:'#4acf70',a2:'#80ff9a',body1:'#021a06',body2:'#010801',mt:'#0a2a10',mm:'#051408'};
+  if(t==='purple') return {a:'#b060f0',a2:'#d090ff',body1:'#0d0218',body2:'#050108',mt:'#1a0a28',mm:'#0d0514'};
+  return {a:'#c9a84c',a2:'#f0d080',body1:'#3a2a18',body2:'#1e1408',mt:'#3a2a18',mm:'#1e1408'};
+}
+
+function applyTheme() {
+  document.body.className = G.theme !== 'default' ? `theme-${G.theme}` : '';
+}
+
+// ========== DRAW MACHINE ==========
+function drawMachine() {
+  const {W,H,MX,MY,MW,MH,RAX,RAY,RAW,RW,RAH} = geo();
+  const tc = themeCol();
+  ctx.clearRect(0,0,W,H);
+  drawBody(W,H,MX,MY,MW,MH,tc);
+  drawReelArea(RAX,RAY,RAW,RW,RAH,tc);
+  drawLeverGfx(W,H,MX,MY,MW,MH,tc);
+  drawBodyLights(MX,MY,MW,tc);
+}
+
+function drawBody(W,H,MX,MY,MW,MH,tc) {
+  ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=20;
+  const bg=ctx.createLinearGradient(MX,MY,MX+MW,MY+MH);
+  bg.addColorStop(0,tc.mt); bg.addColorStop(0.5,tc.mm); bg.addColorStop(1,tc.mt);
+  ctx.fillStyle=bg;
+  rr(MX,MY,MW,MH,16); ctx.fill();
+  ctx.shadowBlur=0;
+
+  ctx.strokeStyle=tc.a; ctx.lineWidth=2.5;
+  rr(MX,MY,MW,MH,16); ctx.stroke();
+  ctx.strokeStyle=`rgba(${hexRgb(tc.a)},0.25)`; ctx.lineWidth=1;
+  rr(MX+5,MY+5,MW-10,MH-10,12); ctx.stroke();
+
+  // Top panel
+  const tp=ctx.createLinearGradient(MX,MY,MX,MY+MH*0.18);
+  tp.addColorStop(0,`rgba(${hexRgb(tc.a)},0.25)`); tp.addColorStop(1,'rgba(0,0,0,0.1)');
+  ctx.fillStyle=tp;
+  rrTop(MX+3,MY+3,MW-6,MH*0.18,13); ctx.fill();
+
+  // Title
+  ctx.fillStyle=tc.a2;
+  ctx.font=`bold ${W*0.055}px Playfair Display, serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.shadowColor=tc.a; ctx.shadowBlur=10;
+  ctx.fillText('LUCKY', MX+MW/2, MY+MH*0.07);
+  ctx.shadowBlur=0;
+
+  // Decorative line
+  ctx.strokeStyle=tc.a; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(MX+20,MY+MH*0.13); ctx.lineTo(MX+MW-20,MY+MH*0.13); ctx.stroke();
+
+  // Bottom area
+  const by=MY+MH*0.75;
+  ctx.fillStyle='rgba(0,0,0,0.25)';
+  rr(MX+10,by,MW-20,MH*0.2,8); ctx.fill();
+  ctx.strokeStyle=`rgba(${hexRgb(tc.a)},0.15)`; ctx.lineWidth=1;
+  rr(MX+10,by,MW-20,MH*0.2,8); ctx.stroke();
+
+  // Coin slot
+  ctx.fillStyle='#0a0a0a';
+  ctx.beginPath(); ctx.ellipse(MX+MW/2, by+MH*0.08, MW*0.12, MH*0.025, 0, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#555'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.ellipse(MX+MW/2, by+MH*0.08, MW*0.12, MH*0.025, 0, 0, Math.PI*2); ctx.stroke();
+
+  // Screws
+  [[MX+14,MY+14],[MX+MW-14,MY+14],[MX+14,MY+MH-14],[MX+MW-14,MY+MH-14]].forEach(([sx,sy])=>drawScrew(sx,sy,tc));
+}
+
+function drawScrew(x,y,tc) {
+  ctx.fillStyle='#444'; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#666'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.stroke();
+  ctx.strokeStyle=`rgba(${hexRgb(tc.a)},0.3)`; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x-2.5,y); ctx.lineTo(x+2.5,y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x,y-2.5); ctx.lineTo(x,y+2.5); ctx.stroke();
+}
+
+function drawBodyLights(MX,MY,MW,tc) {
+  const ly=MY+MW*0.17;
+  for(let i=0;i<8;i++){
+    const lx=MX+MW*0.12+i*(MW*0.76/7);
+    const on=Math.sin(Date.now()/280+i*1.1)>0;
+    ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2);
+    if(on){ ctx.fillStyle=tc.a; ctx.shadowColor=tc.a; ctx.shadowBlur=8; }
+    else { ctx.fillStyle='rgba(0,0,0,0.6)'; ctx.shadowBlur=0; }
+    ctx.fill(); ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.stroke();
+  }
+}
+
+function drawReelArea(RAX,RAY,RAW,RW,RAH,tc) {
+  // Housing
+  ctx.fillStyle='#050302';
+  rr(RAX-8,RAY-8,RAW+16,RAH+16,8); ctx.fill();
+  ctx.strokeStyle='#444'; ctx.lineWidth=2;
+  rr(RAX-8,RAY-8,RAW+16,RAH+16,8); ctx.stroke();
+
+  for(let i=0;i<REEL_COUNT;i++){
+    const rx=RAX+i*(RW+8);
+    const ry=RAY;
+    drawReel(i,rx,ry,RW,RAH,tc);
+  }
+
+  // Winline
+  const lineY=RAY+SYM_H*1.5;
+  ctx.strokeStyle=`rgba(${hexRgb(tc.a)},0.7)`; ctx.lineWidth=1.5;
+  ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(RAX-4,lineY); ctx.lineTo(RAX+RAW+4,lineY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Glass overlay
+  const gg=ctx.createLinearGradient(RAX-8,RAY-8,RAX-8,RAY+RAH+8);
+  gg.addColorStop(0,'rgba(255,255,255,0.05)'); gg.addColorStop(0.3,'rgba(255,255,255,0.01)');
+  gg.addColorStop(0.7,'rgba(0,0,0,0)'); gg.addColorStop(1,'rgba(0,0,0,0.12)');
+  ctx.fillStyle=gg; rr(RAX-8,RAY-8,RAW+16,RAH+16,8); ctx.fill();
+}
+
+function drawReel(idx,rx,ry,rw,rh,tc) {
+  ctx.save();
+  ctx.beginPath(); ctx.rect(rx,ry,rw,rh); ctx.clip();
+
+  const reel=reels[idx];
+  const startI=Math.floor(reel.offset/SYM_H);
+  const pxOff=reel.offset%SYM_H;
+
+  for(let j=-1;j<=VISIBLE+1;j++){
+    const symI=((startI+j)%STRIP_LEN+STRIP_LEN)%STRIP_LEN;
+    const sym=reel.strip[symI];
+    const sy=ry+j*SYM_H-pxOff;
+    if(sy>ry+rh+SYM_H||sy<ry-SYM_H*2) continue;
+
+    // Cell bg
+    ctx.fillStyle='#0d0b08';
+    ctx.fillRect(rx+1,sy+1,rw-2,SYM_H-2);
+    ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+    ctx.strokeRect(rx+1,sy+1,rw-2,SYM_H-2);
+
+    // Draw symbol
+    sym.draw(ctx, rx+rw/2, sy+SYM_H/2, Math.min(rw,SYM_H)*0.85);
+  }
+  ctx.restore();
+
+  ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+  ctx.strokeRect(rx,ry,rw,rh);
+
+  // Row separators
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let row=1;row<VISIBLE;row++){
+    ctx.beginPath(); ctx.moveTo(rx,ry+row*SYM_H); ctx.lineTo(rx+rw,ry+row*SYM_H); ctx.stroke();
+  }
+}
+
+function drawLeverGfx(W,H,MX,MY,MW,MH,tc) {
+  const bx=MX+MW+W*0.02;
+  const by=MY+MH*0.55;
+  const stickLen=MH*0.28;
+
+  // Base
+  const bg2=ctx.createLinearGradient(bx-12,by-8,bx+12,by+8);
+  bg2.addColorStop(0,'#777'); bg2.addColorStop(0.5,'#ccc'); bg2.addColorStop(1,'#555');
+  ctx.fillStyle=bg2;
+  rr(bx-13,by-9,26,18,6); ctx.fill();
+  ctx.strokeStyle='#333'; ctx.lineWidth=1;
+  rr(bx-13,by-9,26,18,6); ctx.stroke();
+
+  ctx.save();
+  ctx.translate(bx,by);
+  ctx.rotate(leverAngle*Math.PI/180);
+
+  // Stick
+  const sg=ctx.createLinearGradient(-4,0,4,0);
+  sg.addColorStop(0,'#555'); sg.addColorStop(0.5,'#bbb'); sg.addColorStop(1,'#555');
+  ctx.fillStyle=sg;
+  ctx.fillRect(-4,-stickLen,8,stickLen);
+  ctx.strokeStyle='#333'; ctx.lineWidth=0.8;
+  ctx.strokeRect(-4,-stickLen,8,stickLen);
+
+  // Ball
+  const ballR=W*0.035;
+  const ballG=ctx.createRadialGradient(-ballR*0.35,-stickLen-ballR*0.35,1,0,-stickLen,ballR);
+  ballG.addColorStop(0,'#ff7755'); ballG.addColorStop(0.5,'#cc2200'); ballG.addColorStop(1,'#880000');
+  ctx.fillStyle=ballG;
+  ctx.shadowColor='rgba(220,50,0,0.7)'; ctx.shadowBlur=12;
+  ctx.beginPath(); ctx.arc(0,-stickLen,ballR,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.strokeStyle='#ff4422'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.arc(0,-stickLen,ballR,0,Math.PI*2); ctx.stroke();
+  // Shine
+  ctx.fillStyle='rgba(255,200,180,0.4)';
+  ctx.beginPath(); ctx.ellipse(-ballR*0.35,-stickLen-ballR*0.35,ballR*0.35,ballR*0.2,-0.5,0,Math.PI*2); ctx.fill();
+
+  ctx.restore();
+}
+
+// ========== ROUNDING HELPERS ==========
+function rr(x,y,w,h,r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+function rrTop(x,y,w,h,r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h); ctx.lineTo(x,y+h);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+function hexRgb(hex) {
+  const h=hex.replace('#','');
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)].join(',');
+}
+
+// ========== LEVER CLICK ==========
+canvas.addEventListener('click', e => {
+  if(spinLock) return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+  const my=(e.clientY-rect.top)*(canvas.height/rect.height);
+  const {W,H,MX,MY,MW,MH}=geo();
+  const bx=MX+MW+W*0.02;
+  const by=MY+MH*0.55;
+  const ballY=by-MH*0.28;
+  const dist=Math.hypot(mx-bx,my-ballY);
+  if(dist<W*0.07) doSpin();
+});
+
+// Cursor
+canvas.addEventListener('mousemove', e => {
+  if(spinLock) return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+  const my=(e.clientY-rect.top)*(canvas.height/rect.height);
+  const {W,H,MX,MY,MW,MH}=geo();
+  const bx=MX+MW+W*0.02;
+  const by=MY+MH*0.55;
+  const ballY=by-MH*0.28;
+  canvas.style.cursor=Math.hypot(mx-bx,my-ballY)<W*0.07?'pointer':'default';
+});
+
+// ========== SPIN ==========
+let spinLock = false;
+
+function doSpin() {
+  if(spinLock) return;
+  if(freeSpins<=0 && G.coins<G.bet) {
+    document.getElementById('rMsg').textContent='Недостаточно монет!';
+    document.getElementById('rMsg').style.color='#f44';
+    return;
+  }
+  spinLock=true;
+  if(freeSpins>0) freeSpins--; else G.coins-=G.bet;
+  G.spins++;
+  document.getElementById('rMsg').textContent='';
+
+  triggerLever();
+
+  const lucky=G.upg.lucky;
+  const results=reels.map(()=>pickSym(lucky));
+  const durations=[55,75,95]; // frames
+
+  reels.forEach((reel,i)=>{
+    const extra=(18+i*6+Math.floor(Math.random()*6))*SYM_H;
+    const targetOff=reel.offset+extra;
+    // Place result in middle row at target
+    const midI=Math.round((targetOff/SYM_H)+1)%STRIP_LEN;
+    reel.strip[((midI%STRIP_LEN)+STRIP_LEN)%STRIP_LEN]=results[i];
+    reel.targetOffset=targetOff;
+    reel.frames=0;
+    reel.totalFrames=durations[i];
+    reel.startOffset=reel.offset;
+    reel.spinning=true;
+    reel.done=false;
+  });
+
+  let frame=0;
+  function step(){
+    frame++;
+    animLever();
+    let allDone=true;
+    reels.forEach(reel=>{
+      if(!reel.spinning){return;}
+      allDone=false;
+      reel.frames++;
+      const t=reel.frames/reel.totalFrames;
+      if(t>=1){
+        reel.offset=reel.targetOffset%(STRIP_LEN*SYM_H);
+        reel.spinning=false; reel.done=true;
+      } else {
+        // Ease out quint
+        const ease=1-Math.pow(1-t,4);
+        reel.offset=(reel.startOffset+ease*(reel.targetOffset-reel.startOffset))%(STRIP_LEN*SYM_H);
+      }
+    });
+    drawMachine();
+    if(!allDone) requestAnimationFrame(step);
+    else finishSpin(results);
+  }
+  requestAnimationFrame(step);
+}
+
+function finishSpin(results) {
+  spinLock=false;
+  let mult=1;
+  if(G.upg.triple) mult=3;
+  else if(G.upg.double) mult=2;
+  // Golden machine bonus
+  const machBonus = G.upg.golden2?1.5 : G.upg.golden?1.25 : 1;
+
+  let win=0,msg='',isJP=false;
+  const [a,b,c]=results;
+  if(a.id===b.id && b.id===c.id){
+    win=Math.floor(a.payout*G.bet*mult*machBonus);
+    if(a.id==='seven'){isJP=true; if(G.upg.jp2)win*=2; msg='ДЖЕКПОТ! +'+win;}
+    else if(a.id==='diamond') msg='БРИЛЛИАНТ! +'+win;
+    else msg='Три совпадения! +'+win;
+    G.wins++;
+  } else if(a.id===b.id||b.id===c.id||a.id===c.id){
+    const m=a.id===b.id?a:(b.id===c.id?b:a);
+    win=Math.floor(m.payout*G.bet*0.35*mult*machBonus);
+    msg='Пара! +'+win;
+    G.wins++;
+  } else { msg='Не повезло'; G.losses++; }
+
+  G.coins+=win; G.totalWon+=win;
+  if(isJP) G.jackpots++;
+
+  const el=document.getElementById('rMsg');
+  el.textContent=msg;
+  el.style.color=win>0?(isJP?'#ffff00':'var(--accent2)'):'#555';
+
+  if(isJP){
+    setTimeout(()=>{
+      document.getElementById('jpA').textContent='+'+win+' монет!';
+      document.getElementById('jpO').classList.add('show');
+    },300);
+  }
+  save(); updateUI();
+}
+
+// ========== SHOP ==========
+const SHOP=[
+  {id:'double',  name:'x2 Выигрыш',         desc:'Удваивает все выигрыши.',                        price:150, rep:false, preview:'gold'},
+  {id:'triple',  name:'x3 Выигрыш',          desc:'Утраивает выигрыши. Требует x2.',                price:600, rep:false, req:'double', preview:'gold'},
+  {id:'lucky',   name:'Удача+',               desc:'Повышает шанс 7, алмаза и BAR.',                price:120, rep:false, preview:'star'},
+  {id:'jp2',     name:'Джекпот x2',           desc:'Удваивает джекпотную выплату.',                  price:800, rep:false, preview:'gold'},
+  {id:'golden',  name:'Golden Machine',       desc:'Корпус машины меняется. +25% к выплатам. Золотая тема.',  price:400, rep:false, preview:'gold', theme:'default'},
+  {id:'blue',    name:'Blue Ice Machine',     desc:'Голубая тема сайта. +50% к выплатам.',          price:500, rep:false, preview:'blue', theme:'blue'},
+  {id:'green',   name:'Emerald Machine',      desc:'Зелёная тема сайта. +40% к выплатам.',          price:500, rep:false, preview:'green', theme:'green'},
+  {id:'purple',  name:'Amethyst Machine',     desc:'Фиолетовая тема сайта. +60% к выплатам.',       price:600, rep:false, preview:'purple', theme:'purple'},
+  {id:'fs',      name:'+10 бесплатных спинов',desc:'10 спинов без списания монет.',                  price:80,  rep:true},
+  {id:'c200',    name:'+200 монет',            desc:'Просто 200 монет.',                              price:150, rep:true},
+  {id:'c1000',   name:'+1000 монет',           desc:'Большой запас монет.',                           price:600, rep:true},
+];
+
+function renderShop(){
+  const el=document.getElementById('shopList');
+  el.innerHTML='';
+  for(const it of SHOP){
+    const owned=!it.rep&&G.upg[it.id];
+    const can=G.coins>=it.price;
+    const reqOk=!it.req||G.upg[it.req];
+    const div=document.createElement('div');
+    div.className='si'+(owned?' owned':'')+((!can&&!owned)?' poor':'');
+
+    // Preview bar
+    let previewStyle='background:linear-gradient(90deg,#2a2010,#c9a84c,#2a2010)';
+    if(it.preview==='blue') previewStyle='background:linear-gradient(90deg,#020d1a,#4ab8f0,#020d1a)';
+    if(it.preview==='green') previewStyle='background:linear-gradient(90deg,#021a06,#4acf70,#021a06)';
+    if(it.preview==='purple') previewStyle='background:linear-gradient(90deg,#0d0218,#b060f0,#0d0218)';
+    if(it.preview==='star') previewStyle='background:linear-gradient(90deg,#1a1500,#ffdd00,#1a1500)';
+
+    div.innerHTML=`
+      <div class="si-top"><span class="si-name">${it.name}</span><span class="si-price">${it.price}</span></div>
+      <div class="si-desc">${it.desc}</div>
+      <div class="si-preview" style="${previewStyle};color:rgba(255,255,255,0.6)">${owned?'КУПЛЕНО':''}</div>
+      <div style="text-align:right">
+        ${owned
+          ? '<span class="owned-badge">Активно</span>'
+          : `<button class="buy-btn" onclick="buyItem('${it.id}')" ${(!can||!reqOk)?'disabled':''}>${!reqOk?'Нужен x2':'Купить'}</button>`}
+      </div>`;
+    el.appendChild(div);
+  }
+}
+
+function buyItem(id){
+  const it=SHOP.find(s=>s.id===id);
+  if(!it||G.coins<it.price) return;
+  if(!it.rep&&G.upg[id]) return;
+  G.coins-=it.price;
+  if(it.rep){
+    if(id==='fs') freeSpins+=10;
+    else if(id==='c200') G.coins+=200;
+    else if(id==='c1000') G.coins+=1000;
+  } else {
+    G.upg[id]=true;
+    // Machine themes
+    if(it.theme!==undefined) G.theme=it.theme;
+    if(id==='blue') G.theme='blue';
+    if(id==='green') G.theme='green';
+    if(id==='purple') G.theme='purple';
+    if(id==='golden') G.theme='default';
+    applyTheme();
+  }
+  save(); updateUI(); renderShop();
+}
+
+function chBet(d){
+  const maxBet=Math.max(10, G.coins-10); // always keep at least 10 coins
+  G.bet=Math.max(10,Math.min(maxBet,G.bet+d));
+  save(); updateUI();
+}
+
+function updateUI(){
+  document.getElementById('hC').textContent=G.coins.toLocaleString();
+  document.getElementById('hW').textContent=G.totalWon.toLocaleString();
+  document.getElementById('hS').textContent=G.spins;
+  document.getElementById('hWins').textContent=G.wins;
+  document.getElementById('hJ').textContent=G.jackpots;
+  document.getElementById('bVal').textContent=G.bet;
+  const maxBet=Math.max(10,G.coins-10);
+  if(G.bet>maxBet){ G.bet=maxBet; save(); }
+  document.getElementById('bHint').textContent=freeSpins>0?`(${freeSpins} бесплатных)`:'';
+  renderShop();
+}
+
+// ========== MAIN LOOP ==========
+function loop(){
+  animLever();
+  if(!spinLock) drawMachine();
+  requestAnimationFrame(loop);
+}
+
+applyTheme(); updateUI(); loop();
+</script>
+</body>
+</html>
