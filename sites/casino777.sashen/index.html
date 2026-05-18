@@ -127,7 +127,8 @@
 <body>
 <div class="page">
   <header>
-    <h1>Casino 777</h1>
+    <h1>Casino</h1>
+    <div class="sub"<span onclick="resetGame()" style="cursor:pointer;color:#555;text-decoration:underline">Сбросить прогресс</span></div>
   </header>
 
   <div class="hud">
@@ -782,6 +783,15 @@ function loop(){
   animLever();
   if(!spinLock) drawMachine();
   requestAnimationFrame(loop);
+}
+
+function resetGame(){
+  if(!confirm("Сбросить весь прогресс? Монеты, улучшения и статистика будут удалены.")) return;
+  localStorage.removeItem("cs3");
+  G={...DEF};
+  freeSpins=0;
+  applyTheme();
+  updateUI();
 }
 
 applyTheme(); updateUI(); loop();
