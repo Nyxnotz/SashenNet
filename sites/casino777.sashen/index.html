@@ -696,15 +696,15 @@ function finishSpin(results) {
 
 // ========== SHOP ==========
 const SHOP=[
-  {id:'double',  name:'x2 Выигрыш',         desc:'Удваивает все выигрыши.',                        price:150, rep:false, preview:'gold'},
-  {id:'triple',  name:'x3 Выигрыш',          desc:'Утраивает выигрыши. Требует x2.',                price:600, rep:false, req:'double', preview:'gold'},
-  {id:'lucky',   name:'Удача+',               desc:'Повышает шанс 7, алмаза и BAR.',                price:120, rep:false, preview:'star'},
-  {id:'jp2',     name:'Джекпот x2',           desc:'Удваивает джекпотную выплату.',                  price:800, rep:false, preview:'gold'},
-  {id:'golden',  name:'Golden Machine',       desc:'Корпус машины меняется. +25% к выплатам. Золотая тема.',  price:400, rep:false, preview:'gold', theme:'default'},
-  {id:'blue',    name:'Blue Ice Machine',     desc:'Голубая тема сайта. +50% к выплатам.',          price:500, rep:false, preview:'blue', theme:'blue'},
-  {id:'green',   name:'Emerald Machine',      desc:'Зелёная тема сайта. +40% к выплатам.',          price:500, rep:false, preview:'green', theme:'green'},
-  {id:'purple',  name:'Amethyst Machine',     desc:'Фиолетовая тема сайта. +60% к выплатам.',       price:600, rep:false, preview:'purple', theme:'purple'},
-  {id:'fs',      name:'+10 бесплатных спинов',desc:'10 спинов без списания монет.',                  price:80,  rep:true},
+  {id:'double',  name:'x2 Выигрыш',         desc:'Удваивает все выигрыши.',                        price:500, rep:false, preview:'gold'},
+  {id:'triple',  name:'x3 Выигрыш',          desc:'Утраивает выигрыши. Требует x2.',                price:2000, rep:false, req:'double', preview:'gold'},
+  {id:'lucky',   name:'Удача+',               desc:'Повышает шанс 7, алмаза и BAR.',                price:400, rep:false, preview:'star'},
+  {id:'jp2',     name:'Джекпот x2',           desc:'Удваивает джекпотную выплату.',                  price:3000, rep:false, preview:'gold'},
+  {id:'golden',  name:'Golden Machine',       desc:'Корпус машины меняется. +25% к выплатам. Золотая тема.',  price:1500, rep:false, preview:'gold', theme:'default'},
+  {id:'blue',    name:'Blue Ice Machine',     desc:'Голубая тема сайта. +50% к выплатам.',          price:2000, rep:false, preview:'blue', theme:'blue'},
+  {id:'green',   name:'Emerald Machine',      desc:'Зелёная тема сайта. +40% к выплатам.',          price:2000, rep:false, preview:'green', theme:'green'},
+  {id:'purple',  name:'Amethyst Machine',     desc:'Фиолетовая тема сайта. +60% к выплатам.',       price:2500, rep:false, preview:'purple', theme:'purple'},
+  {id:'fs',      name:'+10 бесплатных спинов',desc:'10 спинов без списания монет.',                  price:300,  rep:true},
     ];
 
 function renderShop(){
@@ -786,7 +786,7 @@ function loop(){
 function resetGame(){
   if(!confirm("Сбросить весь прогресс? Монеты, улучшения и статистика будут удалены.")) return;
   localStorage.removeItem("cs3");
-  G={...DEF};
+  G=JSON.parse(JSON.stringify(DEF));
   freeSpins=0;
   applyTheme();
   updateUI();
