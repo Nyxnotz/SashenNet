@@ -705,9 +705,7 @@ const SHOP=[
   {id:'green',   name:'Emerald Machine',      desc:'Зелёная тема сайта. +40% к выплатам.',          price:500, rep:false, preview:'green', theme:'green'},
   {id:'purple',  name:'Amethyst Machine',     desc:'Фиолетовая тема сайта. +60% к выплатам.',       price:600, rep:false, preview:'purple', theme:'purple'},
   {id:'fs',      name:'+10 бесплатных спинов',desc:'10 спинов без списания монет.',                  price:80,  rep:true},
-  {id:'c200',    name:'+200 монет',            desc:'Просто 200 монет.',                              price:150, rep:true},
-  {id:'c1000',   name:'+1000 монет',           desc:'Большой запас монет.',                           price:600, rep:true},
-];
+    ];
 
 function renderShop(){
   const el=document.getElementById('shopList');
@@ -746,9 +744,7 @@ function buyItem(id){
   G.coins-=it.price;
   if(it.rep){
     if(id==='fs') freeSpins+=10;
-    else if(id==='c200') G.coins+=200;
-    else if(id==='c1000') G.coins+=1000;
-  } else {
+          } else {
     G.upg[id]=true;
     // Machine themes
     if(it.theme!==undefined) G.theme=it.theme;
