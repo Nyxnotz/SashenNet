@@ -128,7 +128,7 @@
 <div class="page">
   <header>
     <h1>Casino 777</h1>
-    <div class="sub"<span onclick="resetGame()" style="cursor:pointer;color:#555;text-decoration:underline">Сбросить прогресс</span></div>
+    <div class="sub"><span onclick="resetGame()" style="cursor:pointer;color:#555;text-decoration:underline">Сбросить прогресс</span></div>
   </header>
 
   <div class="hud">
@@ -603,7 +603,9 @@ function doSpin() {
     return;
   }
   spinLock=true;
-  if(freeSpins>0) freeSpins--; else G.coins-=G.bet;
+  const activeBet = freeSpins>0 ? Math.min(G.bet, 10) : G.bet;
+if(freeSpins>0) freeSpins--; else G.coins-=activeBet;
+G.bet = activeBet;
   G.spins++;
   document.getElementById('rMsg').textContent='';
 
