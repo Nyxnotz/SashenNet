@@ -216,11 +216,11 @@
 <!-- SEARCH POPUP -->
 <div class="search-popup" id="searchPopup">
   <div class="search-item" onclick="focusPlace(0)"><span class="search-icon">🏛️</span><div><div>Сашенбург</div><div class="search-item-sub">Столица · Главный город</div></div></div>
-  <div class="search-item" onclick="focusPlace(1)"><span class="search-icon">🏖️</span><div><div>Пляж Дерьма/div><div class="search-item-sub">Курорт · Популярное место</div></div></div>
-  <div class="search-item" onclick="focusPlace(2)"><span class="search-icon">🏔️</span><div><div>Гора С Мочой</div><div class="search-item-sub">Природа · Высота 8м</div></div></div>
-  <div class="search-item" onclick="focusPlace(3)"><span class="search-icon">🏪</span><div><div>Магазин</div><div class="search-item-sub">Магазин · Скидка 20% на покупку дерьма</div></div></div>
-  <div class="search-item" onclick="focusPlace(4)"><span class="search-icon">🌊</span><div><div>Озеро Моча</div><div class="search-item-sub">Водоём · С мочой вместо воды</div></div></div>
-  <div class="search-item" onclick="focusPlace(5)"><span class="search-icon">🏠</span><div><div>Район</div><div class="search-item-sub">Жилой район</div></div></div>
+  <div class="search-item" onclick="focusPlace(1)"><span class="search-icon">🏖️</span><div><div>Пляж Нулевой Ошибки</div><div class="search-item-sub">Курорт · Популярное место</div></div></div>
+  <div class="search-item" onclick="focusPlace(2)"><span class="search-icon">🏔️</span><div><div>Гора Не Существует</div><div class="search-item-sub">Природа · Высота 9999м</div></div></div>
+  <div class="search-item" onclick="focusPlace(3)"><span class="search-icon">🏪</span><div><div>Магазин Пустышка</div><div class="search-item-sub">Магазин · Закрыт навсегда</div></div></div>
+  <div class="search-item" onclick="focusPlace(4)"><span class="search-icon">🌊</span><div><div>Озеро Баг</div><div class="search-item-sub">Водоём · Существует только в чётные дни</div></div></div>
+  <div class="search-item" onclick="focusPlace(5)"><span class="search-icon">🏠</span><div><div>Район 404</div><div class="search-item-sub">Жилой район · Не найден</div></div></div>
 </div>
 
 <!-- CONTROLS -->
@@ -246,7 +246,7 @@
   <div class="place-actions">
     <button class="place-action">🗺 Маршрут</button>
     <button class="place-action">🔖 Сохранить</button>
-    <button class="place-action">⭐ Отзыв</button>
+    <button class="place-action"">⭐ Отзыв</button>
   </div>
 </div>
 
@@ -270,7 +270,7 @@ let lastMouse = { x: 0, y: 0 };
 
 // PLACES
 const places = [
-  { id: 0, x: 500, y: 300, icon: '🏛️', name: 'Сашенбург', type: 'Столица', stars: '★★★★★', desc: 'Город', color: '#d32f2f' },
+  { id: 0, x: 500, y: 300, icon: '🏛️', name: 'Сашенбург', type: 'Столица SashenNet', stars: '★★★★★', desc: 'Город', color: '#d32f2f' },
   { id: 1, x: 750, y: 480, icon: '🏖️', name: 'Пляж Дерьма', type: 'Курортная зона', stars: '★★★★☆', desc: 'Все на пляже срали и зарывали свое говно в песок, оттуда и пошло такое название', color: '#0288d1' },
   { id: 2, x: 300, y: 150, icon: '🏔️', name: 'Гора С Мочой', type: 'Природный объект', stars: '★★★☆☆', desc: 'Высота 8м, вместо снега моча', color: '#5d4037' },
   { id: 3, x: 620, y: 200, icon: '🏪', name: 'Магазин', type: 'Торговля', stars: '★☆☆☆☆', desc: 'Магазин где есть все но скидка 20% только на дерьмо, успей купить!', color: '#f57f17' },
@@ -527,13 +527,9 @@ canvas.addEventListener('touchmove', e => {
 
 function checkClick(cx, cy) {
   for (const p of places) {
-    const sx = (p.x + cam.x) * cam.zoom + canvas.width/2 - cam.x * cam.zoom;
-    const sy = (p.y + cam.y) * cam.zoom + canvas.height/2 - cam.y * cam.zoom;
-    // transform to screen
-    const screenX = (p.x + cam.x - canvas.width/2 * (1/cam.zoom - 1)) * cam.zoom;
-    // simpler: just calc screen pos
-    const px = (p.x + cam.x) * cam.zoom + canvas.width/2*(1 - cam.zoom);
-    const py = (p.y + cam.y) * cam.zoom + canvas.height/2*(1 - cam.zoom);
+    // Convert world coords to screen coords
+    const px = (p.x + cam.x) * cam.zoom + canvas.width/2 * (1 - cam.zoom);
+    const py = (p.y + cam.y) * cam.zoom + canvas.height/2 * (1 - cam.zoom);
     if (Math.hypot(cx - px, cy - py) < 20 * cam.zoom) {
       showPlace(p);
       return;
