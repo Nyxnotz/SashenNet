@@ -68,5 +68,10 @@
   "name": "Casino 777",
   "description": "Казино",
   "tags": ["game", "casino"]
+  },
+  "kontakty.sashen": {
+  "name": "Контакты",
+  "description": "Социальная сеть",
+  "tags": ["social"]
   }
 }
