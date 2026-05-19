@@ -108,7 +108,9 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 // Static files
-app.use(express.static(path.join(__dirname, 'public')));
+const publicPath = path.join(__dirname, 'public');
+console.log('Serving static from:', publicPath);
+app.use(express.static(publicPath));
 
 // ---- HELPERS ----
 function sanitize(str) {
@@ -281,8 +283,8 @@ app.post('/api/posts/:id/like', requireAuth, (req, res) => {
 });
 
 // ---- SERVE FRONTEND ----
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+const indexPath = path.join(__dirname, 'public', 'index.html');
+console.log('Sending index from:', indexPath);
+res.sendFile(indexPath);
 
 app.listen(PORT, () => console.log(`Kontakty running on port ${PORT}`));
