@@ -1,6 +1,568 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Контакты</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tahoma&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #d9e2ec;
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 13px;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    #header {
+      background: #4a76a8;
+      border-bottom: 1px solid #2c5282;
+      padding: 0;
+    }
+    .header-inner {
+      max-width: 990px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 10px;
+      gap: 16px;
+    }
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .logo-text span { color: #c8dff0; }
+    .header-nav { display: flex; gap: 4px; margin-left: auto; align-items: center; }
+    .header-nav a, .header-nav button {
+      color: #d0e8ff;
+      text-decoration: none;
+      font-size: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+    .header-nav a:hover, .header-nav button:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .header-user { color: #fff; font-size: 12px; font-weight: bold; }
+
+    /* MAIN */
+    .main-wrap {
+      max-width: 990px;
+      margin: 16px auto;
+      padding: 0 10px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 12px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {}
+    .sidebar-block {
+      background: #fff;
+      border: 1px solid #b8cce0;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .sidebar-block-title {
+      background: #4a76a8;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 5px 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sidebar-link {
+      display: block;
+      padding: 7px 10px;
+      color: #2c5f9e;
+      text-decoration: none;
+      border-bottom: 1px solid #e8f0f8;
+      font-size: 12px;
+    }
+    .sidebar-link:hover { background: #f0f6ff; }
+    .sidebar-link.active { color: #333; font-weight: bold; background: #f5f8fc; }
+
+    /* CONTENT */
+    .content {}
+
+    /* AUTH FORMS */
+    #auth-page {
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    .auth-box {
+      background: #fff;
+      border: 1px solid #b8cce0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .auth-box-title {
+      background: #4a76a8;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 16px;
+    }
+    .auth-box-body { padding: 20px 16px; }
+    .form-row { margin-bottom: 12px; }
+    .form-row label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-row input {
+      width: 100%;
+      border: 1px solid #b8cce0;
+      border-radius: 3px;
+      padding: 6px 8px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      color: #222;
+    }
+    .form-row input:focus { border-color: #4a76a8; box-shadow: 0 0 0 2px rgba(74,118,168,0.15); }
+    .btn-primary {
+      background: #4a76a8;
+      color: #fff;
+      border: 1px solid #2c5282;
+      border-radius: 3px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-primary:hover { background: #3d6491; }
+    .btn-link { background: none; border: none; color: #2c5f9e; cursor: pointer; font-size: 12px; text-decoration: underline; padding: 0; font-family: inherit; }
+    .btn-link:hover { color: #1a3a5c; }
+    .form-error { color: #c0392b; font-size: 12px; margin-top: 4px; display: none; }
+    .form-error.show { display: block; }
+    .auth-switch { text-align: center; margin-top: 12px; font-size: 12px; color: #666; }
+
+    /* FEED */
+    #feed-page {}
+    .post-composer {
+      background: #fff;
+      border: 1px solid #b8cce0;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .composer-inner { display: flex; gap: 10px; }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; color: #fff; font-size: 14px;
+      flex-shrink: 0;
+    }
+    .composer-right { flex: 1; }
+    textarea.post-input {
+      width: 100%;
+      border: 1px solid #b8cce0;
+      border-radius: 3px;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      resize: none;
+      outline: none;
+      color: #222;
+      min-height: 60px;
+    }
+    textarea.post-input:focus { border-color: #4a76a8; }
+    .composer-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+    .char-counter { font-size: 11px; color: #aaa; }
+    .char-counter.warn { color: #e67e22; }
+    .char-counter.over { color: #e74c3c; }
+
+    /* POSTS */
+    .post-card {
+      background: #fff;
+      border: 1px solid #b8cce0;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .post-header { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+    .post-meta { flex: 1; }
+    .post-author { font-weight: bold; color: #2c5f9e; font-size: 13px; text-decoration: none; }
+    .post-author:hover { text-decoration: underline; }
+    .post-time { font-size: 11px; color: #999; margin-top: 1px; }
+    .post-content { font-size: 13px; line-height: 1.5; color: #222; margin-bottom: 10px; white-space: pre-wrap; word-break: break-word; }
+    .post-actions { display: flex; gap: 12px; }
+    .action-btn {
+      background: none; border: none; cursor: pointer;
+      color: #666; font-size: 12px; font-family: inherit;
+      display: flex; align-items: center; gap: 4px; padding: 2px 0;
+    }
+    .action-btn:hover { color: #2c5f9e; }
+    .action-btn.liked { color: #e74c3c; }
+    .action-btn.delete-btn:hover { color: #c0392b; }
+
+    .load-more {
+      text-align: center;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #b8cce0;
+      border-radius: 4px;
+    }
+    .btn-more { background: #f0f6ff; border: 1px solid #b8cce0; border-radius: 3px; padding: 6px 20px; cursor: pointer; color: #2c5f9e; font-size: 12px; font-family: inherit; }
+    .btn-more:hover { background: #e0ecf8; }
+
+    .empty-feed { text-align: center; padding: 40px; color: #999; font-size: 13px; }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 20px; color: #999; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #333; color: #fff; padding: 8px 20px; border-radius: 4px;
+      font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000;
+    }
+    #toast.show { opacity: 1; }
+
+    @media(max-width: 600px) {
+      .main-wrap { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
 <body>
-<h1>not ready</h1>
+
+<div id="header">
+  <div class="header-inner">
+    <a class="logo-text" href="/">Кон<span>такты</span></a>
+    <div class="header-nav" id="headerNav">
+      <span class="header-user" id="headerUser"></span>
+      <button onclick="showPage('feed')" id="navFeed" style="display:none">Лента</button>
+      <button onclick="logout()" id="navLogout" style="display:none">Выйти</button>
+      <button onclick="showPage('login')" id="navLogin">Войти</button>
+      <button onclick="showPage('register')" id="navRegister">Регистрация</button>
+    </div>
+  </div>
+</div>
+
+<div id="auth-page" style="display:none">
+  <!-- LOGIN -->
+  <div class="auth-box" id="loginBox">
+    <div class="auth-box-title">Вход в Контакты</div>
+    <div class="auth-box-body">
+      <div class="form-row">
+        <label>Логин</label>
+        <input type="text" id="loginUsername" autocomplete="username" maxlength="24">
+      </div>
+      <div class="form-row">
+        <label>Пароль</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" maxlength="128">
+      </div>
+      <div class="form-error" id="loginError"></div>
+      <button class="btn-primary" onclick="doLogin()">Войти</button>
+      <div class="auth-switch">Нет аккаунта? <button class="btn-link" onclick="showPage('register')">Зарегистрироваться</button></div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="auth-box" id="registerBox" style="display:none">
+    <div class="auth-box-title">Регистрация в Контактах</div>
+    <div class="auth-box-body">
+      <div class="form-row">
+        <label>Логин <span style="color:#999;font-weight:normal">(буквы, цифры, _, 3-24 символа)</span></label>
+        <input type="text" id="regUsername" autocomplete="username" maxlength="24">
+      </div>
+      <div class="form-row">
+        <label>Имя</label>
+        <input type="text" id="regDisplayName" maxlength="50">
+      </div>
+      <div class="form-row">
+        <label>Пароль <span style="color:#999;font-weight:normal">(минимум 6 символов)</span></label>
+        <input type="password" id="regPassword" autocomplete="new-password" maxlength="128">
+      </div>
+      <div class="form-row">
+        <label>Повторите пароль</label>
+        <input type="password" id="regPassword2" autocomplete="new-password" maxlength="128">
+      </div>
+      <div class="form-error" id="registerError"></div>
+      <button class="btn-primary" onclick="doRegister()">Зарегистрироваться</button>
+      <div class="auth-switch">Уже есть аккаунт? <button class="btn-link" onclick="showPage('login')">Войти</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEED -->
+<div class="main-wrap" id="feed-page" style="display:none">
+  <div class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-block-title">Меню</div>
+      <a href="#" class="sidebar-link active">Лента</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Друзья</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Сообщения</a>
+      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Мой профиль</a>
+    </div>
+    <div class="sidebar-block" id="sidebarUser">
+      <div class="sidebar-block-title">Я</div>
+      <div style="padding:10px;display:flex;align-items:center;gap:8px">
+        <div class="avatar" id="sideAvatar" style="width:32px;height:32px;font-size:12px"></div>
+        <div>
+          <div style="font-weight:bold;font-size:12px" id="sideName"></div>
+          <div style="font-size:11px;color:#999" id="sideUsername"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="post-composer" id="composer">
+      <div class="composer-inner">
+        <div class="avatar" id="composerAvatar"></div>
+        <div class="composer-right">
+          <textarea class="post-input" id="postInput" placeholder="Что у вас нового?" maxlength="1000" oninput="updateCounter()"></textarea>
+          <div class="composer-footer">
+            <span class="char-counter" id="charCounter">0/1000</span>
+            <button class="btn-primary" onclick="submitPost()">Опубликовать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="postsList"></div>
+    <div id="loadMoreWrap" style="display:none">
+      <div class="load-more"><button class="btn-more" onclick="loadPosts(true)">Загрузить ещё</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = '';
+let currentUser = null;
+let currentPage = 1;
+let hasMore = false;
+
+// ---- UTILS ----
+function showToast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(ts) {
+  const d = Math.floor(Date.now()/1000) - ts;
+  if(d<60) return 'только что';
+  if(d<3600) return Math.floor(d/60)+' мин назад';
+  if(d<86400) return Math.floor(d/3600)+' ч назад';
+  return Math.floor(d/86400)+' дн назад';
+}
+
+function avatarLetter(name) {
+  return (name||'?')[0].toUpperCase();
+}
+
+// ---- PAGES ----
+function showPage(page) {
+  document.getElementById('auth-page').style.display = 'none';
+  document.getElementById('feed-page').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('registerBox').style.display = 'none';
+
+  if(page === 'login') {
+    document.getElementById('auth-page').style.display = 'block';
+    document.getElementById('loginBox').style.display = 'block';
+  } else if(page === 'register') {
+    document.getElementById('auth-page').style.display = 'block';
+    document.getElementById('registerBox').style.display = 'block';
+  } else if(page === 'feed') {
+    document.getElementById('feed-page').style.display = 'grid';
+    loadPosts(false);
+  }
+}
+
+function updateNav() {
+  const loggedIn = !!currentUser;
+  document.getElementById('navLogin').style.display = loggedIn ? 'none' : '';
+  document.getElementById('navRegister').style.display = loggedIn ? 'none' : '';
+  document.getElementById('navLogout').style.display = loggedIn ? '' : 'none';
+  document.getElementById('navFeed').style.display = loggedIn ? '' : 'none';
+  document.getElementById('headerUser').textContent = loggedIn ? currentUser.display_name : '';
+  document.getElementById('composer').style.display = loggedIn ? '' : 'none';
+
+  if(loggedIn) {
+    document.getElementById('composerAvatar').style.background = currentUser.avatar_color;
+    document.getElementById('composerAvatar').textContent = avatarLetter(currentUser.display_name);
+    document.getElementById('sideAvatar').style.background = currentUser.avatar_color;
+    document.getElementById('sideAvatar').textContent = avatarLetter(currentUser.display_name);
+    document.getElementById('sideName').textContent = currentUser.display_name;
+    document.getElementById('sideUsername').textContent = '@'+currentUser.username;
+  }
+}
+
+// ---- AUTH ----
+async function doLogin() {
+  const err = document.getElementById('loginError');
+  err.classList.remove('show');
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if(!username||!password){ err.textContent='Заполните все поля'; err.classList.add('show'); return; }
+  try {
+    const r = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
+    const d = await r.json();
+    if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
+    currentUser = d.user;
+    updateNav();
+    showPage('feed');
+  } catch(e){ err.textContent='Ошибка соединения'; err.classList.add('show'); }
+}
+
+async function doRegister() {
+  const err = document.getElementById('registerError');
+  err.classList.remove('show');
+  const username = document.getElementById('regUsername').value.trim();
+  const display_name = document.getElementById('regDisplayName').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const password2 = document.getElementById('regPassword2').value;
+  if(password !== password2){ err.textContent='Пароли не совпадают'; err.classList.add('show'); return; }
+  try {
+    const r = await fetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,display_name,password}) });
+    const d = await r.json();
+    if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
+    currentUser = d.user;
+    updateNav();
+    showPage('feed');
+  } catch(e){ err.textContent='Ошибка соединения'; err.classList.add('show'); }
+}
+
+async function logout() {
+  await fetch('/api/logout', { method:'POST' });
+  currentUser = null;
+  updateNav();
+  showPage('login');
+}
+
+// ---- POSTS ----
+async function loadPosts(more=false) {
+  if(!more){ currentPage=1; document.getElementById('postsList').innerHTML='<div class="loading">Загрузка...</div>'; }
+  else currentPage++;
+  try {
+    const r = await fetch(`/api/posts?page=${currentPage}`);
+    const d = await r.json();
+    hasMore = d.hasMore;
+    document.getElementById('loadMoreWrap').style.display = hasMore ? 'block' : 'none';
+    if(!more) {
+      if(d.posts.length===0){
+        document.getElementById('postsList').innerHTML='<div class="empty-feed">Постов пока нет. Будьте первым!</div>';
+        return;
+      }
+      document.getElementById('postsList').innerHTML = '';
+    }
+    d.posts.forEach(p => appendPost(p, !more));
+  } catch(e){ document.getElementById('postsList').innerHTML='<div class="empty-feed">Ошибка загрузки</div>'; }
+}
+
+function appendPost(p, prepend=false) {
+  const div = document.createElement('div');
+  div.className = 'post-card';
+  div.id = 'post-'+p.id;
+  const isOwn = currentUser && currentUser.username === p.username;
+  div.innerHTML = `
+    <div class="post-header">
+      <div class="avatar" style="background:${escapeHtml(p.avatar_color)}">${escapeHtml(avatarLetter(p.display_name))}</div>
+      <div class="post-meta">
+        <a class="post-author" href="#">${escapeHtml(p.display_name)}</a>
+        <div class="post-time">@${escapeHtml(p.username)} · ${timeAgo(p.created_at)}</div>
+      </div>
+    </div>
+    <div class="post-content">${escapeHtml(p.content)}</div>
+    <div class="post-actions">
+      <button class="action-btn ${p.liked?'liked':''}" id="like-${p.id}" onclick="toggleLike(${p.id})">
+        ${p.liked?'♥':'♡'} <span id="likes-${p.id}">${p.likes_count}</span>
+      </button>
+      ${isOwn?`<button class="action-btn delete-btn" onclick="deletePost(${p.id})">✕ Удалить</button>`:''}
+    </div>`;
+  const list = document.getElementById('postsList');
+  if(prepend) list.insertBefore(div, list.firstChild);
+  else list.appendChild(div);
+}
+
+async function submitPost() {
+  const input = document.getElementById('postInput');
+  const content = input.value.trim();
+  if(!content) return;
+  if(content.length>1000){ showToast('Максимум 1000 символов'); return; }
+  try {
+    const r = await fetch('/api/posts', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content}) });
+    const d = await r.json();
+    if(!r.ok){ showToast(d.error); return; }
+    input.value=''; updateCounter();
+    appendPost(d.post, true);
+    const empty = document.querySelector('.empty-feed');
+    if(empty) empty.remove();
+  } catch(e){ showToast('Ошибка отправки'); }
+}
+
+async function toggleLike(id) {
+  if(!currentUser){ showToast('Войдите чтобы ставить лайки'); return; }
+  try {
+    const r = await fetch(`/api/posts/${id}/like`, { method:'POST' });
+    const d = await r.json();
+    if(!r.ok) return;
+    const btn = document.getElementById('like-'+id);
+    btn.classList.toggle('liked', d.liked);
+    btn.querySelector('span').textContent = d.likes_count;
+    btn.childNodes[0].textContent = d.liked ? '♥ ' : '♡ ';
+  } catch(e){}
+}
+
+async function deletePost(id) {
+  if(!confirm('Удалить пост?')) return;
+  try {
+    const r = await fetch(`/api/posts/${id}`, { method:'DELETE' });
+    if(r.ok) document.getElementById('post-'+id)?.remove();
+  } catch(e){}
+}
+
+function updateCounter() {
+  const len = document.getElementById('postInput').value.length;
+  const el = document.getElementById('charCounter');
+  el.textContent = len+'/1000';
+  el.className = 'char-counter'+(len>900?' warn':'')+(len>980?' over':'');
+}
+
+// Enter to submit (Shift+Enter = newline)
+document.getElementById('postInput')?.addEventListener('keydown', e => {
+  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); submitPost(); }
+});
+
+// Login on Enter
+['loginUsername','loginPassword'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+});
+['regUsername','regDisplayName','regPassword','regPassword2'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') doRegister(); });
+});
+
+// ---- INIT ----
+async function init() {
+  try {
+    const r = await fetch('/api/me');
+    const d = await r.json();
+    currentUser = d.user;
+    updateNav();
+    if(currentUser) showPage('feed');
+    else showPage('login');
+  } catch(e){ showPage('login'); }
+}
+
+init();
+</script>
 </body>
 </html>
