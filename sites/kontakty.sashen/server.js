@@ -9,6 +9,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { JSDOM } from 'jsdom';
 import DOMPurify from 'dompurify';
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
 
 const require = createRequire(import.meta.url);
 const SqliteStore = require('connect-sqlite3')(session);
@@ -16,6 +18,23 @@ const SqliteStore = require('connect-sqlite3')(session);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.set('trust proxy', 1);
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Multer — memory storage, max 2MB
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Только изображения'));
+    cb(null, true);
+  }
+});
 const PORT = process.env.PORT || 3000;
 
 // DOMPurify for server-side XSS sanitization
@@ -33,6 +52,7 @@ db.exec(`
     password_hash TEXT NOT NULL,
     avatar_color TEXT NOT NULL DEFAULT '#4a76a8',
     bio TEXT DEFAULT '',
+    avatar_url TEXT DEFAULT '',
     created_at INTEGER DEFAULT (unixepoch())
   );
 
@@ -199,7 +219,7 @@ app.post('/api/logout', requireAuth, (req, res) => {
 
 app.get('/api/me', (req, res) => {
   if (!req.session.userId) return res.json({ user: null });
-  const user = db.prepare('SELECT id, username, display_name, avatar_color, bio FROM users WHERE id = ?').get(req.session.userId);
+  const user = db.prepare('SELECT id, username, display_name, avatar_color, avatar_url, bio FROM users WHERE id = ?').get(req.session.userId);
   res.json({ user: user || null });
 });
 
@@ -280,6 +300,77 @@ app.post('/api/posts/:id/like', requireAuth, (req, res) => {
   }
   const count = db.prepare('SELECT COUNT(*) as c FROM likes WHERE post_id=?').get(postId).c;
   res.json({ ok: true, liked: !existing, likes_count: count });
+});
+
+// ---- PROFILE ROUTES ----
+
+// Get profile
+app.get('/api/profile/:username', (req, res) => {
+  const user = db.prepare(
+    'SELECT id, username, display_name, avatar_color, avatar_url, bio, created_at FROM users WHERE username = ?'
+  ).get(req.params.username);
+  if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+  const postCount = db.prepare('SELECT COUNT(*) as c FROM posts WHERE user_id = ?').get(user.id).c;
+  res.json({ user: { ...user, post_count: postCount } });
+});
+
+// Update profile
+app.put('/api/profile', requireAuth, rateLimit({ windowMs: 60*1000, max: 5 }), async (req, res) => {
+  try {
+    const display_name = sanitize(req.body.display_name || '');
+    const bio = sanitize(req.body.bio || '');
+    const avatar_color = req.body.avatar_color || '';
+
+    if (display_name && (display_name.length < 2 || display_name.length > 50))
+      return res.status(400).json({ error: 'Имя: 2-50 символов' });
+    if (bio.length > 200)
+      return res.status(400).json({ error: 'Описание: максимум 200 символов' });
+    if (avatar_color && !/^#[0-9a-fA-F]{6}$/.test(avatar_color))
+      return res.status(400).json({ error: 'Неверный цвет' });
+
+    const updates = [];
+    const values = [];
+    if (display_name) { updates.push('display_name = ?'); values.push(display_name); }
+    if (bio !== undefined) { updates.push('bio = ?'); values.push(bio); }
+    if (avatar_color) { updates.push('avatar_color = ?'); values.push(avatar_color); }
+    if (!updates.length) return res.status(400).json({ error: 'Нечего обновлять' });
+
+    values.push(req.session.userId);
+    db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`).run(...values);
+
+    const user = db.prepare('SELECT id, username, display_name, avatar_color, avatar_url, bio FROM users WHERE id = ?').get(req.session.userId);
+    res.json({ ok: true, user });
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+// Upload avatar
+app.post('/api/profile/avatar', requireAuth, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Файл не загружен' });
+
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'kontakty_avatars',
+          public_id: `user_${req.session.userId}`,
+          overwrite: true,
+          transformation: [{ width: 200, height: 200, crop: 'fill', gravity: 'face' }],
+          format: 'webp',
+        },
+        (err, result) => err ? reject(err) : resolve(result)
+      );
+      stream.end(req.file.buffer);
+    });
+
+    db.prepare('UPDATE users SET avatar_url = ? WHERE id = ?').run(result.secure_url, req.session.userId);
+    res.json({ ok: true, avatar_url: result.secure_url });
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error: 'Ошибка загрузки' });
+  }
 });
 
 // ---- SERVE FRONTEND ----
