@@ -7,174 +7,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Tahoma&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #d9e2ec;
-      font-family: Tahoma, Arial, sans-serif;
-      font-size: 13px;
-      color: #222;
-      min-height: 100vh;
-    }
+    body { background: #d9e2ec; font-family: Tahoma, Arial, sans-serif; font-size: 13px; color: #222; min-height: 100vh; }
 
     /* HEADER */
-    #header {
-      background: #4a76a8;
-      border-bottom: 1px solid #2c5282;
-      padding: 0;
-    }
-    .header-inner {
-      max-width: 990px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      height: 44px;
-      padding: 0 10px;
-      gap: 16px;
-    }
-    .logo-text {
-      font-size: 22px;
-      font-weight: bold;
-      color: #fff;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
+    #header { background: #4a76a8; border-bottom: 1px solid #2c5282; }
+    .header-inner { max-width: 990px; margin: 0 auto; display: flex; align-items: center; height: 44px; padding: 0 10px; gap: 16px; }
+    .logo-text { font-size: 22px; font-weight: bold; color: #fff; letter-spacing: -0.5px; text-decoration: none; cursor: pointer; }
     .logo-text span { color: #c8dff0; }
     .header-nav { display: flex; gap: 4px; margin-left: auto; align-items: center; }
-    .header-nav a, .header-nav button {
-      color: #d0e8ff;
-      text-decoration: none;
-      font-size: 12px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 3px;
-    }
+    .header-nav a, .header-nav button { color: #d0e8ff; text-decoration: none; font-size: 12px; background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 3px; font-family: inherit; }
     .header-nav a:hover, .header-nav button:hover { background: rgba(255,255,255,0.15); color: #fff; }
     .header-user { color: #fff; font-size: 12px; font-weight: bold; }
 
-    /* MAIN */
-    .main-wrap {
-      max-width: 990px;
-      margin: 16px auto;
-      padding: 0 10px;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 12px;
-    }
+    /* LAYOUT */
+    .main-wrap { max-width: 990px; margin: 16px auto; padding: 0 10px; display: grid; grid-template-columns: 200px 1fr; gap: 12px; }
 
     /* SIDEBAR */
-    .sidebar {}
-    .sidebar-block {
-      background: #fff;
-      border: 1px solid #b8cce0;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      overflow: hidden;
-    }
-    .sidebar-block-title {
-      background: #4a76a8;
-      color: #fff;
-      font-size: 11px;
-      font-weight: bold;
-      padding: 5px 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .sidebar-link {
-      display: block;
-      padding: 7px 10px;
-      color: #2c5f9e;
-      text-decoration: none;
-      border-bottom: 1px solid #e8f0f8;
-      font-size: 12px;
-    }
+    .sidebar-block { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
+    .sidebar-block-title { background: #4a76a8; color: #fff; font-size: 11px; font-weight: bold; padding: 5px 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sidebar-link { display: block; padding: 7px 10px; color: #2c5f9e; text-decoration: none; border-bottom: 1px solid #e8f0f8; font-size: 12px; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; width: 100%; text-align: left; font-family: inherit; }
     .sidebar-link:hover { background: #f0f6ff; }
     .sidebar-link.active { color: #333; font-weight: bold; background: #f5f8fc; }
 
-    /* CONTENT */
-    .content {}
-
-    /* AUTH FORMS */
-    #auth-page {
-      max-width: 400px;
-      margin: 40px auto;
-    }
-    .auth-box {
-      background: #fff;
-      border: 1px solid #b8cce0;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .auth-box-title {
-      background: #4a76a8;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-      padding: 10px 16px;
-    }
+    /* AUTH */
+    #auth-page { max-width: 400px; margin: 40px auto; }
+    .auth-box { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; overflow: hidden; }
+    .auth-box-title { background: #4a76a8; color: #fff; font-size: 14px; font-weight: bold; padding: 10px 16px; }
     .auth-box-body { padding: 20px 16px; }
     .form-row { margin-bottom: 12px; }
     .form-row label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
-    .form-row input {
-      width: 100%;
-      border: 1px solid #b8cce0;
-      border-radius: 3px;
-      padding: 6px 8px;
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-      color: #222;
-    }
-    .form-row input:focus { border-color: #4a76a8; box-shadow: 0 0 0 2px rgba(74,118,168,0.15); }
-    .btn-primary {
-      background: #4a76a8;
-      color: #fff;
-      border: 1px solid #2c5282;
-      border-radius: 3px;
-      padding: 7px 18px;
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-      font-weight: bold;
-    }
+    .form-row input, .form-row textarea, .form-row select { width: 100%; border: 1px solid #b8cce0; border-radius: 3px; padding: 6px 8px; font-size: 13px; font-family: inherit; outline: none; color: #222; }
+    .form-row input:focus, .form-row textarea:focus { border-color: #4a76a8; box-shadow: 0 0 0 2px rgba(74,118,168,0.15); }
+    .form-row textarea { resize: vertical; min-height: 70px; }
+    .btn-primary { background: #4a76a8; color: #fff; border: 1px solid #2c5282; border-radius: 3px; padding: 7px 18px; font-size: 13px; font-family: inherit; cursor: pointer; font-weight: bold; }
     .btn-primary:hover { background: #3d6491; }
+    .btn-secondary { background: #f0f6ff; color: #2c5f9e; border: 1px solid #b8cce0; border-radius: 3px; padding: 6px 14px; font-size: 12px; font-family: inherit; cursor: pointer; }
+    .btn-secondary:hover { background: #e0ecf8; }
     .btn-link { background: none; border: none; color: #2c5f9e; cursor: pointer; font-size: 12px; text-decoration: underline; padding: 0; font-family: inherit; }
-    .btn-link:hover { color: #1a3a5c; }
-    .form-error { color: #c0392b; font-size: 12px; margin-top: 4px; display: none; }
+    .form-error { color: #c0392b; font-size: 12px; margin-top: 6px; display: none; }
     .form-error.show { display: block; }
+    .form-success { color: #27ae60; font-size: 12px; margin-top: 6px; display: none; }
+    .form-success.show { display: block; }
     .auth-switch { text-align: center; margin-top: 12px; font-size: 12px; color: #666; }
 
     /* FEED */
-    #feed-page {}
-    .post-composer {
-      background: #fff;
-      border: 1px solid #b8cce0;
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
+    .post-composer { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; padding: 12px; margin-bottom: 10px; }
     .composer-inner { display: flex; gap: 10px; }
-    .avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; color: #fff; font-size: 14px;
-      flex-shrink: 0;
-    }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 14px; flex-shrink: 0; overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .composer-right { flex: 1; }
-    textarea.post-input {
-      width: 100%;
-      border: 1px solid #b8cce0;
-      border-radius: 3px;
-      padding: 8px;
-      font-family: inherit;
-      font-size: 13px;
-      resize: none;
-      outline: none;
-      color: #222;
-      min-height: 60px;
-    }
+    textarea.post-input { width: 100%; border: 1px solid #b8cce0; border-radius: 3px; padding: 8px; font-family: inherit; font-size: 13px; resize: none; outline: none; color: #222; min-height: 60px; }
     textarea.post-input:focus { border-color: #4a76a8; }
     .composer-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
     .char-counter { font-size: 11px; color: #aaa; }
@@ -182,66 +64,63 @@
     .char-counter.over { color: #e74c3c; }
 
     /* POSTS */
-    .post-card {
-      background: #fff;
-      border: 1px solid #b8cce0;
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 8px;
-    }
+    .post-card { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; padding: 12px; margin-bottom: 8px; }
     .post-header { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
     .post-meta { flex: 1; }
-    .post-author { font-weight: bold; color: #2c5f9e; font-size: 13px; text-decoration: none; }
+    .post-author { font-weight: bold; color: #2c5f9e; font-size: 13px; text-decoration: none; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
     .post-author:hover { text-decoration: underline; }
     .post-time { font-size: 11px; color: #999; margin-top: 1px; }
     .post-content { font-size: 13px; line-height: 1.5; color: #222; margin-bottom: 10px; white-space: pre-wrap; word-break: break-word; }
     .post-actions { display: flex; gap: 12px; }
-    .action-btn {
-      background: none; border: none; cursor: pointer;
-      color: #666; font-size: 12px; font-family: inherit;
-      display: flex; align-items: center; gap: 4px; padding: 2px 0;
-    }
+    .action-btn { background: none; border: none; cursor: pointer; color: #666; font-size: 12px; font-family: inherit; display: flex; align-items: center; gap: 4px; padding: 2px 0; }
     .action-btn:hover { color: #2c5f9e; }
     .action-btn.liked { color: #e74c3c; }
     .action-btn.delete-btn:hover { color: #c0392b; }
-
-    .load-more {
-      text-align: center;
-      padding: 12px;
-      background: #fff;
-      border: 1px solid #b8cce0;
-      border-radius: 4px;
-    }
+    .load-more { text-align: center; padding: 12px; background: #fff; border: 1px solid #b8cce0; border-radius: 4px; }
     .btn-more { background: #f0f6ff; border: 1px solid #b8cce0; border-radius: 3px; padding: 6px 20px; cursor: pointer; color: #2c5f9e; font-size: 12px; font-family: inherit; }
-    .btn-more:hover { background: #e0ecf8; }
-
     .empty-feed { text-align: center; padding: 40px; color: #999; font-size: 13px; }
 
-    /* LOADING */
-    .loading { text-align: center; padding: 20px; color: #999; }
+    /* PROFILE PAGE */
+    .profile-header { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; padding: 20px; margin-bottom: 10px; display: flex; gap: 20px; align-items: flex-start; }
+    .profile-avatar-wrap { position: relative; flex-shrink: 0; }
+    .profile-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; font-size: 28px; overflow: hidden; border: 3px solid #b8cce0; }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-info { flex: 1; }
+    .profile-name { font-size: 20px; font-weight: bold; color: #222; margin-bottom: 2px; }
+    .profile-username { font-size: 12px; color: #999; margin-bottom: 8px; }
+    .profile-bio { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 10px; }
+    .profile-stats { display: flex; gap: 20px; font-size: 12px; color: #777; }
+    .profile-stat span { font-weight: bold; color: #222; }
+    .profile-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* EDIT PROFILE */
+    .edit-profile-box { background: #fff; border: 1px solid #b8cce0; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+    .edit-profile-title { background: #4a76a8; color: #fff; font-size: 13px; font-weight: bold; padding: 8px 14px; }
+    .edit-profile-body { padding: 16px; }
+    .color-picker-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .color-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border-color 0.15s; }
+    .color-opt:hover, .color-opt.selected { border-color: #222; }
+    .avatar-upload-area { border: 2px dashed #b8cce0; border-radius: 4px; padding: 16px; text-align: center; cursor: pointer; margin-top: 6px; }
+    .avatar-upload-area:hover { border-color: #4a76a8; background: #f5f9ff; }
+    .avatar-preview { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; color: #fff; }
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
 
     /* TOAST */
-    #toast {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: #333; color: #fff; padding: 8px 20px; border-radius: 4px;
-      font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000;
-    }
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 8px 20px; border-radius: 4px; font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
     #toast.show { opacity: 1; }
 
-    @media(max-width: 600px) {
-      .main-wrap { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
+    @media(max-width:600px) { .main-wrap { grid-template-columns: 1fr; } .sidebar { display: none; } }
   </style>
 </head>
 <body>
 
 <div id="header">
   <div class="header-inner">
-    <a class="logo-text" href="/">Кон<span>такты</span></a>
-    <div class="header-nav" id="headerNav">
+    <span class="logo-text" onclick="showPage('feed')">Кон<span>такты</span></span>
+    <div class="header-nav">
       <span class="header-user" id="headerUser"></span>
       <button onclick="showPage('feed')" id="navFeed" style="display:none">Лента</button>
+      <button onclick="showPage('profile-me')" id="navProfile" style="display:none">Мой профиль</button>
       <button onclick="logout()" id="navLogout" style="display:none">Выйти</button>
       <button onclick="showPage('login')" id="navLogin">Войти</button>
       <button onclick="showPage('register')" id="navRegister">Регистрация</button>
@@ -249,48 +128,28 @@
   </div>
 </div>
 
+<!-- AUTH -->
 <div id="auth-page" style="display:none">
-  <!-- LOGIN -->
   <div class="auth-box" id="loginBox">
     <div class="auth-box-title">Вход в Контакты</div>
     <div class="auth-box-body">
-      <div class="form-row">
-        <label>Логин</label>
-        <input type="text" id="loginUsername" autocomplete="username" maxlength="24">
-      </div>
-      <div class="form-row">
-        <label>Пароль</label>
-        <input type="password" id="loginPassword" autocomplete="current-password" maxlength="128">
-      </div>
+      <div class="form-row"><label>Логин</label><input type="text" id="loginUsername" autocomplete="username" maxlength="24"></div>
+      <div class="form-row"><label>Пароль</label><input type="password" id="loginPassword" autocomplete="current-password" maxlength="128"></div>
       <div class="form-error" id="loginError"></div>
       <button class="btn-primary" onclick="doLogin()">Войти</button>
       <div class="auth-switch">Нет аккаунта? <button class="btn-link" onclick="showPage('register')">Зарегистрироваться</button></div>
     </div>
   </div>
-
-  <!-- REGISTER -->
   <div class="auth-box" id="registerBox" style="display:none">
-    <div class="auth-box-title">Регистрация в Контактах</div>
+    <div class="auth-box-title">Регистрация</div>
     <div class="auth-box-body">
-      <div class="form-row">
-        <label>Логин <span style="color:#999;font-weight:normal">(буквы, цифры, _, 3-24 символа)</span></label>
-        <input type="text" id="regUsername" autocomplete="username" maxlength="24">
-      </div>
-      <div class="form-row">
-        <label>Имя</label>
-        <input type="text" id="regDisplayName" maxlength="50">
-      </div>
-      <div class="form-row">
-        <label>Пароль <span style="color:#999;font-weight:normal">(минимум 6 символов)</span></label>
-        <input type="password" id="regPassword" autocomplete="new-password" maxlength="128">
-      </div>
-      <div class="form-row">
-        <label>Повторите пароль</label>
-        <input type="password" id="regPassword2" autocomplete="new-password" maxlength="128">
-      </div>
+      <div class="form-row"><label>Логин (буквы, цифры, _, 3-24)</label><input type="text" id="regUsername" autocomplete="username" maxlength="24"></div>
+      <div class="form-row"><label>Имя</label><input type="text" id="regDisplayName" maxlength="50"></div>
+      <div class="form-row"><label>Пароль (мин. 6 символов)</label><input type="password" id="regPassword" autocomplete="new-password" maxlength="128"></div>
+      <div class="form-row"><label>Повторите пароль</label><input type="password" id="regPassword2" autocomplete="new-password" maxlength="128"></div>
       <div class="form-error" id="registerError"></div>
       <button class="btn-primary" onclick="doRegister()">Зарегистрироваться</button>
-      <div class="auth-switch">Уже есть аккаунт? <button class="btn-link" onclick="showPage('login')">Войти</button></div>
+      <div class="auth-switch">Есть аккаунт? <button class="btn-link" onclick="showPage('login')">Войти</button></div>
     </div>
   </div>
 </div>
@@ -300,12 +159,10 @@
   <div class="sidebar">
     <div class="sidebar-block">
       <div class="sidebar-block-title">Меню</div>
-      <a href="#" class="sidebar-link active">Лента</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Друзья</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Сообщения</a>
-      <a href="#" class="sidebar-link" onclick="showToast('Скоро')">Мой профиль</a>
+      <button class="sidebar-link active" onclick="showPage('feed')">Лента</button>
+      <button class="sidebar-link" onclick="showPage('profile-me')">Мой профиль</button>
     </div>
-    <div class="sidebar-block" id="sidebarUser">
+    <div class="sidebar-block" id="sidebarUser" style="display:none">
       <div class="sidebar-block-title">Я</div>
       <div style="padding:10px;display:flex;align-items:center;gap:8px">
         <div class="avatar" id="sideAvatar" style="width:32px;height:32px;font-size:12px"></div>
@@ -316,9 +173,8 @@
       </div>
     </div>
   </div>
-
   <div class="content">
-    <div class="post-composer" id="composer">
+    <div class="post-composer" id="composer" style="display:none">
       <div class="composer-inner">
         <div class="avatar" id="composerAvatar"></div>
         <div class="composer-right">
@@ -337,13 +193,69 @@
   </div>
 </div>
 
+<!-- PROFILE PAGE -->
+<div class="main-wrap" id="profile-page" style="display:none">
+  <div class="sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-block-title">Меню</div>
+      <button class="sidebar-link" onclick="showPage('feed')">Лента</button>
+      <button class="sidebar-link active" onclick="showPage('profile-me')">Мой профиль</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="profile-header" id="profileHeader"></div>
+    <div id="editProfileBox" style="display:none">
+      <div class="edit-profile-box">
+        <div class="edit-profile-title">Редактировать профиль</div>
+        <div class="edit-profile-body">
+          <!-- Avatar -->
+          <div class="form-row">
+            <label>Аватарка</label>
+            <div class="avatar-upload-area" onclick="document.getElementById('avatarFileInput').click()">
+              <div class="avatar-preview" id="avatarPreview"></div>
+              <div style="font-size:12px;color:#666">Нажмите чтобы загрузить фото (макс. 2MB)</div>
+              <div style="font-size:11px;color:#aaa;margin-top:4px">JPG, PNG, GIF, WebP</div>
+            </div>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+            <div id="avatarUploadStatus" style="font-size:11px;margin-top:4px;color:#666"></div>
+          </div>
+          <!-- Color -->
+          <div class="form-row">
+            <label>Цвет аватара (если нет фото)</label>
+            <div class="color-picker-row" id="colorPicker"></div>
+          </div>
+          <!-- Name -->
+          <div class="form-row">
+            <label>Имя</label>
+            <input type="text" id="editName" maxlength="50">
+          </div>
+          <!-- Bio -->
+          <div class="form-row">
+            <label>О себе (макс. 200 символов)</label>
+            <textarea id="editBio" maxlength="200" oninput="document.getElementById('bioCounter').textContent=this.value.length+'/200'"></textarea>
+            <div style="font-size:11px;color:#aaa;text-align:right;margin-top:2px" id="bioCounter">0/200</div>
+          </div>
+          <div class="form-error" id="editError"></div>
+          <div class="form-success" id="editSuccess"></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn-primary" onclick="saveProfile()">Сохранить</button>
+            <button class="btn-secondary" onclick="toggleEditProfile(false)">Отмена</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="profilePosts"></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const API = '';
+const COLORS = ['#4a76a8','#e64646','#4caf50','#ff9800','#9c27b0','#00bcd4','#f44336','#3f51b5','#795548','#607d8b'];
 let currentUser = null;
 let currentPage = 1;
-let hasMore = false;
+let selectedColor = '#4a76a8';
+let pendingAvatarFile = null;
 
 // ---- UTILS ----
 function showToast(msg, dur=2500) {
@@ -351,11 +263,9 @@ function showToast(msg, dur=2500) {
   t.textContent = msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), dur);
 }
-
-function escapeHtml(s) {
+function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 function timeAgo(ts) {
   const d = Math.floor(Date.now()/1000) - ts;
   if(d<60) return 'только что';
@@ -363,15 +273,26 @@ function timeAgo(ts) {
   if(d<86400) return Math.floor(d/3600)+' ч назад';
   return Math.floor(d/86400)+' дн назад';
 }
+function avatarLetter(name) { return (name||'?')[0].toUpperCase(); }
 
-function avatarLetter(name) {
-  return (name||'?')[0].toUpperCase();
+function renderAvatar(el, user, size=36) {
+  el.style.width = size+'px';
+  el.style.height = size+'px';
+  el.style.fontSize = Math.round(size*0.4)+'px';
+  if(user.avatar_url) {
+    el.innerHTML = `<img src="${esc(user.avatar_url)}" alt="">`;
+    el.style.background = 'transparent';
+  } else {
+    el.innerHTML = avatarLetter(user.display_name);
+    el.style.background = user.avatar_color || '#4a76a8';
+  }
 }
 
 // ---- PAGES ----
 function showPage(page) {
   document.getElementById('auth-page').style.display = 'none';
   document.getElementById('feed-page').style.display = 'none';
+  document.getElementById('profile-page').style.display = 'none';
   document.getElementById('loginBox').style.display = 'none';
   document.getElementById('registerBox').style.display = 'none';
 
@@ -384,23 +305,24 @@ function showPage(page) {
   } else if(page === 'feed') {
     document.getElementById('feed-page').style.display = 'grid';
     loadPosts(false);
+  } else if(page === 'profile-me' && currentUser) {
+    loadProfile(currentUser.username);
   }
 }
 
 function updateNav() {
-  const loggedIn = !!currentUser;
-  document.getElementById('navLogin').style.display = loggedIn ? 'none' : '';
-  document.getElementById('navRegister').style.display = loggedIn ? 'none' : '';
-  document.getElementById('navLogout').style.display = loggedIn ? '' : 'none';
-  document.getElementById('navFeed').style.display = loggedIn ? '' : 'none';
-  document.getElementById('headerUser').textContent = loggedIn ? currentUser.display_name : '';
-  document.getElementById('composer').style.display = loggedIn ? '' : 'none';
-
-  if(loggedIn) {
-    document.getElementById('composerAvatar').style.background = currentUser.avatar_color;
-    document.getElementById('composerAvatar').textContent = avatarLetter(currentUser.display_name);
-    document.getElementById('sideAvatar').style.background = currentUser.avatar_color;
-    document.getElementById('sideAvatar').textContent = avatarLetter(currentUser.display_name);
+  const li = !!currentUser;
+  document.getElementById('navLogin').style.display = li ? 'none' : '';
+  document.getElementById('navRegister').style.display = li ? 'none' : '';
+  document.getElementById('navLogout').style.display = li ? '' : 'none';
+  document.getElementById('navFeed').style.display = li ? '' : 'none';
+  document.getElementById('navProfile').style.display = li ? '' : 'none';
+  document.getElementById('headerUser').textContent = li ? currentUser.display_name : '';
+  document.getElementById('composer').style.display = li ? '' : 'none';
+  document.getElementById('sidebarUser').style.display = li ? '' : 'none';
+  if(li) {
+    renderAvatar(document.getElementById('composerAvatar'), currentUser);
+    renderAvatar(document.getElementById('sideAvatar'), currentUser, 32);
     document.getElementById('sideName').textContent = currentUser.display_name;
     document.getElementById('sideUsername').textContent = '@'+currentUser.username;
   }
@@ -414,12 +336,10 @@ async function doLogin() {
   const password = document.getElementById('loginPassword').value;
   if(!username||!password){ err.textContent='Заполните все поля'; err.classList.add('show'); return; }
   try {
-    const r = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
+    const r = await fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const d = await r.json();
     if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
-    currentUser = d.user;
-    updateNav();
-    showPage('feed');
+    currentUser=d.user; updateNav(); showPage('feed');
   } catch(e){ err.textContent='Ошибка соединения'; err.classList.add('show'); }
 }
 
@@ -430,135 +350,254 @@ async function doRegister() {
   const display_name = document.getElementById('regDisplayName').value.trim();
   const password = document.getElementById('regPassword').value;
   const password2 = document.getElementById('regPassword2').value;
-  if(password !== password2){ err.textContent='Пароли не совпадают'; err.classList.add('show'); return; }
+  if(password!==password2){ err.textContent='Пароли не совпадают'; err.classList.add('show'); return; }
   try {
-    const r = await fetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,display_name,password}) });
+    const r = await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,display_name,password})});
     const d = await r.json();
     if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
-    currentUser = d.user;
-    updateNav();
-    showPage('feed');
+    currentUser=d.user; updateNav(); showPage('feed');
   } catch(e){ err.textContent='Ошибка соединения'; err.classList.add('show'); }
 }
 
 async function logout() {
-  await fetch('/api/logout', { method:'POST' });
-  currentUser = null;
-  updateNav();
-  showPage('login');
+  await fetch('/api/logout',{method:'POST'});
+  currentUser=null; updateNav(); showPage('login');
 }
 
 // ---- POSTS ----
 async function loadPosts(more=false) {
-  if(!more){ currentPage=1; document.getElementById('postsList').innerHTML='<div class="loading">Загрузка...</div>'; }
+  if(!more){ currentPage=1; document.getElementById('postsList').innerHTML='<div style="text-align:center;padding:20px;color:#999">Загрузка...</div>'; }
   else currentPage++;
   try {
     const r = await fetch(`/api/posts?page=${currentPage}`);
     const d = await r.json();
-    hasMore = d.hasMore;
-    document.getElementById('loadMoreWrap').style.display = hasMore ? 'block' : 'none';
+    document.getElementById('loadMoreWrap').style.display = d.hasMore ? 'block' : 'none';
     if(!more) {
-      if(d.posts.length===0){
-        document.getElementById('postsList').innerHTML='<div class="empty-feed">Постов пока нет. Будьте первым!</div>';
-        return;
-      }
-      document.getElementById('postsList').innerHTML = '';
+      if(!d.posts.length){ document.getElementById('postsList').innerHTML='<div class="empty-feed">Постов пока нет. Будьте первым!</div>'; return; }
+      document.getElementById('postsList').innerHTML='';
     }
-    d.posts.forEach(p => appendPost(p, !more));
+    d.posts.forEach(p=>appendPost(p,!more));
   } catch(e){ document.getElementById('postsList').innerHTML='<div class="empty-feed">Ошибка загрузки</div>'; }
 }
 
 function appendPost(p, prepend=false) {
-  const div = document.createElement('div');
-  div.className = 'post-card';
-  div.id = 'post-'+p.id;
-  const isOwn = currentUser && currentUser.username === p.username;
-  div.innerHTML = `
+  const div=document.createElement('div');
+  div.className='post-card'; div.id='post-'+p.id;
+  const isOwn=currentUser&&currentUser.username===p.username;
+  const avatarHtml = p.avatar_url
+    ? `<img src="${esc(p.avatar_url)}" alt="">`
+    : esc(avatarLetter(p.display_name));
+  const avatarStyle = p.avatar_url ? '' : `background:${esc(p.avatar_color)}`;
+  div.innerHTML=`
     <div class="post-header">
-      <div class="avatar" style="background:${escapeHtml(p.avatar_color)}">${escapeHtml(avatarLetter(p.display_name))}</div>
+      <div class="avatar" style="${avatarStyle}">${avatarHtml}</div>
       <div class="post-meta">
-        <a class="post-author" href="#">${escapeHtml(p.display_name)}</a>
-        <div class="post-time">@${escapeHtml(p.username)} · ${timeAgo(p.created_at)}</div>
+        <button class="post-author" onclick="loadProfile('${esc(p.username)}')">${esc(p.display_name)}</button>
+        <div class="post-time">@${esc(p.username)} · ${timeAgo(p.created_at)}</div>
       </div>
     </div>
-    <div class="post-content">${escapeHtml(p.content)}</div>
+    <div class="post-content">${esc(p.content)}</div>
     <div class="post-actions">
       <button class="action-btn ${p.liked?'liked':''}" id="like-${p.id}" onclick="toggleLike(${p.id})">
         ${p.liked?'♥':'♡'} <span id="likes-${p.id}">${p.likes_count}</span>
       </button>
       ${isOwn?`<button class="action-btn delete-btn" onclick="deletePost(${p.id})">✕ Удалить</button>`:''}
     </div>`;
-  const list = document.getElementById('postsList');
-  if(prepend) list.insertBefore(div, list.firstChild);
-  else list.appendChild(div);
+  const list=document.getElementById('postsList');
+  if(prepend) list.insertBefore(div,list.firstChild); else list.appendChild(div);
 }
 
 async function submitPost() {
-  const input = document.getElementById('postInput');
-  const content = input.value.trim();
+  const input=document.getElementById('postInput');
+  const content=input.value.trim();
   if(!content) return;
   if(content.length>1000){ showToast('Максимум 1000 символов'); return; }
   try {
-    const r = await fetch('/api/posts', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content}) });
-    const d = await r.json();
+    const r=await fetch('/api/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    const d=await r.json();
     if(!r.ok){ showToast(d.error); return; }
     input.value=''; updateCounter();
-    appendPost(d.post, true);
-    const empty = document.querySelector('.empty-feed');
-    if(empty) empty.remove();
+    appendPost(d.post,true);
+    document.querySelector('.empty-feed')?.remove();
   } catch(e){ showToast('Ошибка отправки'); }
 }
 
 async function toggleLike(id) {
   if(!currentUser){ showToast('Войдите чтобы ставить лайки'); return; }
   try {
-    const r = await fetch(`/api/posts/${id}/like`, { method:'POST' });
-    const d = await r.json();
+    const r=await fetch(`/api/posts/${id}/like`,{method:'POST'});
+    const d=await r.json();
     if(!r.ok) return;
-    const btn = document.getElementById('like-'+id);
-    btn.classList.toggle('liked', d.liked);
-    btn.querySelector('span').textContent = d.likes_count;
-    btn.childNodes[0].textContent = d.liked ? '♥ ' : '♡ ';
+    const btn=document.getElementById('like-'+id);
+    btn.classList.toggle('liked',d.liked);
+    btn.querySelector('span').textContent=d.likes_count;
+    btn.childNodes[0].textContent=d.liked?'♥ ':'♡ ';
   } catch(e){}
 }
 
 async function deletePost(id) {
   if(!confirm('Удалить пост?')) return;
   try {
-    const r = await fetch(`/api/posts/${id}`, { method:'DELETE' });
+    const r=await fetch(`/api/posts/${id}`,{method:'DELETE'});
     if(r.ok) document.getElementById('post-'+id)?.remove();
   } catch(e){}
 }
 
 function updateCounter() {
-  const len = document.getElementById('postInput').value.length;
-  const el = document.getElementById('charCounter');
-  el.textContent = len+'/1000';
-  el.className = 'char-counter'+(len>900?' warn':'')+(len>980?' over':'');
+  const len=document.getElementById('postInput').value.length;
+  const el=document.getElementById('charCounter');
+  el.textContent=len+'/1000';
+  el.className='char-counter'+(len>900?' warn':'')+(len>980?' over':'');
 }
 
-// Enter to submit (Shift+Enter = newline)
-document.getElementById('postInput')?.addEventListener('keydown', e => {
-  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); submitPost(); }
-});
+// ---- PROFILE ----
+async function loadProfile(username) {
+  document.getElementById('auth-page').style.display='none';
+  document.getElementById('feed-page').style.display='none';
+  document.getElementById('profile-page').style.display='grid';
+  document.getElementById('editProfileBox').style.display='none';
+  document.getElementById('profileHeader').innerHTML='<div style="color:#999;padding:10px">Загрузка...</div>';
+  document.getElementById('profilePosts').innerHTML='';
 
-// Login on Enter
-['loginUsername','loginPassword'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
-});
-['regUsername','regDisplayName','regPassword','regPassword2'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') doRegister(); });
-});
+  try {
+    const r=await fetch(`/api/profile/${username}`);
+    const d=await r.json();
+    if(!r.ok){ document.getElementById('profileHeader').innerHTML='<div style="color:#c00">Пользователь не найден</div>'; return; }
+    renderProfile(d.user);
+
+    // Load user posts
+    const pr=await fetch(`/api/posts?user=${username}`);
+  } catch(e){ document.getElementById('profileHeader').innerHTML='<div style="color:#c00">Ошибка загрузки</div>'; }
+}
+
+function renderProfile(user) {
+  const isMe = currentUser && currentUser.username === user.username;
+  const avatarHtml = user.avatar_url
+    ? `<img src="${esc(user.avatar_url)}" alt="">`
+    : esc(avatarLetter(user.display_name));
+  const avatarStyle = user.avatar_url ? '' : `background:${esc(user.avatar_color)}`;
+
+  document.getElementById('profileHeader').innerHTML=`
+    <div class="profile-avatar" style="${avatarStyle}">${avatarHtml}</div>
+    <div class="profile-info">
+      <div class="profile-name">${esc(user.display_name)}</div>
+      <div class="profile-username">@${esc(user.username)}</div>
+      ${user.bio?`<div class="profile-bio">${esc(user.bio)}</div>`:''}
+      <div class="profile-stats">
+        <div>Постов: <span>${user.post_count}</span></div>
+      </div>
+      ${isMe?`<div class="profile-actions"><button class="btn-primary" onclick="toggleEditProfile(true)">Редактировать профиль</button></div>`:''}
+    </div>`;
+
+  if(isMe) {
+    // Pre-fill edit form
+    document.getElementById('editName').value=user.display_name;
+    document.getElementById('editBio').value=user.bio||'';
+    document.getElementById('bioCounter').textContent=(user.bio||'').length+'/200';
+    selectedColor=user.avatar_color||'#4a76a8';
+    buildColorPicker();
+    updateAvatarPreview(user);
+  }
+}
+
+function toggleEditProfile(show) {
+  document.getElementById('editProfileBox').style.display=show?'block':'none';
+  document.getElementById('editError').classList.remove('show');
+  document.getElementById('editSuccess').classList.remove('show');
+}
+
+function buildColorPicker() {
+  const el=document.getElementById('colorPicker');
+  el.innerHTML='';
+  COLORS.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='color-opt'+(c===selectedColor?' selected':'');
+    div.style.background=c;
+    div.onclick=()=>{ selectedColor=c; buildColorPicker(); updateAvatarPreviewColor(); };
+    el.appendChild(div);
+  });
+}
+
+function updateAvatarPreviewColor() {
+  const el=document.getElementById('avatarPreview');
+  if(!pendingAvatarFile) {
+    el.style.background=selectedColor;
+    el.innerHTML=avatarLetter(currentUser?.display_name||'?');
+  }
+}
+
+function updateAvatarPreview(user) {
+  const el=document.getElementById('avatarPreview');
+  if(user.avatar_url) {
+    el.innerHTML=`<img src="${esc(user.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    el.style.background='transparent';
+  } else {
+    el.style.background=user.avatar_color||'#4a76a8';
+    el.innerHTML=avatarLetter(user.display_name);
+  }
+}
+
+function previewAvatar(input) {
+  const file=input.files[0];
+  if(!file) return;
+  if(file.size>2*1024*1024){ showToast('Файл слишком большой (макс. 2MB)'); return; }
+  pendingAvatarFile=file;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const el=document.getElementById('avatarPreview');
+    el.innerHTML=`<img src="${e.target.result}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    el.style.background='transparent';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveProfile() {
+  const err=document.getElementById('editError');
+  const succ=document.getElementById('editSuccess');
+  err.classList.remove('show'); succ.classList.remove('show');
+
+  // Upload avatar if pending
+  if(pendingAvatarFile) {
+    document.getElementById('avatarUploadStatus').textContent='Загрузка аватарки...';
+    try {
+      const fd=new FormData();
+      fd.append('avatar',pendingAvatarFile);
+      const r=await fetch('/api/profile/avatar',{method:'POST',body:fd});
+      const d=await r.json();
+      if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
+      currentUser.avatar_url=d.avatar_url;
+      pendingAvatarFile=null;
+      document.getElementById('avatarUploadStatus').textContent='Аватарка загружена!';
+    } catch(e){ err.textContent='Ошибка загрузки аватарки'; err.classList.add('show'); return; }
+  }
+
+  // Save profile data
+  const display_name=document.getElementById('editName').value.trim();
+  const bio=document.getElementById('editBio').value.trim();
+  try {
+    const r=await fetch('/api/profile',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({display_name,bio,avatar_color:selectedColor})});
+    const d=await r.json();
+    if(!r.ok){ err.textContent=d.error; err.classList.add('show'); return; }
+    currentUser={...currentUser,...d.user};
+    updateNav();
+    succ.textContent='Профиль сохранён!'; succ.classList.add('show');
+    setTimeout(()=>{ toggleEditProfile(false); loadProfile(currentUser.username); },1000);
+  } catch(e){ err.textContent='Ошибка сохранения'; err.classList.add('show'); }
+}
+
+// Keyboard shortcuts
+document.getElementById('postInput')?.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitPost();} });
+['loginUsername','loginPassword'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter')doLogin(); }));
+['regUsername','regDisplayName','regPassword','regPassword2'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter')doRegister(); }));
 
 // ---- INIT ----
 async function init() {
   try {
-    const r = await fetch('/api/me');
-    const d = await r.json();
-    currentUser = d.user;
+    const r=await fetch('/api/me');
+    const d=await r.json();
+    currentUser=d.user;
     updateNav();
-    if(currentUser) showPage('feed');
-    else showPage('login');
+    if(currentUser) showPage('feed'); else showPage('login');
   } catch(e){ showPage('login'); }
 }
 
