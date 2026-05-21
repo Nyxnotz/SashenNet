@@ -1,631 +1,87 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RuslTube</title>
-    <style>
-        :root { --bg: #0f0f0f; --surf: #1f1f1f; --text: #fff; --red: #ff0000; --blue: #3ea6ff; --border: #333; --card-bg: #000; }
-        body.light { --bg: #f9f9f9; --surf: #fff; --text: #0f0f0f; --border: #ddd; --card-bg: #eee; }
-        
-        body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; -webkit-tap-highlight-color: transparent; }
-        header { display: flex; justify-content: space-between; padding: 10px 15px; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); gap: 10px; }
-        .logo { font-size: 20px; font-weight: bold; cursor: pointer; flex-shrink: 0; }
-        .logo span { background: var(--red); padding: 2px 6px; border-radius: 4px; color: #fff; }
-        
-        .search-bar { display: flex; flex: 0 1 500px; width: 100%; }
-        .search-bar input { width: 100%; padding: 8px 12px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text); border-radius: 20px 0 0 20px; outline: none; font-size: 14px; }
-        .search-bar button { padding: 0 12px; background: var(--surf); border: 1px solid var(--border); border-radius: 0 20px 20px 0; color: var(--text); cursor: pointer; }
+  <meta charset="UTF-8">
+  <title>404 — SashenNet</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .rt-page { padding: 15px; display: none; box-sizing: border-box; }
-        #homePage { display: block; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        
-        .card { cursor: pointer; display: block; width: 100%; }
-        .card .thumb-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 12px; background: #111; overflow: hidden; position: relative; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: #444; font-size: 40px; }
-        .card .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .card-info { display: flex; gap: 12px; margin-top: 10px; }
-        .card-info h4 { margin: 0; font-size: 14px; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .card-info p { margin: 4px 0 0 0; font-size: 12px; color: #888; }
-        
-        .avatar { position: relative; width: 38px; height: 38px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; color: #fff; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .v-badge { position: absolute; bottom: -2px; right: -2px; background: var(--blue); color: white; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg); z-index: 2; }
-        .v-badge svg { width: 10px; height: 10px; }
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #0a0a0a;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,40,0,0.15) 2px, rgba(0,40,0,0.15) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,60,0,0.07) 40px, rgba(0,60,0,0.07) 41px),
+        radial-gradient(ellipse at 20% 50%, rgba(0,60,20,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(0,40,10,0.25) 0%, transparent 60%);
+      color: #ccc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-        #videoPage { max-width: 1400px; margin: 0 auto; gap: 20px; }
-        @media(min-width: 900px) { #videoPage { grid-template-columns: minmax(0, 1fr) 360px; gap: 25px; } }
-        
-        .player-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        .player-wrap video { width: 100%; height: 100%; object-fit: contain; }
-        
-        .endscreen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10; flex-direction: column; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .endscreen-content { display: flex; width: 100%; justify-content: space-around; align-items: center; max-width: 800px; flex: 1; gap: 10px; }
-        .endscreen-author { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: #fff; text-align: center; }
-        
-        .endscreen-recs { display: flex; gap: 15px; }
-        .endscreen-rec-card { width: 140px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
-        .endscreen-rec-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; background: #222; }
-        .endscreen-rec-card h5 { margin: 6px 0 0 0; font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; }
+    a.logo {
+      font-size: 3rem;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .logo span:nth-child(1)  { color: #a78bfa; }
+    .logo span:nth-child(2)  { color: #60a5fa; }
+    .logo span:nth-child(3)  { color: #34d399; }
+    .logo span:nth-child(4)  { color: #fbbf24; }
+    .logo span:nth-child(5)  { color: #f87171; }
+    .logo span:nth-child(6)  { color: #a78bfa; }
+    .logo span:nth-child(7)  { color: #60a5fa; }
+    .logo span:nth-child(8)  { color: #34d399; }
+    .logo span:nth-child(9)  { color: #fbbf24; }
 
-        @media(max-width: 550px) {
-            .endscreen-content { flex-direction: column; justify-content: center; gap: 15px; }
-            .endscreen-recs { display: none; }
-        }
+    .code {
+      font-size: 6rem;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      color: #222;
+      line-height: 1;
+      margin-bottom: 12px;
+      letter-spacing: -4px;
+    }
 
-        .endscreen-controls { display: flex; gap: 10px; padding-bottom: 10px; }
-        .ctrl-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 8px 16px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    .title {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
 
-        .v-desc { background: var(--surf); padding: 12px; border-radius: 12px; margin: 12px 0; font-size: 13px; line-height: 1.4; border: 1px solid var(--border); white-space: pre-wrap; word-break: break-word; }
-        .actions { display: flex; flex-direction: column; gap: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
-        @media(min-width: 550px) { .actions { flex-direction: row; justify-content: space-between; align-items: center; } }
+    .desc {
+      font-size: 0.8rem;
+      color: #333;
+      margin-bottom: 32px;
+    }
 
-        .sub-btn { background: var(--text); color: var(--bg); padding: 0 16px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; height: 36px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
-        .sub-btn.active { background: var(--surf); color: var(--text); border: 1px solid var(--border); }
-
-        .rating-block { display: flex; background: var(--surf); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; height: 36px; }
-        .rate-btn { background: none; border: none; color: var(--text); padding: 0 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold; }
-        .rate-btn:first-child { border-right: 1px solid var(--border); }
-        .rate-btn.active { color: var(--blue); }
-
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surf); padding: 20px; border-radius: 15px; z-index: 1001; width: 90%; max-width: 340px; box-shadow: 0 0 40px rgba(0,0,0,0.5); border: 1px solid var(--border); box-sizing: border-box; }
-        .modal input, .modal textarea { width: 100%; padding: 10px; margin-bottom: 12px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; outline: none; box-sizing: border-box; font-size: 14px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; }
-        .btn-main { background: var(--red); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        
-        .ch-card { display: flex; flex-direction: column; align-items: center; min-width: 90px; cursor: pointer; text-align: center; }
-        .theme-toggle { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
-        .del-comment-btn { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 11px; margin-left: 10px; padding: 0; }
-        
-        #authBox { flex-shrink: 0; }
-    </style>
+    a.back {
+      font-size: 0.85rem;
+      color: #8ab4f8;
+      text-decoration: none;
+    }
+    a.back:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo" onclick="goHome()">Rusl<span>Tube</span></div>
-        <div class="search-bar">
-            <input type="text" id="sInp" placeholder="Поиск..." onkeydown="if(event.key==='Enter') search()">
-            <button onclick="search()">🔍</button>
-        </div>
-        <div id="authBox">
-            <button onclick="openM('loginM')" id="loginBtnUI" class="sub-btn" style="background:var(--blue); color:white;">Войти</button>
-            <div id="userUI" style="display:none; gap:10px; align-items:center;">
-                <button onclick="openM('upM')" style="background:var(--surf); color:var(--text); border-radius:20px; padding:6px 12px; cursor:pointer; border:1px solid var(--border); font-size:12px;">+ Видео</button>
-                <div class="avatar" id="myHeadAv" onclick="openM('settingsM')" style="cursor:pointer; width:32px; height:32px; border:1px solid var(--blue);"></div>
-            </div>
-        </div>
-    </header>
+  <a class="logo" href="../../index.html">
+    <span>S</span><span>a</span><span>s</span><span>h</span><span>e</span><span>n</span><span>N</span><span>e</span><span>t</span>
+  </a>
 
-    <div id="homePage" class="rt-page" style="display: block;">
-        <div id="searchChannels" style="display:none; gap:20px; overflow-x:auto; padding-bottom:15px; margin-bottom:20px; border-bottom:1px solid var(--border);"></div>
-        <div class="grid" id="mainFeed"></div>
-        <center><button id="loadMoreBtn" onclick="renderMore()" class="sub-btn" style="margin-top:30px; display:none; background:var(--surf); color:var(--text); border:1px solid var(--border);">Еще видео</button></center>
-    </div>
+  <div class="code">404</div>
+  <div class="title">Ничего не найдено</div>
+  <div class="desc">Этот сайт не существует в сети SashenNet.</div>
+  <a class="back" href="../../index.html">← Вернуться на главную</a>
 
-    <div id="videoPage" class="rt-page" style="display: none;">
-        <div class="player-side">
-            <div class="player-wrap">
-                <video id="vPl" controls autoplay preload="auto" playsinline></video>
-                
-                <div class="endscreen" id="endScreenUI">
-                    <div class="endscreen-content">
-                        <div class="endscreen-author" id="endAuthorBtn">
-                            <div class="avatar" id="endAv" style="width:65px; height:65px; font-size:22px; box-shadow: 0 0 15px rgba(62,166,255,0.4);"></div>
-                            <b id="endAuthorName" style="font-size:14px; margin-top:4px;"></b>
-                            <span style="font-size:11px; background:var(--red); padding:3px 10px; border-radius:20px; font-weight:bold; margin-top:4px;">Канал</span>
-                        </div>
-                        <div class="endscreen-recs" id="endRecsContainer"></div>
-                    </div>
-                    <div class="endscreen-controls">
-                        <button class="ctrl-btn" onclick="replayVideo()">🔄</button>
-                        <button class="ctrl-btn" onclick="rewindVideo(10)">⏪ 10с</button>
-                    </div>
-                </div>
-            </div>
-            <h2 id="vT" style="margin:12px 0 5px 0; font-size:18px;"></h2>
-            <div id="vViewsText" style="color:#888; font-size:12px; margin-bottom:12px;"></div>
-            <div class="v-desc" id="vDescText"></div>
-            
-            <div class="actions">
-                <div style="display:flex; align-items:center; gap:10px; width:100%; justify-content:flex-start;">
-                    <div class="avatar" id="authorAv" style="cursor:pointer;"></div>
-                    <div style="flex-grow:1; min-width:0;">
-                        <b id="vA" style="cursor:pointer; font-size:14px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></b>
-                        <div id="vSubCount" style="font-size:11px; color:#888;"></div>
-                    </div>
-                    <button id="subBtn" class="sub-btn">Подписаться</button>
-                </div>
-                
-                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
-                    <div class="rating-block">
-                        <button class="rate-btn" id="likeBtn" onclick="toggleRate('like')">
-                            <span id="likeIcon">👍</span> <span id="likeCount">0</span>
-                        </button>
-                        <button class="rate-btn" id="dislikeBtn" onclick="toggleRate('dislike')">
-                            <span id="dislikeIcon">👎</span> <span id="dislikeCount">0</span>
-                        </button>
-                    </div>
-                    <div id="vDelPlace"></div>
-                </div>
-            </div>
-            
-            <div class="comm-box">
-                <h4 id="cCount" style="font-size:14px; margin:15px 0 10px 0;">0 Комментариев</h4>
-                <div style="display:flex; gap:10px; margin-bottom:15px;">
-                    <input type="text" id="cInp" placeholder="Комментарий..." style="width:100%; padding:8px 12px; background:var(--card-bg); border:1px solid var(--border); color:var(--text); border-radius:20px; outline:none; font-size:14px;">
-                    <button onclick="addComm()" class="sub-btn" style="background:var(--blue); color:#fff;">ОК</button>
-                </div>
-                <div id="cList"></div>
-            </div>
-        </div>
-        <div id="recList" class="rec-side"></div>
-    </div>
-
-    <div id="channelPage" class="rt-page" style="display: none;">
-        <div style="display:flex; align-items:center; gap:15px; padding:15px; background:var(--surf); border-radius:12px; margin-bottom:20px; border:1px solid var(--border);">
-            <div class="avatar" id="chAv" style="width:60px; height:60px; font-size:24px;"></div>
-            <div style="min-width:0; flex:1;">
-                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <h3 id="chName" style="margin:0; font-size:16px;"></h3>
-                    <button id="adminVerifyBtn" style="display:none; background:var(--blue); color:#fff; border:none; border-radius:12px; padding:4px 10px; font-size:11px; cursor:pointer; font-weight:bold;">Выдать ✓</button>
-                </div>
-                <p id="chDescContainer" style="font-size:12px; color:#ccc; margin:5px 0; white-space:pre-wrap; word-break:break-word;"></p>
-                <p id="chSubs" style="color:#888; margin:3px 0 6px 0; font-size:11px;"></p>
-                <button id="chSubBtn" class="sub-btn" style="height:30px; font-size:12px; padding:0 12px;">Подписаться</button>
-            </div>
-        </div>
-        <div class="grid" id="chFeed"></div>
-    </div>
-
-    <div class="overlay" id="ovl" onclick="closeM()"></div>
-    
-    <div id="settingsM" class="modal">
-        <h3>Настройки</h3>
-        <label style="font-size:12px; color:#aaa;">Описание канала:</label>
-        <textarea id="chDescInp" placeholder="Пару слов о себе..." maxlength="150" rows="3"></textarea>
-        <button class="btn-main" onclick="updateChannelData()" style="margin-bottom:15px; background:var(--blue);">Сохранить описание</button>
-        
-        <label style="font-size:12px; color:#aaa;">Фото профиля:</label>
-        <input type="file" id="avF" accept="image/*" style="font-size:11px; margin-top:5px;">
-        <button class="btn-main" onclick="updateAvatar()" style="margin-bottom:10px;">Сменить фото</button>
-        
-        <button class="btn-main" onclick="goToMyChannel()" style="background:var(--surf); color:var(--text); border:1px solid var(--border); margin-bottom:10px;">Мой канал</button>
-        <div class="theme-toggle">
-            <span>Светлая тема</span>
-            <input type="checkbox" id="themeCheck" onchange="toggleTheme()">
-        </div>
-        <button class="btn-main" onclick="logout()" style="background:#311; color:#f66; margin-top:20px;">Выйти</button>
-    </div>
-
-    <div id="upM" class="modal">
-        <h3>Загрузка видео</h3>
-        <input type="text" id="upT" placeholder="Название (макс 50)" maxlength="50">
-        <textarea id="upD" placeholder="Описание видео (макс 150)" maxlength="150" rows="3"></textarea>
-        <label style="font-size:11px; color:#aaa;">Файл видео:</label>
-        <input type="file" id="upF" accept="video/*" style="font-size:11px; margin-bottom:10px;">
-        <label style="font-size:11px; color:#aaa;">Заставка (Обложка) - НЕОБЯЗАТЕЛЬНО:</label>
-        <input type="file" id="upThumbF" accept="image/*" style="font-size:11px;">
-        <div id="upS" style="font-size:12px; color:var(--blue); margin-top:5px;"></div>
-        <button class="btn-main" id="uploadActionBtn" onclick="upload()" style="margin-top:10px;">Опубликовать</button>
-    </div>
-
-    <div id="loginM" class="modal">
-        <h3>Вход</h3>
-        <input type="text" id="liU" placeholder="Логин" maxlength="10">
-        <input type="password" id="liP" placeholder="Пароль">
-        <button class="btn-main" onclick="auth('login')">Войти</button>
-        <p onclick="openM('regM')" style="cursor:pointer; color:var(--blue); font-size:12px; text-align:center; margin-top:10px;">Нет аккаунта? Регистрация</p>
-    </div>
-
-    <div id="regM" class="modal">
-        <h3>Регистрация</h3>
-        <input type="text" id="rgU" placeholder="Логин (Только латиница, макс 10)" maxlength="10">
-        <input type="password" id="rgP" placeholder="Пароль">
-        <button class="btn-main" onclick="auth('reg')">Создать</button>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, setDoc, getDocs, doc, updateDoc, query, where, serverTimestamp, getDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = { apiKey: "AIzaSyBw5b72gU3RIBn3NUqwnJz4a7QAf-ox-hg", authDomain: "rusltube-ff487.firebaseapp.com", projectId: "rusltube-ff487", storageBucket: "rusltube-ff487.firebasestorage.app", messagingSenderId: "144869005114", appId: "1:144869005114:web:764ec36730b6c8c7012203" };
-        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
-        const CLOUD = "dujfw1ch1"; const PRESET = "RuslTube";
-        
-        window.user = localStorage.getItem("rUser");
-        let curVid = null; let curVidAuthor = null; let homeVids = []; let homeStart = 0; 
-        let userMetaCache = {};
-
-        if(localStorage.getItem('lightMode') === 'true') { document.body.classList.add('light'); document.getElementById('themeCheck').checked = true; }
-        window.toggleTheme = () => { const isL = document.body.classList.toggle('light'); localStorage.setItem('lightMode', isL); };
-
-        function esc(s) { return s ? s.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
-        
-        function optImg(url) {
-            if(!url) return "";
-            if(url.includes("cloudinary.com")) return url.replace("/upload/", "/upload/w_100,c_fill,q_auto,f_auto/");
-            return url;
-        }
-
-        function getCardThumb(v) {
-            if (v.thumb && v.thumb.trim() !== "") return `<img src="${v.thumb}" loading="lazy">`;
-            if (v.url && v.url.includes("cloudinary.com")) {
-                let u = v.url.split('?')[0];
-                if (u.toLowerCase().endsWith('.mov')) {
-                    return `<span style="font-size:40px;">🎬</span>`;
-                }
-                let dot = u.lastIndexOf('.');
-                let slash = u.lastIndexOf('/');
-                if (dot > slash) u = u.substring(0, dot);
-                let generatedThumb = u.replace("/video/upload/", "/video/upload/w_600,q_auto/") + ".jpg";
-                return `<img src="${generatedThumb}" onerror="this.parentElement.innerHTML='🎬'" loading="lazy">`;
-            }
-            return `<span style="font-size:40px;">🎬</span>`;
-        }
-
-        async function getUserMeta(n) {
-            if(!n) return { av: "", verified: false, id: null };
-            let key = n.toLowerCase();
-            if(userMetaCache[key]) return userMetaCache[key];
-            try {
-                const dSnap = await getDoc(doc(db, "users", key));
-                let meta = { av: "", verified: false, id: null };
-                if (dSnap.exists()) {
-                    const data = dSnap.data();
-                    meta.av = optImg(data.av || "");
-                    meta.verified = data.verified || false;
-                    meta.id = dSnap.id;
-                }
-                userMetaCache[key] = meta;
-                return meta;
-            } catch(e) {
-                return { av: "", verified: false, id: null };
-            }
-        }
-
-        function drawAv(meta, n) { 
-            let img = meta.av ? `<img src="${meta.av}" onerror="this.style.display='none'">` : (n ? n[0].toUpperCase() : "?");
-            let badge = meta.verified ? `<div class="v-badge" title="Подтвержденный аккаунт"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>` : "";
-            return img + badge; 
-        }
-
-        const player = document.getElementById('vPl');
-        const endScreen = document.getElementById('endScreenUI');
-        player.ontimeupdate = () => {
-            if(player.duration && (player.duration - player.currentTime <= 1.0)) {
-                if(endScreen.style.display !== 'flex') showEndScreen();
-            } else {
-                endScreen.style.display = 'none';
-            }
-        };
-
-        window.replayVideo = () => { endScreen.style.display = 'none'; player.currentTime = 0; player.play(); };
-        window.rewindVideo = (sec) => { endScreen.style.display = 'none'; let targetTime = player.currentTime - sec; player.currentTime = targetTime < 0 ? 0 : targetTime; player.play(); };
-
-        window.switchPage = (id) => {
-            document.querySelectorAll('.rt-page').forEach(p => p.style.display = 'none');
-            document.getElementById(id).style.display = (id === 'videoPage') ? (window.innerWidth >= 900 ? 'grid' : 'block') : 'block';
-            if(id !== 'videoPage') { player.pause(); player.src = ""; endScreen.style.display = 'none'; }
-        };
-
-        window.goHome = () => { 
-            document.getElementById('sInp').value = ""; document.getElementById('searchChannels').style.display = 'none';
-            switchPage('homePage'); loadFeed(); 
-        };
-        
-        window.openM = (id) => { 
-            closeM(); document.getElementById(id).style.display='block'; document.getElementById('ovl').style.display='block'; 
-            if(id === 'settingsM' && user) {
-                getDoc(doc(db, "users", user.toLowerCase())).then(d => { if(d.exists()) document.getElementById('chDescInp').value = d.data().desc || ""; });
-            }
-        };
-        window.closeM = () => { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); document.getElementById('ovl').style.display='none'; };
-        window.goToMyChannel = () => { closeM(); openChannel(user); };
-
-        window.navToChannel = (e, authorName) => { e.stopPropagation(); e.preventDefault(); openChannel(authorName); };
-
-        window.search = async () => {
-            const v = document.getElementById('sInp').value.trim().toLowerCase();
-            if(!v) return goHome();
-            switchPage('homePage');
-            const feed = document.getElementById('mainFeed'); const chBox = document.getElementById('searchChannels');
-            feed.innerHTML = "Поиск..."; chBox.innerHTML = ""; chBox.style.display = 'none';
-            
-            const vS = await getDocs(collection(db, "videos"));
-            feed.innerHTML = ""; let found = false; let foundAuthors = new Set();
-            
-            for(const d of vS.docs) {
-                const vi = d.data();
-                const tMatch = vi.title.toLowerCase().includes(v);
-                const aMatch = vi.author.toLowerCase().includes(v);
-                
-                if(aMatch && !foundAuthors.has(vi.author.toLowerCase())) {
-                    foundAuthors.add(vi.author.toLowerCase());
-                    const meta = await getUserMeta(vi.author);
-                    chBox.innerHTML += `<div class="ch-card" onclick="openChannel('${vi.author}')"><div class="avatar">${drawAv(meta, vi.author)}</div><b style="font-size:12px; margin-top:5px;">@${esc(vi.author)}</b></div>`;
-                }
-                
-                if(tMatch || aMatch) {
-                    found = true; const meta = await getUserMeta(vi.author);
-                    feed.innerHTML += `<div class="card" onclick="openV('${d.id}')"><div class="thumb-wrap">${getCardThumb(vi)}</div><div class="card-info"><div class="avatar" onclick="navToChannel(event, '${vi.author}')">${drawAv(meta, vi.author)}</div><div><h4>${esc(vi.title)}</h4><p onclick="navToChannel(event, '${vi.author}')">@${esc(vi.author)} • ${vi.views||0} просмотров</p></div></div></div>`;
-                }
-            }
-            if(foundAuthors.size > 0) chBox.style.display = 'flex';
-            if(!found && foundAuthors.size === 0) feed.innerHTML = "Ничего не найдено";
-        };
-
-        window.openV = async (id) => {
-            curVid = id; endScreen.style.display = 'none'; window.scrollTo(0,0);
-            const d = (await getDoc(doc(db, "videos", id))).data();
-            curVidAuthor = d.author; switchPage('videoPage');
-            player.src = d.url;
-            document.getElementById('vT').innerText = d.title;
-            document.getElementById('vDescText').innerText = d.desc || "Нет описания";
-            document.getElementById('vViewsText').innerText = `${(d.views || 0) + 1} просмотров`;
-            document.getElementById('vA').innerText = "@" + d.author;
-            document.getElementById('vA').onclick = (e) => openChannel(d.author);
-            
-            const meta = await getUserMeta(d.author);
-            document.getElementById('authorAv').innerHTML = drawAv(meta, d.author);
-            document.getElementById('authorAv').onclick = (e) => openChannel(d.author);
-            
-            document.getElementById('vDelPlace').innerHTML = (user && d.author.toLowerCase() === user.toLowerCase()) ? `<button onclick="deleteVid('${id}')" style="background:none; border:none; color:red; cursor:pointer; font-size:12px;">Удалить</button>` : "";
-            updateSubUI(d.author, 'subBtn', 'vSubCount'); updateRatingUI(); loadComms(id); loadRecs(id);
-            updateDoc(doc(db, "videos", id), { views: increment(1) }).catch(()=>{});
-        };
-
-        async function showEndScreen() {
-            const meta = await getUserMeta(curVidAuthor);
-            document.getElementById('endAv').innerHTML = drawAv(meta, curVidAuthor);
-            document.getElementById('endAuthorName').innerText = "@" + curVidAuthor;
-            document.getElementById('endAuthorBtn').onclick = () => openChannel(curVidAuthor);
-            
-            const s = await getDocs(collection(db, "videos"));
-            let r = s.docs.filter(d => d.id !== curVid).map(d => ({id: d.id, ...d.data()})).sort(() => Math.random() - 0.5).slice(0, 2);
-            const box = document.getElementById('endRecsContainer'); box.innerHTML = "";
-            r.forEach(v => {
-                box.innerHTML += `<div class="endscreen-rec-card" onclick="event.stopPropagation(); openV('${v.id}')"><div style="width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; background:#222; border-radius:4px; overflow:hidden;">${getCardThumb(v)}</div><h5>${esc(v.title)}</h5></div>`;
-            });
-            endScreen.style.display = 'flex';
-        }
-
-        window.openChannel = async (n) => {
-            closeM(); switchPage('channelPage');
-            document.getElementById('chName').innerText = "@" + n;
-            
-            const targetMeta = await getUserMeta(n);
-            document.getElementById('chAv').innerHTML = drawAv(targetMeta, n);
-
-            const adminBtn = document.getElementById('adminVerifyBtn');
-            if(user && user.toLowerCase() === "rusltube") {
-                adminBtn.style.display = "block";
-                adminBtn.innerText = targetMeta.verified ? "Забрать ✓" : "Выдать ✓";
-                adminBtn.onclick = async () => {
-                    if(!targetMeta.id) return alert("Ошибка: ID пользователя не найден!");
-                    await updateDoc(doc(db, "users", targetMeta.id.toLowerCase()), { verified: !targetMeta.verified });
-                    userMetaCache[n.toLowerCase()].verified = !targetMeta.verified;
-                    openChannel(n);
-                    loadFeed();
-                };
-            } else {
-                adminBtn.style.display = "none";
-            }
-            
-            const uDoc = await getDoc(doc(db, "users", n.toLowerCase()));
-            let desc = "Описание канала отсутствует.";
-            if(uDoc.exists() && uDoc.data().desc) desc = uDoc.data().desc;
-            document.getElementById('chDescContainer').innerText = desc;
-
-            updateSubUI(n, 'chSubBtn', 'chSubs');
-            const s = await getDocs(query(collection(db, "videos"), where("author", "==", n)));
-            const f = document.getElementById('chFeed'); f.innerHTML = "";
-            s.forEach(d => {
-                const v = d.data();
-                f.innerHTML += `<div class="card" onclick="openV('${d.id}')"><div class="thumb-wrap">${getCardThumb(v)}</div><div class="card-info"><div><h4>${esc(v.title)}</h4><p>${v.views||0} просмотров</p></div></div></div>`;
-            });
-        };
-
-        window.loadFeed = async () => {
-            const s = await getDocs(collection(db, "videos"));
-            homeVids = s.docs.map(d => ({id: d.id, ...d.data()})).sort(() => Math.random() - 0.5);
-            document.getElementById('mainFeed').innerHTML = ""; homeStart = 0; renderMore();
-        };
-
-        window.renderMore = async () => {
-            const end = Math.min(homeStart + 16, homeVids.length);
-            const f = document.getElementById('mainFeed');
-            for (let i = homeStart; i < end; i++) {
-                const v = homeVids[i]; const meta = await getUserMeta(v.author);
-                f.innerHTML += `<div class="card" onclick="openV('${v.id}')"><div class="thumb-wrap">${getCardThumb(v)}</div><div class="card-info"><div class="avatar" onclick="navToChannel(event, '${v.author}')">${drawAv(meta, v.author)}</div><div><h4>${esc(v.title)}</h4><p onclick="navToChannel(event, '${v.author}')">@${esc(v.author)} • ${v.views || 0} просмотров</p></div></div></div>`;
-            }
-            homeStart = end; document.getElementById('loadMoreBtn').style.display = (homeStart < homeVids.length) ? 'block' : 'none';
-        };
-
-        window.loadRecs = async (id) => {
-            const s = await getDocs(collection(db, "videos"));
-            let r = s.docs.filter(d => d.id !== id).map(d => ({id: d.id, ...d.data()})).sort(() => Math.random() - 0.5).slice(0, 7);
-            const l = document.getElementById('recList'); l.innerHTML = "";
-            r.forEach(v => {
-                l.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:12px; cursor:pointer;" onclick="openV('${v.id}')"><div style="width:120px; aspect-ratio:16/9; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#222; flex-shrink:0; overflow:hidden;">${getCardThumb(v)}</div><div><h5 style="margin:0; font-size:13px; line-height:1.2;">${esc(v.title)}</h5><p style="font-size:11px; color:#888; margin-top:4px;">@${esc(v.author)}</p></div></div>`;
-            });
-        };
-
-        window.upload = async () => {
-            const f = document.getElementById('upF').files[0]; const thumbF = document.getElementById('upThumbF').files[0];
-            const t = document.getElementById('upT').value.trim(); const d = document.getElementById('upD').value.trim();
-            if(!f || !t) return alert("Выберите видео и введите название!");
-            
-            const btn = document.getElementById('uploadActionBtn');
-            btn.disabled = true; btn.innerText = "Загрузка...";
-            
-            try {
-                document.getElementById('upS').innerText = "Загрузка видеофайла...";
-                const fdV = new FormData(); fdV.append('file', f); fdV.append('upload_preset', PRESET);
-                
-                const resV = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/video/upload`, {method:'POST', body:fdV});
-                const dataV = await resV.json();
-                
-                if(!dataV.secure_url) throw new Error("Cloudinary error");
-                
-                let finalThumbUrl = "";
-                if (thumbF) {
-                    document.getElementById('upS').innerText = "Загрузка обложки...";
-                    const fdT = new FormData(); fdT.append('file', thumbF); fdT.append('upload_preset', PRESET);
-                    const resT = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {method:'POST', body:fdT});
-                    const dataT = await resT.json(); finalThumbUrl = dataT.secure_url || "";
-                }
-                
-                const newVidRef = doc(collection(db, "videos"));
-                await setDoc(newVidRef, { title: t, desc: d, url: dataV.secure_url, thumb: finalThumbUrl, author: user, views: 0, createdAt: serverTimestamp() }); 
-                location.reload();
-            } catch(e) {
-                alert("Ошибка при публикации видео! Проверьте файлы.");
-                btn.disabled = false; btn.innerText = "Опубликовать";
-                document.getElementById('upS').innerText = "";
-            }
-        };
-
-        window.auth = async (m) => {
-            const u = document.getElementById(m=='reg'?'rgU':'liU').value.trim();
-            const p = document.getElementById(m=='reg'?'rgP':'liP').value.trim();
-            if(!u || !p) return alert("Заполните все поля!");
-            
-            const docRef = doc(db, "users", u.toLowerCase());
-            
-            if(m=='reg') {
-                const latReg = /^[A-Za-z0-9]+$/;
-                if(!latReg.test(u)) return alert("Ошибка! Логин должен состоять ТОЛЬКО из латинских букв и цифр!");
-                
-                try {
-                    const snap = await getDoc(docRef);
-                    if(snap.exists()) return alert("Логин занят!");
-                    
-                    await setDoc(docRef, {u: u, p: p, av: "", desc: "", verified: false});
-                    localStorage.setItem("rUser", u); location.reload();
-                } catch(e) {
-                    alert("Ошибка регистрации!");
-                }
-            } else {
-                try {
-                    const snap = await getDoc(docRef);
-                    if(!snap.exists() || snap.data().p !== p) return alert("Неверный логин или пароль!");
-                    
-                    localStorage.setItem("rUser", snap.data().u); location.reload();
-                } catch(e) {
-                    alert("Ошибка входа!");
-                }
-            }
-        };
-
-        window.updateChannelData = async () => {
-            const text = document.getElementById('chDescInp').value.trim();
-            await updateDoc(doc(db, "users", user.toLowerCase()), { desc: text }); alert("Описание успешно сохранено!");
-        };
-
-        window.updateAvatar = async () => {
-            const f = document.getElementById('avF').files[0]; if(!f) return;
-            try {
-                const fd = new FormData(); fd.append('file', f); fd.append('upload_preset', PRESET);
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {method:'POST', body:fd});
-                const data = await res.json();
-                await updateDoc(doc(db, "users", user.toLowerCase()), { av: data.secure_url }); location.reload();
-            } catch(e) {
-                alert("Ошибка смены аватарки!");
-            }
-        };
-
-        window.logout = () => { localStorage.removeItem("rUser"); location.reload(); };
-
-        window.toggleRate = async (type) => {
-            if(!user) return openM('loginM');
-            const qCurrent = query(collection(db, "ratings"), where("vId", "==", curVid), where("u", "==", user.toLowerCase()));
-            const snapCurrent = await getDocs(qCurrent);
-            if(!snapCurrent.empty) {
-                const existData = snapCurrent.docs[0].data();
-                if(existData.type === type) await deleteDoc(doc(db, "ratings", snapCurrent.docs[0].id));
-                else await updateDoc(doc(db, "ratings", snapCurrent.docs[0].id), { type: type });
-            } else {
-                const newRateRef = doc(collection(db, "ratings"));
-                await setDoc(newRateRef, { vId: curVid, u: user.toLowerCase(), type: type });
-            }
-            updateRatingUI();
-        };
-
-        async function updateRatingUI() {
-            const q = query(collection(db, "ratings"), where("vId", "==", curVid));
-            const s = await getDocs(q);
-            let likes = 0; let dislikes = 0; let myChoice = null;
-            s.forEach(d => {
-                const data = d.data();
-                if(data.type === 'like') likes++;
-                if(data.type === 'dislike') dislikes++;
-                if(user && data.u === user.toLowerCase()) myChoice = data.type;
-            });
-            document.getElementById('likeCount').innerText = likes; document.getElementById('dislikeCount').innerText = dislikes;
-            document.getElementById('likeBtn').className = `rate-btn ${myChoice === 'like' ? 'active' : ''}`;
-            document.getElementById('dislikeBtn').className = `rate-btn ${myChoice === 'dislike' ? 'active' : ''}`;
-        }
-
-        window.addComm = async () => {
-            const t = document.getElementById('cInp').value.trim(); if(!user || !t) return !user ? openM('loginM') : null;
-            const newCommRef = doc(collection(db, "comments"));
-            await setDoc(newCommRef, { vId: curVid, u: user, t, createdAt: serverTimestamp() });
-            document.getElementById('cInp').value = ""; loadComms(curVid);
-        };
-
-        window.deleteComment = async (cId) => {
-            if(confirm("Удалить этот комментарий?")) { await deleteDoc(doc(db, "comments", cId)); loadComms(curVid); }
-        };
-
-        async function loadComms(vId) {
-            const q = query(collection(db, "comments"), where("vId", "==", vId));
-            const s = await getDocs(q); const l = document.getElementById('cList'); l.innerHTML = "";
-            document.getElementById('cCount').innerText = `${s.size} Комментариев`;
-            const ds = s.docs.sort((a,b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0));
-            
-            for (const d of ds) {
-                const c = d.data(); const meta = await getUserMeta(c.u);
-                let delBtnHtml = "";
-                if(user && (c.u.toLowerCase() === user.toLowerCase() || curVidAuthor.toLowerCase() === user.toLowerCase())) {
-                    delBtnHtml = `<button class="del-comment-btn" onclick="deleteComment('${d.id}')">[Удалить]</button>`;
-                }
-                l.innerHTML += `<div style="display:flex; gap:12px; margin-bottom:12px;"><div class="avatar" style="width:32px; height:32px; cursor:pointer;" onclick="openChannel('${c.u}')">${drawAv(meta, c.u)}</div><div style="flex:1;"><b style="font-size:13px; cursor:pointer;" onclick="openChannel('${c.u}')">@${esc(c.u)}</b>${delBtnHtml}<p style="margin:2px 0 0; font-size:14px;">${esc(c.t)}</p></div></div>`;
-            }
-        }
-
-        window.updateSubUI = async (a, bId, cId) => {
-            const qS = query(collection(db, "subs"), where("to", "==", a.toLowerCase()));
-            const count = (await getDocs(qS)).size;
-            document.getElementById(cId).innerText = `${count} Подписчиков`;
-            const btn = document.getElementById(bId); if(!user || !btn) return;
-            const snap = await getDocs(query(collection(db, "subs"), where("from","==",user.toLowerCase()), where("to","==",a.toLowerCase())));
-            btn.innerText = snap.empty ? "Подписаться" : "Вы подписаны";
-            btn.className = snap.empty ? "sub-btn" : "sub-btn active";
-            btn.onclick = () => toggleSub(a, bId, cId);
-        };
-
-        window.toggleSub = async (a, bId, cId) => {
-            if(!user) return openM('loginM'); if(a.toLowerCase() === user.toLowerCase()) return;
-            const q = query(collection(db, "subs"), where("from","==",user.toLowerCase()), where("to","==",a.toLowerCase()));
-            const snap = await getDocs(q);
-            if(snap.empty) {
-                const newSubRef = doc(collection(db, "subs"));
-                await setDoc(newSubRef, {from:user.toLowerCase(), to:a.toLowerCase()});
-            }
-            else await deleteDoc(doc(db, "subs", snap.docs[0].id));
-            updateSubUI(a, bId, cId);
-        };
-
-        window.deleteVid = async (id) => { if(confirm("Удалить видео?")) { await deleteDoc(doc(db, "videos", id)); goHome(); } };
-
-        if(user) { 
-            document.getElementById('loginBtnUI').style.display='none'; document.getElementById('userUI').style.display='flex';
-            getUserMeta(user).then(meta => document.getElementById('myHeadAv').innerHTML = drawAv(meta, user));
-        }
-        loadFeed();
-    </script>
 </body>
 </html>
